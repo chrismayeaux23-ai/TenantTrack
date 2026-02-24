@@ -1,0 +1,159 @@
+import React, { useState, useRef } from "react";
+import { AppLayout } from "@/components/layout/AppLayout";
+import { useProperties, useCreateProperty } from "@/hooks/use-properties";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Dialog } from "@/components/ui/Dialog";
+import { QRCodeSVG } from "qrcode.react";
+import { Loader2, Plus, Building, MapPin, Download, QrCode } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+
+export default function Properties() {
+  const { data: properties, isLoading } = useProperties();
+  const { mutate: createProperty, isPending: isCreating } = useCreateProperty();
+  const { toast } = useToast();
+  
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [activeQR, setActiveQR] = useState<{id: number, name: string} | null>(null);
+  
+  const [formData, setFormData] = useState({ name: "", address: "" });
+  const qrRef = useRef<HTMLDivElement>(null);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createProperty(formData, {
+      onSuccess: () => {
+        setIsAddModalOpen(false);
+        setFormData({ name: "", address: "" });
+        toast({ title: "Success", description: "Property added successfully!" });
+      }
+    });
+  };
+
+  const downloadQR = () => {
+    if (!qrRef.current || !activeQR) return;
+    const canvas = qrRef.current.querySelector('canvas');
+    if (!canvas) return;
+    
+    const url = canvas.toDataURL("image/png");
+    const link = document.createElement('a');
+    link.download = `QR-${activeQR.name.replace(/\s+/g, '-')}.png`;
+    link.href = url;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="h-[60vh] flex items-center justify-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        </div>
+      </AppLayout>
+    );
+  }
+
+  return (
+    <AppLayout>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-display font-bold text-foreground">Properties</h1>
+          <p className="text-muted-foreground mt-2">Manage your buildings and generate report QR codes.</p>
+        </div>
+        <Button onClick={() => setIsAddModalOpen(true)} className="shadow-lg shadow-primary/20">
+          <Plus className="mr-2 h-5 w-5" /> Add Property
+        </Button>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {properties?.map((property) => (
+          <div key={property.id} className="bg-card rounded-2xl p-6 border border-border shadow-sm hover-elevate flex flex-col">
+            <div className="h-12 w-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+              <Building className="h-6 w-6 text-primary" />
+            </div>
+            <h3 className="text-xl font-bold mb-2">{property.name}</h3>
+            <p className="text-muted-foreground flex items-start gap-2 text-sm mb-6 flex-1">
+              <MapPin className="h-4 w-4 mt-0.5 shrink-0" />
+              {property.address}
+            </p>
+            
+            <Button 
+              variant="outline" 
+              className="w-full"
+              onClick={() => setActiveQR({ id: property.id, name: property.name })}
+            >
+              <QrCode className="mr-2 h-4 w-4" /> View QR Code
+            </Button>
+          </div>
+        ))}
+
+        {properties?.length === 0 && (
+          <div className="col-span-full bg-card border-2 border-dashed border-border rounded-3xl p-12 text-center">
+            <Building className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+            <h3 className="text-xl font-bold mb-2">No properties yet</h3>
+            <p className="text-muted-foreground mb-6 max-w-sm mx-auto">Add your first property to generate a QR code and start receiving maintenance requests.</p>
+            <Button onClick={() => setIsAddModalOpen(true)}>Add Your First Property</Button>
+          </div>
+        )}
+      </div>
+
+      {/* Add Property Modal */}
+      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+        <div>
+          <h2 className="text-2xl font-display font-bold mb-6">Add New Property</h2>
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="name">Property Name</Label>
+              <Input 
+                id="name" 
+                placeholder="e.g. Sunset Apartments" 
+                required 
+                value={formData.name}
+                onChange={e => setFormData({...formData, name: e.target.value})}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="address">Full Address</Label>
+              <Input 
+                id="address" 
+                placeholder="123 Main St, City, ST 12345" 
+                required 
+                value={formData.address}
+                onChange={e => setFormData({...formData, address: e.target.value})}
+              />
+            </div>
+            <Button type="submit" className="w-full mt-2" isLoading={isCreating}>
+              Create Property
+            </Button>
+          </form>
+        </div>
+      </Dialog>
+
+      {/* QR Code Modal */}
+      <Dialog open={!!activeQR} onOpenChange={() => setActiveQR(null)} className="sm:max-w-sm text-center p-8">
+        {activeQR && (
+          <div className="flex flex-col items-center">
+            <h2 className="text-2xl font-display font-bold mb-2">{activeQR.name}</h2>
+            <p className="text-sm text-muted-foreground mb-8">Scan to report a maintenance issue.</p>
+            
+            <div className="bg-white p-6 rounded-2xl shadow-inner border border-border mb-8 inline-block" ref={qrRef}>
+              <QRCodeSVG 
+                value={`${window.location.origin}/report/${activeQR.id}`} 
+                size={220}
+                level="H"
+                includeMargin={false}
+              />
+            </div>
+            
+            <Button onClick={downloadQR} className="w-full rounded-full" size="lg">
+              <Download className="mr-2 h-5 w-5" /> Download QR as PNG
+            </Button>
+          </div>
+        )}
+      </Dialog>
+
+    </AppLayout>
+  );
+}

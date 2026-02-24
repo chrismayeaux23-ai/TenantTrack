@@ -1,38 +1,58 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { db } from "./db";
+import {
+  properties, maintenanceRequests,
+  type Property, type InsertProperty, type CreatePropertyRequest,
+  type MaintenanceRequest, type InsertMaintenanceRequest, type CreateMaintenanceRequest,
+  type UpdateRequestStatus
+} from "@shared/schema";
+import { eq, inArray } from "drizzle-orm";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getProperties(landlordId: string): Promise<Property[]>;
+  getProperty(id: number): Promise<Property | undefined>;
+  createProperty(property: InsertProperty): Promise<Property>;
+  
+  getRequestsByLandlord(landlordId: string): Promise<MaintenanceRequest[]>;
+  createRequest(request: InsertMaintenanceRequest): Promise<MaintenanceRequest>;
+  updateRequestStatus(id: number, status: string): Promise<MaintenanceRequest>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
+export class DatabaseStorage implements IStorage {
+  async getProperties(landlordId: string): Promise<Property[]> {
+    return await db.select().from(properties).where(eq(properties.landlordId, landlordId));
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+  async getProperty(id: number): Promise<Property | undefined> {
+    const [property] = await db.select().from(properties).where(eq(properties.id, id));
+    return property;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async createProperty(insertProperty: InsertProperty): Promise<Property> {
+    const [property] = await db.insert(properties).values(insertProperty).returning();
+    return property;
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async getRequestsByLandlord(landlordId: string): Promise<MaintenanceRequest[]> {
+    const rows = await db.select({ request: maintenanceRequests })
+      .from(maintenanceRequests)
+      .innerJoin(properties, eq(maintenanceRequests.propertyId, properties.id))
+      .where(eq(properties.landlordId, landlordId));
+      
+    return rows.map(r => r.request);
+  }
+
+  async createRequest(insertRequest: InsertMaintenanceRequest): Promise<MaintenanceRequest> {
+    const [request] = await db.insert(maintenanceRequests).values(insertRequest).returning();
+    return request;
+  }
+
+  async updateRequestStatus(id: number, status: string): Promise<MaintenanceRequest> {
+    const [request] = await db.update(maintenanceRequests)
+      .set({ status })
+      .where(eq(maintenanceRequests.id, id))
+      .returning();
+    return request;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
