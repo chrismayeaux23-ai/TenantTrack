@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/Button";
 import { Wrench, ShieldCheck, QrCode, Smartphone } from "lucide-react";
-import logoPng from "@assets/ChatGPT_Image_Feb_26,_2026,_05_00_29_AM_1772180450104.png";
-import heroPng from "@assets/ChatGPT_Image_Feb_26,_2026,_05_03_18_AM_1772180450105.png";
+import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
+import heroPng from "@assets/ChatGPT_Image_Feb_27,_2026,_08_01_41_AM_1772208715787.png";
 
 export default function Landing() {
   return (
@@ -34,7 +34,7 @@ export default function Landing() {
             </div>
             <h1 className="text-5xl md:text-7xl font-display font-extrabold tracking-tight text-foreground leading-[1.1] mb-6">
               Maintenance Requests <br className="hidden md:block"/> 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Made Effortless.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-500">Made Effortless.</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed">
               Generate QR codes for your properties. Tenants scan, snap a photo, and report issues instantly without downloading an app. You manage everything from a beautiful dashboard.
@@ -50,7 +50,7 @@ export default function Landing() {
           </div>
           
           <div className="flex-1 w-full max-w-2xl animate-in fade-in zoom-in duration-1000">
-            <div className="relative p-2 bg-gradient-to-tr from-primary/20 to-blue-400/20 rounded-[2.5rem] overflow-hidden">
+            <div className="relative p-2 bg-gradient-to-tr from-primary/20 to-emerald-400/20 rounded-[2.5rem] overflow-hidden">
               <img 
                 src={heroPng} 
                 alt="TenantTrack Dashboard Preview" 

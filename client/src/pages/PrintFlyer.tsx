@@ -3,7 +3,7 @@ import { useProperty } from "@/hooks/use-properties";
 import { QRCodeSVG } from "qrcode.react";
 import { Loader2, Printer, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import logoPng from "@assets/ChatGPT_Image_Feb_26,_2026,_05_00_29_AM_1772180450104.png";
+import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
 
 export default function PrintFlyer() {
   const { propertyId } = useParams<{ propertyId: string }>();
@@ -45,13 +45,13 @@ export default function PrintFlyer() {
 
       <div className="max-w-[8.5in] mx-auto p-6 print:p-0">
         <div className="bg-white rounded-3xl print:rounded-none shadow-xl print:shadow-none border border-border print:border-0 overflow-hidden">
-          <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white p-8 sm:p-12 text-center">
+          <div className="bg-gradient-to-br from-green-800 to-green-950 text-white p-8 sm:p-12 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
               <img src={logoPng} alt="TenantTrack" className="h-14 w-14 rounded-xl" />
               <span className="text-3xl sm:text-4xl font-bold tracking-tight">TenantTrack</span>
             </div>
             <div className="w-16 h-1 bg-white/40 rounded-full mx-auto mb-4"></div>
-            <p className="text-blue-100 text-lg">Fast. Easy. Maintenance Reporting.</p>
+            <p className="text-green-200 text-lg">Fast. Easy. Maintenance Reporting.</p>
           </div>
 
           <div className="p-8 sm:p-12">
@@ -61,7 +61,7 @@ export default function PrintFlyer() {
             </div>
 
             <div className="flex flex-col items-center mb-10">
-              <div className="bg-white p-6 rounded-2xl shadow-lg border-2 border-blue-100 inline-block mb-4">
+              <div className="bg-white p-6 rounded-2xl shadow-lg border-2 border-green-200 inline-block mb-4">
                 <QRCodeSVG
                   value={reportUrl}
                   size={240}
@@ -72,21 +72,21 @@ export default function PrintFlyer() {
               <p className="text-sm text-gray-400 font-mono break-all max-w-xs text-center">{reportUrl}</p>
             </div>
 
-            <div className="bg-blue-50 rounded-2xl p-6 sm:p-8 mb-8 border border-blue-100">
+            <div className="bg-green-50 rounded-2xl p-6 sm:p-8 mb-8 border border-green-200">
               <h3 className="text-xl font-bold text-gray-900 mb-5 text-center">How It Works</h3>
               <div className="grid sm:grid-cols-3 gap-6 text-center">
                 <div>
-                  <div className="h-12 w-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">1</div>
+                  <div className="h-12 w-12 rounded-full bg-green-800 text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">1</div>
                   <p className="font-semibold text-gray-800 mb-1">Scan the Code</p>
                   <p className="text-sm text-gray-500">Open your phone camera and point it at the QR code above.</p>
                 </div>
                 <div>
-                  <div className="h-12 w-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">2</div>
+                  <div className="h-12 w-12 rounded-full bg-green-800 text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">2</div>
                   <p className="font-semibold text-gray-800 mb-1">Describe the Issue</p>
                   <p className="text-sm text-gray-500">Fill out the form with details and take a photo if you can.</p>
                 </div>
                 <div>
-                  <div className="h-12 w-12 rounded-full bg-blue-600 text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">3</div>
+                  <div className="h-12 w-12 rounded-full bg-green-800 text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">3</div>
                   <p className="font-semibold text-gray-800 mb-1">We'll Handle It</p>
                   <p className="text-sm text-gray-500">Your landlord gets notified instantly and will follow up.</p>
                 </div>

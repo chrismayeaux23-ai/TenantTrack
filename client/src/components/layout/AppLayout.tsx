@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Building2, LayoutDashboard, LogOut, Menu, X, CreditCard, Users } from "lucide-react";
 import { Button } from "../ui/Button";
-import logoPng from "@assets/ChatGPT_Image_Feb_26,_2026,_05_00_29_AM_1772180450104.png";
+import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();

@@ -17,7 +17,7 @@ function TrackingResult({ data }: { data: TrackRequestResponse }) {
     switch (status) {
       case "Completed": return <CheckCircle2 className="h-5 w-5 text-green-600" />;
       case "In-Progress": return <Clock className="h-5 w-5 text-yellow-600" />;
-      default: return <AlertTriangle className="h-5 w-5 text-blue-600" />;
+      default: return <AlertTriangle className="h-5 w-5 text-primary" />;
     }
   };
 
@@ -55,7 +55,7 @@ function TrackingResult({ data }: { data: TrackRequestResponse }) {
           className={`h-2 rounded-full transition-all duration-700 ${
             data.status === "Completed" ? "bg-green-500 w-full" :
             data.status === "In-Progress" ? "bg-yellow-500 w-2/3" :
-            "bg-blue-500 w-1/3"
+            "bg-primary w-1/3"
           }`}
           data-testid="progress-bar"
         />

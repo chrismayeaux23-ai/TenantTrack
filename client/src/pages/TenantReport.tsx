@@ -128,8 +128,8 @@ export default function TenantReport() {
       </header>
 
       <main className="max-w-2xl mx-auto p-4 py-6 md:py-10">
-        <div className="bg-blue-50 text-blue-800 rounded-2xl p-4 flex gap-3 items-start mb-8 border border-blue-100">
-          <Info className="h-5 w-5 mt-0.5 shrink-0 text-blue-600" />
+        <div className="bg-green-50 text-green-800 rounded-2xl p-4 flex gap-3 items-start mb-8 border border-green-200">
+          <Info className="h-5 w-5 mt-0.5 shrink-0 text-green-700" />
           <p className="text-sm leading-relaxed">Please provide as much detail as possible. Uploading photos helps resolve the issue faster.</p>
         </div>
 
