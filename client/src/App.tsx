@@ -13,6 +13,7 @@ import Dashboard from "@/pages/Dashboard";
 import Properties from "@/pages/Properties";
 import TenantReport from "@/pages/TenantReport";
 import PrintFlyer from "@/pages/PrintFlyer";
+import Pricing from "@/pages/Pricing";
 
 // Protected Route Wrapper
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -63,6 +64,10 @@ function Router() {
       {/* Protected Landlord Routes */}
       <Route path="/properties">
         <ProtectedRoute component={Properties} />
+      </Route>
+      
+      <Route path="/pricing">
+        <ProtectedRoute component={Pricing} />
       </Route>
 
       {/* Fallback */}

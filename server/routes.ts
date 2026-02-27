@@ -5,6 +5,10 @@ import { api } from "@shared/routes";
 import { z } from "zod";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
 import { registerObjectStorageRoutes } from "./replit_integrations/object_storage";
+import { getUncachableStripeClient, getStripePublishableKey } from "./stripeClient";
+import { db } from "./db";
+import { users } from "@shared/models/auth";
+import { eq, sql } from "drizzle-orm";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -102,6 +106,142 @@ export async function registerRoutes(
         });
       }
       res.status(500).json({ message: "Failed to update request" });
+    }
+  });
+
+  app.get('/api/stripe/publishable-key', async (_req, res) => {
+    try {
+      const key = await getStripePublishableKey();
+      res.json({ publishableKey: key });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to get Stripe key" });
+    }
+  });
+
+  app.get('/api/stripe/plans', async (_req, res) => {
+    try {
+      const result = await db.execute(sql`
+        SELECT 
+          p.id as product_id,
+          p.name as product_name,
+          p.description as product_description,
+          p.metadata as product_metadata,
+          pr.id as price_id,
+          pr.unit_amount,
+          pr.currency,
+          pr.recurring
+        FROM stripe.products p
+        LEFT JOIN stripe.prices pr ON pr.product = p.id AND pr.active = true
+        WHERE p.active = true
+        ORDER BY pr.unit_amount ASC
+      `);
+      res.json(result.rows);
+    } catch (err) {
+      console.error("Failed to fetch plans:", err);
+      res.status(500).json({ message: "Failed to fetch plans" });
+    }
+  });
+
+  app.get('/api/stripe/subscription', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const [user] = await db.select().from(users).where(eq(users.id, userId));
+      if (!user?.stripeSubscriptionId) {
+        return res.json({ subscription: null, tier: user?.subscriptionTier || 'trial' });
+      }
+
+      const subResult = await db.execute(
+        sql`SELECT * FROM stripe.subscriptions WHERE id = ${user.stripeSubscriptionId}`
+      );
+      res.json({ 
+        subscription: subResult.rows[0] || null, 
+        tier: user?.subscriptionTier || 'trial',
+        stripeCustomerId: user?.stripeCustomerId 
+      });
+    } catch (err) {
+      console.error("Failed to fetch subscription:", err);
+      res.status(500).json({ message: "Failed to fetch subscription" });
+    }
+  });
+
+  app.post('/api/stripe/checkout', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { priceId, tier } = req.body;
+
+      if (!priceId || !tier) {
+        return res.status(400).json({ message: "Missing priceId or tier" });
+      }
+
+      const validTiers = ['starter', 'growth', 'pro'];
+      if (!validTiers.includes(tier)) {
+        return res.status(400).json({ message: "Invalid tier" });
+      }
+
+      const priceCheck = await db.execute(
+        sql`SELECT pr.id FROM stripe.prices pr
+            JOIN stripe.products p ON pr.product = p.id
+            WHERE pr.id = ${priceId} AND pr.active = true AND p.active = true
+            AND p.metadata->>'tier' = ${tier}`
+      );
+      if (priceCheck.rows.length === 0) {
+        return res.status(400).json({ message: "Invalid price for the selected plan" });
+      }
+
+      const [user] = await db.select().from(users).where(eq(users.id, userId));
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      const stripe = await getUncachableStripeClient();
+
+      let customerId = user.stripeCustomerId;
+      if (!customerId) {
+        const customer = await stripe.customers.create({
+          email: user.email || undefined,
+          metadata: { userId },
+        });
+        customerId = customer.id;
+        await db.update(users).set({ stripeCustomerId: customerId }).where(eq(users.id, userId));
+      }
+
+      const session = await stripe.checkout.sessions.create({
+        customer: customerId,
+        payment_method_types: ['card'],
+        line_items: [{ price: priceId, quantity: 1 }],
+        mode: 'subscription',
+        subscription_data: {
+          trial_period_days: 14,
+          metadata: { userId, tier },
+        },
+        success_url: `${req.protocol}://${req.get('host')}/?checkout=success`,
+        cancel_url: `${req.protocol}://${req.get('host')}/?checkout=cancel`,
+      });
+
+      res.json({ url: session.url });
+    } catch (err) {
+      console.error("Checkout error:", err);
+      res.status(500).json({ message: "Failed to create checkout session" });
+    }
+  });
+
+  app.post('/api/stripe/portal', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const [user] = await db.select().from(users).where(eq(users.id, userId));
+
+      if (!user?.stripeCustomerId) {
+        return res.status(400).json({ message: "No billing account found" });
+      }
+
+      const stripe = await getUncachableStripeClient();
+      const session = await stripe.billingPortal.sessions.create({
+        customer: user.stripeCustomerId,
+        return_url: `${req.protocol}://${req.get('host')}/`,
+      });
+
+      res.json({ url: session.url });
+    } catch (err) {
+      console.error("Portal error:", err);
+      res.status(500).json({ message: "Failed to create portal session" });
     }
   });
 

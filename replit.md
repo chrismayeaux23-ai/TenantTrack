@@ -8,6 +8,7 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - **Database**: PostgreSQL via Drizzle ORM
 - **Auth**: Replit Auth (landlord login)
 - **Storage**: Replit Object Storage (tenant photo uploads)
+- **Payments**: Stripe (subscriptions with 14-day free trial)
 
 ## Key Features
 - Landlords sign up, add properties (each generating a unique QR code)
@@ -15,27 +16,38 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - Tenants can upload up to 3 photos per maintenance request
 - Dashboard with status badges (Green=Completed, Red=Emergency, Yellow=In-Progress)
 - Printable flyer template at `/flyer/:propertyId` for landlords to post on tenant doors
+- Stripe subscription billing with 3 tiers: Starter ($19), Growth ($39), Pro ($59)
 
 ## File Structure
 - `shared/schema.ts` - Drizzle schema (properties, maintenanceRequests tables)
-- `shared/models/auth.ts` - Replit Auth schema (users, sessions tables)
+- `shared/models/auth.ts` - Replit Auth schema (users, sessions tables) + Stripe fields
 - `shared/routes.ts` - Shared route types
-- `server/routes.ts` - API routes
+- `server/routes.ts` - API routes (app + Stripe checkout/portal/plans)
 - `server/storage.ts` - Storage interface (CRUD)
+- `server/stripeClient.ts` - Stripe client using Replit connector credentials
+- `server/webhookHandlers.ts` - Stripe webhook processing via stripe-replit-sync
+- `server/seed-products.ts` - Script to create Stripe products/prices
 - `server/db.ts` - Database connection
 - `server/replit_integrations/` - Auth + Object Storage integrations
 - `client/src/App.tsx` - Routes and app wrapper
-- `client/src/pages/` - Landing, Dashboard, Properties, TenantReport, PrintFlyer
+- `client/src/pages/` - Landing, Dashboard, Properties, TenantReport, PrintFlyer, Pricing
 - `client/src/components/layout/AppLayout.tsx` - Sidebar layout for landlord pages
 - `client/src/hooks/` - Auth, properties, requests, upload hooks
 
 ## Routes
 - `/` - Landing (unauthenticated) or Dashboard (authenticated)
 - `/properties` - Property management (protected)
+- `/pricing` - Subscription plans and billing (protected)
 - `/flyer/:propertyId` - Printable flyer with QR code (protected)
 - `/report/:propertyId` - Public tenant maintenance form
 
+## Stripe Setup
+- Products seeded via `server/seed-products.ts`
+- stripe-replit-sync manages `stripe` schema tables automatically (DO NOT modify)
+- Webhook route registered BEFORE express.json() middleware in server/index.ts
+- Users table has stripe_customer_id, stripe_subscription_id, subscription_tier columns
+
 ## Notes
 - Object storage wildcard route uses regex syntax for Express 5 compatibility
-- Stripe payments not yet integrated (requires connector setup)
 - Logo assets in `attached_assets/` imported via `@assets/` alias
+- Stripe connector handles API keys automatically (no manual .env needed)
