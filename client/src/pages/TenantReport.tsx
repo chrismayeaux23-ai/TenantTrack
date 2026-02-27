@@ -20,6 +20,7 @@ export default function TenantReport() {
   const { mutate: submitRequest, isPending: isSubmitting } = useCreateRequest();
 
   const [isSuccess, setIsSuccess] = useState(false);
+  const [trackingCode, setTrackingCode] = useState<string | null>(null);
   const [formData, setFormData] = useState<MaintenanceRequestInput>({
     propertyId: id,
     tenantName: "",
@@ -43,7 +44,10 @@ export default function TenantReport() {
       return;
     }
     submitRequest(formData, {
-      onSuccess: () => setIsSuccess(true)
+      onSuccess: (data) => {
+        setTrackingCode(data.trackingCode || null);
+        setIsSuccess(true);
+      }
     });
   };
 
@@ -75,13 +79,34 @@ export default function TenantReport() {
           <div className="h-24 w-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle2 className="h-12 w-12 text-green-600" />
           </div>
-          <h1 className="text-3xl font-display font-bold mb-3">Request Sent!</h1>
-          <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
+          <h1 className="text-3xl font-display font-bold mb-3" data-testid="text-success-title">Request Sent!</h1>
+          <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
             Your landlord has been notified about the issue at <strong>{property.name}</strong>, Unit {formData.unitNumber}.
           </p>
-          <Button onClick={() => window.location.reload()} variant="outline" className="w-full rounded-xl" size="lg">
-            Submit Another Request
-          </Button>
+
+          {trackingCode && (
+            <div className="bg-muted/50 rounded-xl p-5 mb-6 border border-border">
+              <p className="text-sm text-muted-foreground mb-2">Your Tracking Code</p>
+              <p className="text-2xl font-mono font-bold tracking-widest text-foreground" data-testid="text-tracking-code">{trackingCode}</p>
+              <p className="text-xs text-muted-foreground mt-3">Save this code to check your request status anytime.</p>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-3">
+            {trackingCode && (
+              <Button
+                onClick={() => setLocation(`/track/${trackingCode}`)}
+                className="w-full rounded-xl"
+                size="lg"
+                data-testid="link-track-request"
+              >
+                Track My Request
+              </Button>
+            )}
+            <Button onClick={() => window.location.reload()} variant="outline" className="w-full rounded-xl" size="lg" data-testid="button-submit-another">
+              Submit Another Request
+            </Button>
+          </div>
         </div>
       </div>
     );

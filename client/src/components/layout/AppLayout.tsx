@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import { Building2, LayoutDashboard, LogOut, Menu, X, CreditCard } from "lucide-react";
+import { Building2, LayoutDashboard, LogOut, Menu, X, CreditCard, Users } from "lucide-react";
 import { Button } from "../ui/Button";
 import logoPng from "@assets/ChatGPT_Image_Feb_26,_2026,_05_00_29_AM_1772180450104.png";
 
@@ -13,6 +13,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const navigation = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
     { name: "Properties", href: "/properties", icon: Building2 },
+    { name: "Staff", href: "/staff", icon: Users },
     { name: "Pricing", href: "/pricing", icon: CreditCard },
   ];
 

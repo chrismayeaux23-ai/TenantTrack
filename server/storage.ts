@@ -1,20 +1,32 @@
+import { randomBytes } from "crypto";
 import { db } from "./db";
 import {
-  properties, maintenanceRequests,
-  type Property, type InsertProperty, type CreatePropertyRequest,
-  type MaintenanceRequest, type InsertMaintenanceRequest, type CreateMaintenanceRequest,
-  type UpdateRequestStatus
+  properties, maintenanceRequests, maintenanceStaff,
+  type Property, type InsertProperty,
+  type MaintenanceRequest, type InsertMaintenanceRequest,
+  type MaintenanceStaff, type InsertMaintenanceStaff,
 } from "@shared/schema";
 import { eq, inArray } from "drizzle-orm";
+
+function generateTrackingCode(): string {
+  return randomBytes(4).toString("hex").toUpperCase();
+}
 
 export interface IStorage {
   getProperties(landlordId: string): Promise<Property[]>;
   getProperty(id: number): Promise<Property | undefined>;
   createProperty(property: InsertProperty): Promise<Property>;
-  
+
   getRequestsByLandlord(landlordId: string): Promise<MaintenanceRequest[]>;
   createRequest(request: InsertMaintenanceRequest): Promise<MaintenanceRequest>;
   updateRequestStatus(id: number, status: string): Promise<MaintenanceRequest>;
+
+  getStaff(landlordId: string): Promise<MaintenanceStaff[]>;
+  createStaff(staff: InsertMaintenanceStaff): Promise<MaintenanceStaff>;
+  deleteStaff(id: number): Promise<void>;
+  assignRequest(requestId: number, staffId: number): Promise<MaintenanceRequest>;
+  unassignRequest(requestId: number): Promise<MaintenanceRequest>;
+  getRequestByTrackingCode(code: string): Promise<MaintenanceRequest | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -37,13 +49,28 @@ export class DatabaseStorage implements IStorage {
       .from(maintenanceRequests)
       .innerJoin(properties, eq(maintenanceRequests.propertyId, properties.id))
       .where(eq(properties.landlordId, landlordId));
-      
+
     return rows.map(r => r.request);
   }
 
   async createRequest(insertRequest: InsertMaintenanceRequest): Promise<MaintenanceRequest> {
-    const [request] = await db.insert(maintenanceRequests).values(insertRequest).returning();
-    return request;
+    const MAX_RETRIES = 5;
+    for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+      try {
+        const trackingCode = generateTrackingCode();
+        const [request] = await db.insert(maintenanceRequests).values({
+          ...insertRequest,
+          trackingCode,
+        }).returning();
+        return request;
+      } catch (err: any) {
+        const isUniqueViolation = err?.code === '23505' && err?.constraint?.includes('tracking_code');
+        if (!isUniqueViolation || attempt === MAX_RETRIES - 1) {
+          throw err;
+        }
+      }
+    }
+    throw new Error("Failed to generate unique tracking code");
   }
 
   async updateRequestStatus(id: number, status: string): Promise<MaintenanceRequest> {
@@ -51,6 +78,40 @@ export class DatabaseStorage implements IStorage {
       .set({ status })
       .where(eq(maintenanceRequests.id, id))
       .returning();
+    return request;
+  }
+
+  async getStaff(landlordId: string): Promise<MaintenanceStaff[]> {
+    return await db.select().from(maintenanceStaff).where(eq(maintenanceStaff.landlordId, landlordId));
+  }
+
+  async createStaff(staff: InsertMaintenanceStaff): Promise<MaintenanceStaff> {
+    const [created] = await db.insert(maintenanceStaff).values(staff).returning();
+    return created;
+  }
+
+  async deleteStaff(id: number): Promise<void> {
+    await db.delete(maintenanceStaff).where(eq(maintenanceStaff.id, id));
+  }
+
+  async assignRequest(requestId: number, staffId: number): Promise<MaintenanceRequest> {
+    const [request] = await db.update(maintenanceRequests)
+      .set({ assignedTo: staffId })
+      .where(eq(maintenanceRequests.id, requestId))
+      .returning();
+    return request;
+  }
+
+  async unassignRequest(requestId: number): Promise<MaintenanceRequest> {
+    const [request] = await db.update(maintenanceRequests)
+      .set({ assignedTo: null })
+      .where(eq(maintenanceRequests.id, requestId))
+      .returning();
+    return request;
+  }
+
+  async getRequestByTrackingCode(code: string): Promise<MaintenanceRequest | undefined> {
+    const [request] = await db.select().from(maintenanceRequests).where(eq(maintenanceRequests.trackingCode, code));
     return request;
   }
 }

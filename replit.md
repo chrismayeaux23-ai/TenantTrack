@@ -17,9 +17,11 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - Dashboard with status badges (Green=Completed, Red=Emergency, Yellow=In-Progress)
 - Printable flyer template at `/flyer/:propertyId` for landlords to post on tenant doors
 - Stripe subscription billing with 3 tiers: Starter ($19), Growth ($39), Pro ($59)
+- Maintenance staff management: landlords add/remove team members, assign requests to staff
+- Tenant tracking: each request gets a unique 8-char tracking code; tenants check status at `/track/:code`
 
 ## File Structure
-- `shared/schema.ts` - Drizzle schema (properties, maintenanceRequests tables)
+- `shared/schema.ts` - Drizzle schema (properties, maintenanceRequests, maintenanceStaff tables)
 - `shared/models/auth.ts` - Replit Auth schema (users, sessions tables) + Stripe fields
 - `shared/routes.ts` - Shared route types
 - `server/routes.ts` - API routes (app + Stripe checkout/portal/plans)
@@ -30,9 +32,9 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - `server/db.ts` - Database connection
 - `server/replit_integrations/` - Auth + Object Storage integrations
 - `client/src/App.tsx` - Routes and app wrapper
-- `client/src/pages/` - Landing, Dashboard, Properties, TenantReport, PrintFlyer, Pricing
+- `client/src/pages/` - Landing, Dashboard, Properties, TenantReport, PrintFlyer, Pricing, Staff, TrackRequest
 - `client/src/components/layout/AppLayout.tsx` - Sidebar layout for landlord pages
-- `client/src/hooks/` - Auth, properties, requests, upload hooks
+- `client/src/hooks/` - Auth, properties, requests, staff, upload hooks
 
 ## Routes
 - `/` - Landing (unauthenticated) or Dashboard (authenticated)
@@ -40,6 +42,8 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - `/pricing` - Subscription plans and billing (protected)
 - `/flyer/:propertyId` - Printable flyer with QR code (protected)
 - `/report/:propertyId` - Public tenant maintenance form
+- `/staff` - Maintenance staff management (protected)
+- `/track/:code` - Public request tracking page (no auth)
 
 ## Stripe Setup
 - Products seeded via `server/seed-products.ts`

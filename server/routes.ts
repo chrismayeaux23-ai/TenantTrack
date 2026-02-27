@@ -109,6 +109,104 @@ export async function registerRoutes(
     }
   });
 
+  app.get(api.staff.list.path, isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const staff = await storage.getStaff(userId);
+      res.json(staff);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch staff" });
+    }
+  });
+
+  app.post(api.staff.create.path, isAuthenticated, async (req: any, res) => {
+    try {
+      const input = api.staff.create.input.parse(req.body);
+      const userId = req.user.claims.sub;
+      const staff = await storage.createStaff({ ...input, landlordId: userId });
+      res.status(201).json(staff);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({
+          message: err.errors[0].message,
+          field: err.errors[0].path.join('.'),
+        });
+      }
+      res.status(500).json({ message: "Failed to create staff" });
+    }
+  });
+
+  app.delete('/api/staff/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const staffList = await storage.getStaff(userId);
+      const staffMember = staffList.find(s => s.id === Number(req.params.id));
+      if (!staffMember) {
+        return res.status(404).json({ message: "Staff member not found" });
+      }
+      await storage.deleteStaff(Number(req.params.id));
+      res.json({ message: "Staff member deleted" });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to delete staff member" });
+    }
+  });
+
+  app.patch('/api/requests/:id/assign', isAuthenticated, async (req: any, res) => {
+    try {
+      const input = api.requests.assign.input.parse(req.body);
+      const userId = req.user.claims.sub;
+
+      const landlordRequests = await storage.getRequestsByLandlord(userId);
+      const ownedRequest = landlordRequests.find(r => r.id === Number(req.params.id));
+      if (!ownedRequest) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+
+      if (input.staffId === 0) {
+        const request = await storage.unassignRequest(Number(req.params.id));
+        return res.json(request);
+      }
+
+      const staffList = await storage.getStaff(userId);
+      const staffMember = staffList.find(s => s.id === input.staffId);
+      if (!staffMember) {
+        return res.status(400).json({ message: "Staff member does not belong to your team" });
+      }
+      const request = await storage.assignRequest(Number(req.params.id), input.staffId);
+      res.json(request);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({
+          message: err.errors[0].message,
+          field: err.errors[0].path.join('.'),
+        });
+      }
+      res.status(500).json({ message: "Failed to assign request" });
+    }
+  });
+
+  app.get('/api/requests/track/:code', async (req, res) => {
+    try {
+      const request = await storage.getRequestByTrackingCode(req.params.code);
+      if (!request) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+      const property = await storage.getProperty(request.propertyId);
+      res.json({
+        id: request.id,
+        unitNumber: request.unitNumber,
+        issueType: request.issueType,
+        description: request.description,
+        urgency: request.urgency,
+        status: request.status,
+        createdAt: request.createdAt ? request.createdAt.toISOString() : null,
+        propertyName: property?.name || "Unknown Property",
+      });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to track request" });
+    }
+  });
+
   app.get('/api/stripe/publishable-key', async (_req, res) => {
     try {
       const key = await getStripePublishableKey();

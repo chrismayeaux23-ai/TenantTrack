@@ -2,19 +2,22 @@ import React, { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useRequests } from "@/hooks/use-requests";
 import { useProperties } from "@/hooks/use-properties";
+import { useStaff, useAssignRequest } from "@/hooks/use-staff";
 import { Badge } from "@/components/ui/Badge";
 import { format } from "date-fns";
 import { Dialog } from "@/components/ui/Dialog";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { useUpdateRequestStatus } from "@/hooks/use-requests";
-import { Loader2, AlertCircle, Phone, Mail, MapPin, Search } from "lucide-react";
+import { Loader2, AlertCircle, Phone, Mail, MapPin, Search, UserCheck } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 
 export default function Dashboard() {
   const { data: requests, isLoading: reqLoading } = useRequests();
   const { data: properties, isLoading: propLoading } = useProperties();
+  const { data: staffList } = useStaff();
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateRequestStatus();
+  const { mutate: assignRequest } = useAssignRequest();
   
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,6 +52,16 @@ export default function Dashboard() {
   const getPropertyName = (propId: number) => {
     return properties?.find(p => p.id === propId)?.name || 'Unknown Property';
   };
+
+  const getStaffName = (staffId: number | null) => {
+    if (!staffId || !staffList) return null;
+    return staffList.find(s => s.id === staffId)?.name || null;
+  };
+
+  const staffOptions = [
+    { label: "Unassigned", value: "0" },
+    ...(staffList || []).map(s => ({ label: s.name, value: String(s.id) })),
+  ];
 
   let filteredRequests = requests || [];
   
@@ -156,18 +169,38 @@ export default function Dashboard() {
                   </div>
                 </div>
 
+                {getStaffName(request.assignedTo) && (
+                  <div className="flex items-center gap-2 mb-3 text-sm text-muted-foreground" data-testid={`text-assigned-staff-${request.id}`}>
+                    <UserCheck className="h-4 w-4 text-primary" />
+                    <span>Assigned to <strong className="text-foreground">{getStaffName(request.assignedTo)}</strong></span>
+                  </div>
+                )}
+
                 <div className="flex gap-2">
                   <Select 
                     value={request.status}
                     onChange={(e) => updateStatus({ id: request.id, data: { status: e.target.value } })}
                     disabled={isUpdating}
-                    className="h-10 text-sm py-1 bg-muted border-none"
+                    className="h-10 text-sm py-1 bg-muted border-none flex-1"
                     options={[
                       { label: "Mark New", value: "New" },
                       { label: "Mark In-Progress", value: "In-Progress" },
                       { label: "Mark Completed", value: "Completed" }
                     ]}
+                    data-testid={`select-status-${request.id}`}
                   />
+                  {staffList && staffList.length > 0 && (
+                    <Select
+                      value={String(request.assignedTo || 0)}
+                      onChange={(e) => {
+                        const staffId = parseInt(e.target.value);
+                        assignRequest({ requestId: request.id, staffId });
+                      }}
+                      className="h-10 text-sm py-1 bg-muted border-none flex-1"
+                      options={staffOptions}
+                      data-testid={`select-assign-${request.id}`}
+                    />
+                  )}
                 </div>
               </div>
             </div>

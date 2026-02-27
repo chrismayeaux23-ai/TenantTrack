@@ -14,6 +14,8 @@ import Properties from "@/pages/Properties";
 import TenantReport from "@/pages/TenantReport";
 import PrintFlyer from "@/pages/PrintFlyer";
 import Pricing from "@/pages/Pricing";
+import Staff from "@/pages/Staff";
+import TrackRequest from "@/pages/TrackRequest";
 
 // Protected Route Wrapper
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
@@ -51,6 +53,10 @@ function Router() {
       {/* Public Tenant Route - Open to anyone with the QR code */}
       <Route path="/report/:propertyId" component={TenantReport} />
       
+      {/* Public Tracking Route */}
+      <Route path="/track/:code" component={TrackRequest} />
+      <Route path="/track" component={TrackRequest} />
+      
       {/* Printable Flyer Route */}
       <Route path="/flyer/:propertyId">
         <ProtectedRoute component={PrintFlyer} />
@@ -66,6 +72,10 @@ function Router() {
         <ProtectedRoute component={Properties} />
       </Route>
       
+      <Route path="/staff">
+        <ProtectedRoute component={Staff} />
+      </Route>
+
       <Route path="/pricing">
         <ProtectedRoute component={Pricing} />
       </Route>
