@@ -24,16 +24,18 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - Auto-seeding of Stripe products on startup if they don't exist in the connected Stripe account
 - Maintenance staff management: landlords add/remove team members, assign requests to staff
 - Tenant tracking: each request gets a unique 8-char tracking code; tenants check status at `/track/:code`
+- Repair cost tracking: log costs per request (description, amount, vendor), view/export reports by date/property as CSV
+- Recurring maintenance scheduling: create tasks (HVAC, smoke detectors, etc.) with frequency, auto-calculates next due date on completion, overdue highlighting
 - Plan-based feature gating: property limits (trial=2, starter=5, growth/pro=unlimited), staff assignment (growth+)
 - Landlord profile page: edit name, phone, company name
 - Terms & Conditions and Privacy Policy pages
 
 ## File Structure
-- `shared/schema.ts` - Drizzle schema (properties, maintenanceRequests, requestNotes, maintenanceStaff tables)
+- `shared/schema.ts` - Drizzle schema (properties, maintenanceRequests, requestNotes, maintenanceStaff, repairCosts, recurringTasks tables)
 - `shared/models/auth.ts` - Replit Auth schema (users, sessions tables) + Stripe fields + phone, companyName
 - `shared/routes.ts` - Shared route types
 - `server/routes.ts` - API routes (app + Stripe checkout/portal/plans + profile + notes + tenants + stats)
-- `server/storage.ts` - Storage interface (CRUD for properties, requests, staff, notes)
+- `server/storage.ts` - Storage interface (CRUD for properties, requests, staff, notes, costs, recurring tasks)
 - `server/stripeClient.ts` - Stripe client using Replit connector credentials
 - `server/webhookHandlers.ts` - Stripe webhook processing via stripe-replit-sync
 - `server/seed-products.ts` - Script to create Stripe products/prices
@@ -41,8 +43,8 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - `server/db.ts` - Database connection
 - `server/replit_integrations/` - Auth + Object Storage integrations
 - `client/src/App.tsx` - Routes and app wrapper
-- `client/src/pages/` - Landing, Dashboard, Properties, TenantReport, PrintFlyer, Pricing, Staff, TrackRequest, Profile, Terms, Privacy, Tenants, Billing
-- `client/src/components/layout/AppLayout.tsx` - Sidebar layout with Requests, Properties, Tenants, Staff, Billing, Pricing nav
+- `client/src/pages/` - Landing, Dashboard, Properties, TenantReport, PrintFlyer, Pricing, Staff, TrackRequest, Profile, Terms, Privacy, Tenants, Billing, CostTracking, RecurringMaintenance
+- `client/src/components/layout/AppLayout.tsx` - Sidebar layout with Requests, Properties, Tenants, Staff, Costs, Scheduled, Billing, Pricing nav
 - `client/src/hooks/` - Auth, properties, requests, staff, upload, subscription hooks
 
 ## Routes
@@ -50,6 +52,8 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - `/properties` - Property management (protected)
 - `/tenants` - Tenant directory (protected)
 - `/staff` - Maintenance staff management (protected, Growth+ plan)
+- `/costs` - Repair cost tracking & reports (protected)
+- `/scheduled` - Recurring maintenance scheduling (protected)
 - `/billing` - Billing & subscription management (protected)
 - `/pricing` - Subscription plans comparison (protected)
 - `/profile` - Landlord profile editing (protected)
@@ -66,6 +70,16 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - `GET /api/tenants` - Get tenant directory (aggregated from requests)
 - `GET /api/notes/:requestId` - Get notes for a request
 - `POST /api/notes/:requestId` - Add a note to a request
+- `GET /api/costs/report` - Get cost report (query: startDate, endDate, propertyId)
+- `GET /api/costs/export` - Export costs as CSV (query: startDate, endDate, propertyId)
+- `GET /api/costs/:requestId` - Get costs for a specific request
+- `POST /api/costs/:requestId` - Add a cost to a request
+- `DELETE /api/costs/:costId` - Delete a cost entry
+- `GET /api/recurring` - Get all recurring tasks
+- `POST /api/recurring` - Create a recurring task
+- `PATCH /api/recurring/:id` - Update a recurring task
+- `POST /api/recurring/:id/complete` - Mark task complete + auto-schedule next
+- `DELETE /api/recurring/:id` - Delete a recurring task
 - `GET /api/stripe/plans` - Get subscription plans (filtered by tier metadata)
 - `GET /api/stripe/subscription` - Get current subscription status
 - `POST /api/stripe/checkout` - Create Stripe checkout session

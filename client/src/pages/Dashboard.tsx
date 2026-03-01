@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { useUpdateRequestStatus } from "@/hooks/use-requests";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, AlertCircle, Phone, Mail, MapPin, Search, UserCheck, MessageSquare, Send, ClipboardList, AlertTriangle, CheckCircle2, Clock } from "lucide-react";
+import { Loader2, AlertCircle, Phone, Mail, MapPin, Search, UserCheck, MessageSquare, Send, ClipboardList, AlertTriangle, CheckCircle2, Clock, DollarSign, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 
 interface DashboardStats {
@@ -20,6 +20,130 @@ interface DashboardStats {
   completed: number;
   emergencies: number;
   totalProperties: number;
+}
+
+function RequestCosts({ requestId }: { requestId: number }) {
+  const [desc, setDesc] = useState("");
+  const [amount, setAmount] = useState("");
+  const [vendor, setVendor] = useState("");
+  const queryClient = useQueryClient();
+  const { data: costs, isLoading } = useQuery<any[]>({
+    queryKey: ["/api/costs", requestId],
+    queryFn: async () => {
+      const res = await fetch(`/api/costs/${requestId}`, { credentials: "include" });
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+  });
+
+  const addCost = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/costs/${requestId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          description: desc,
+          amount: Math.round(parseFloat(amount) * 100),
+          vendor: vendor || undefined,
+        }),
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+    onSuccess: () => {
+      setDesc("");
+      setAmount("");
+      setVendor("");
+      queryClient.invalidateQueries({ queryKey: ["/api/costs", requestId] });
+    },
+  });
+
+  const deleteCost = useMutation({
+    mutationFn: async (costId: number) => {
+      const res = await fetch(`/api/costs/${costId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/costs", requestId] });
+    },
+  });
+
+  const totalCents = (costs || []).reduce((s: number, c: any) => s + c.amount, 0);
+  const formatCents = (c: number) => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(c / 100);
+
+  return (
+    <div className="mt-3 pt-3 border-t border-border">
+      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-3 flex items-center gap-1">
+        <DollarSign className="h-3 w-3" /> Costs {totalCents > 0 && <span className="text-primary ml-1">{formatCents(totalCents)}</span>}
+      </p>
+      {isLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+      ) : (
+        <div className="space-y-2 max-h-32 overflow-y-auto mb-3">
+          {(costs || []).length === 0 && (
+            <p className="text-xs text-muted-foreground">No costs logged</p>
+          )}
+          {(costs || []).map((cost: any) => (
+            <div key={cost.id} className="bg-muted/50 rounded-lg p-2 flex items-center justify-between gap-2" data-testid={`cost-entry-${cost.id}`}>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs text-foreground truncate">{cost.description}</p>
+                <p className="text-xs text-muted-foreground">
+                  {cost.vendor && <>{cost.vendor} &middot; </>}
+                  {formatCents(cost.amount)}
+                </p>
+              </div>
+              <button
+                onClick={() => deleteCost.mutate(cost.id)}
+                className="text-muted-foreground hover:text-red-400 p-1 shrink-0"
+                data-testid={`button-delete-cost-${cost.id}`}
+              >
+                <Trash2 className="h-3 w-3" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="flex gap-2 flex-wrap">
+        <Input
+          placeholder="Description"
+          className="text-sm h-8 bg-muted/50 flex-1 min-w-[100px]"
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
+          data-testid={`input-cost-desc-${requestId}`}
+        />
+        <Input
+          placeholder="$0.00"
+          type="number"
+          step="0.01"
+          min="0"
+          className="text-sm h-8 bg-muted/50 w-20"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          data-testid={`input-cost-amount-${requestId}`}
+        />
+        <Input
+          placeholder="Vendor"
+          className="text-sm h-8 bg-muted/50 w-24"
+          value={vendor}
+          onChange={(e) => setVendor(e.target.value)}
+          data-testid={`input-cost-vendor-${requestId}`}
+        />
+        <Button
+          size="sm"
+          className="h-8 px-3"
+          disabled={!desc.trim() || !amount || parseFloat(amount) <= 0 || addCost.isPending}
+          onClick={() => addCost.mutate()}
+          data-testid={`button-add-cost-${requestId}`}
+        >
+          <DollarSign className="h-3 w-3" />
+        </Button>
+      </div>
+    </div>
+  );
 }
 
 function RequestNotes({ requestId }: { requestId: number }) {
@@ -363,7 +487,12 @@ export default function Dashboard() {
                   )}
                 </div>
 
-                {expandedNotes.has(request.id) && <RequestNotes requestId={request.id} />}
+                {expandedNotes.has(request.id) && (
+                  <>
+                    <RequestNotes requestId={request.id} />
+                    <RequestCosts requestId={request.id} />
+                  </>
+                )}
               </div>
             </div>
           ))}

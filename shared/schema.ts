@@ -1,4 +1,4 @@
-import { pgTable, text, serial, varchar, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, varchar, timestamp, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -44,10 +44,36 @@ export const maintenanceStaff = pgTable("maintenance_staff", {
   phone: text("phone"),
 });
 
+export const repairCosts = pgTable("repair_costs", {
+  id: serial("id").primaryKey(),
+  requestId: integer("request_id").notNull(),
+  landlordId: varchar("landlord_id").notNull(),
+  description: text("description").notNull(),
+  amount: integer("amount").notNull(),
+  vendor: text("vendor"),
+  receiptUrl: text("receipt_url"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const recurringTasks = pgTable("recurring_tasks", {
+  id: serial("id").primaryKey(),
+  landlordId: varchar("landlord_id").notNull(),
+  propertyId: integer("property_id").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  frequency: text("frequency").notNull(),
+  nextDueDate: timestamp("next_due_date").notNull(),
+  lastCompletedDate: timestamp("last_completed_date"),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertPropertySchema = createInsertSchema(properties).omit({ id: true, createdAt: true });
 export const insertMaintenanceRequestSchema = createInsertSchema(maintenanceRequests).omit({ id: true, createdAt: true, assignedTo: true, trackingCode: true });
 export const insertMaintenanceStaffSchema = createInsertSchema(maintenanceStaff).omit({ id: true });
 export const insertRequestNoteSchema = createInsertSchema(requestNotes).omit({ id: true, createdAt: true });
+export const insertRepairCostSchema = createInsertSchema(repairCosts).omit({ id: true, createdAt: true });
+export const insertRecurringTaskSchema = createInsertSchema(recurringTasks).omit({ id: true, createdAt: true });
 
 export type Property = typeof properties.$inferSelect;
 export type InsertProperty = z.infer<typeof insertPropertySchema>;
@@ -60,6 +86,12 @@ export type InsertMaintenanceStaff = z.infer<typeof insertMaintenanceStaffSchema
 
 export type RequestNote = typeof requestNotes.$inferSelect;
 export type InsertRequestNote = z.infer<typeof insertRequestNoteSchema>;
+
+export type RepairCost = typeof repairCosts.$inferSelect;
+export type InsertRepairCost = z.infer<typeof insertRepairCostSchema>;
+
+export type RecurringTask = typeof recurringTasks.$inferSelect;
+export type InsertRecurringTask = z.infer<typeof insertRecurringTaskSchema>;
 
 export type CreatePropertyRequest = Omit<InsertProperty, "landlordId">;
 export type CreateMaintenanceRequest = Omit<InsertMaintenanceRequest, "status">;

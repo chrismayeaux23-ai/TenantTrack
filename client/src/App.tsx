@@ -20,6 +20,8 @@ import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import Tenants from "@/pages/Tenants";
 import Billing from "@/pages/Billing";
+import CostTracking from "@/pages/CostTracking";
+import RecurringMaintenance from "@/pages/RecurringMaintenance";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -78,6 +80,14 @@ function Router() {
 
       <Route path="/billing">
         <ProtectedRoute component={Billing} />
+      </Route>
+
+      <Route path="/costs">
+        <ProtectedRoute component={CostTracking} />
+      </Route>
+
+      <Route path="/scheduled">
+        <ProtectedRoute component={RecurringMaintenance} />
       </Route>
 
       <Route path="/pricing">

@@ -8,8 +8,8 @@ import { registerObjectStorageRoutes } from "./replit_integrations/object_storag
 import { getUncachableStripeClient, getStripePublishableKey } from "./stripeClient";
 import { db } from "./db";
 import { users } from "@shared/models/auth";
-import { eq, sql, desc } from "drizzle-orm";
-import { properties, maintenanceRequests } from "@shared/schema";
+import { eq, sql, desc, and, gte, lte } from "drizzle-orm";
+import { properties, maintenanceRequests, repairCosts, recurringTasks } from "@shared/schema";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -497,6 +497,273 @@ export async function registerRoutes(
       res.json(tenants);
     } catch (err) {
       res.status(500).json({ message: "Failed to fetch tenants" });
+    }
+  });
+
+  // === REPAIR COSTS ROUTES ===
+  // Static routes MUST come before parameterized :requestId route
+  app.get('/api/costs/report', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { startDate, endDate, propertyId } = req.query;
+      const costs = await storage.getCostsByLandlord(userId);
+      const landlordRequests = await storage.getRequestsByLandlord(userId);
+      const props = await storage.getProperties(userId);
+      const requestMap = new Map(landlordRequests.map(r => [r.id, r]));
+      const propMap = new Map(props.map(p => [p.id, p]));
+
+      let filtered = costs.filter(c => {
+        const request = requestMap.get(c.requestId);
+        if (!request) return false;
+        if (propertyId && request.propertyId !== Number(propertyId)) return false;
+        if (startDate && c.createdAt && c.createdAt < new Date(startDate as string)) return false;
+        if (endDate && c.createdAt && c.createdAt > new Date(endDate as string + 'T23:59:59')) return false;
+        return true;
+      });
+
+      const grouped: Record<string, { propertyName: string; costs: any[]; total: number }> = {};
+      for (const cost of filtered) {
+        const request = requestMap.get(cost.requestId)!;
+        const prop = propMap.get(request.propertyId);
+        const propName = prop?.name || 'Unknown';
+        if (!grouped[propName]) grouped[propName] = { propertyName: propName, costs: [], total: 0 };
+        grouped[propName].costs.push({
+          ...cost,
+          unitNumber: request.unitNumber,
+          issueType: request.issueType,
+          requestDescription: request.description,
+        });
+        grouped[propName].total += cost.amount;
+      }
+
+      const totalSpent = filtered.reduce((s, c) => s + c.amount, 0);
+      const uniqueRequests = new Set(filtered.map(c => c.requestId)).size;
+      res.json({
+        totalSpent,
+        averagePerRequest: uniqueRequests > 0 ? Math.round(totalSpent / uniqueRequests) : 0,
+        numberOfRepairs: filtered.length,
+        byProperty: Object.values(grouped),
+      });
+    } catch (err) {
+      console.error("Cost report error:", err);
+      res.status(500).json({ message: "Failed to generate cost report" });
+    }
+  });
+
+  app.get('/api/costs/export', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { startDate, endDate, propertyId } = req.query;
+      const costs = await storage.getCostsByLandlord(userId);
+      const landlordRequests = await storage.getRequestsByLandlord(userId);
+      const props = await storage.getProperties(userId);
+      const requestMap = new Map(landlordRequests.map(r => [r.id, r]));
+      const propMap = new Map(props.map(p => [p.id, p]));
+
+      let filtered = costs.filter(c => {
+        const request = requestMap.get(c.requestId);
+        if (!request) return false;
+        if (propertyId && request.propertyId !== Number(propertyId)) return false;
+        if (startDate && c.createdAt && c.createdAt < new Date(startDate as string)) return false;
+        if (endDate && c.createdAt && c.createdAt > new Date(endDate as string + 'T23:59:59')) return false;
+        return true;
+      });
+
+      const rows = [['Date', 'Property', 'Unit', 'Issue', 'Description', 'Vendor', 'Amount'].join(',')];
+      for (const cost of filtered) {
+        const request = requestMap.get(cost.requestId)!;
+        const prop = propMap.get(request.propertyId);
+        const escapeCsv = (v: string) => `"${(v || '').replace(/"/g, '""')}"`;
+        rows.push([
+          cost.createdAt ? new Date(cost.createdAt).toISOString().split('T')[0] : '',
+          escapeCsv(prop?.name || 'Unknown'),
+          escapeCsv(request.unitNumber),
+          escapeCsv(request.issueType),
+          escapeCsv(cost.description),
+          escapeCsv(cost.vendor || ''),
+          (cost.amount / 100).toFixed(2),
+        ].join(','));
+      }
+
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', 'attachment; filename="cost-report.csv"');
+      res.send(rows.join('\n'));
+    } catch (err) {
+      console.error("Cost export error:", err);
+      res.status(500).json({ message: "Failed to export costs" });
+    }
+  });
+
+  app.get('/api/costs/:requestId', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const requestId = Number(req.params.requestId);
+      const landlordRequests = await storage.getRequestsByLandlord(userId);
+      if (!landlordRequests.find(r => r.id === requestId)) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+      const costs = await storage.getCostsByRequest(requestId);
+      res.json(costs);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch costs" });
+    }
+  });
+
+  app.post('/api/costs/:requestId', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const requestId = Number(req.params.requestId);
+      const landlordRequests = await storage.getRequestsByLandlord(userId);
+      if (!landlordRequests.find(r => r.id === requestId)) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+      const schema = z.object({
+        description: z.string().min(1).max(500),
+        amount: z.number().int().positive(),
+        vendor: z.string().max(200).optional(),
+        receiptUrl: z.string().url().optional(),
+      });
+      const input = schema.parse(req.body);
+      const cost = await storage.createCost({
+        requestId,
+        landlordId: userId,
+        description: input.description,
+        amount: input.amount,
+        vendor: input.vendor || null,
+        receiptUrl: input.receiptUrl || null,
+      });
+      res.status(201).json(cost);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to create cost" });
+    }
+  });
+
+  app.delete('/api/costs/:costId', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const costs = await storage.getCostsByLandlord(userId);
+      const cost = costs.find(c => c.id === Number(req.params.costId));
+      if (!cost) {
+        return res.status(404).json({ message: "Cost not found" });
+      }
+      await storage.deleteCost(Number(req.params.costId));
+      res.json({ message: "Cost deleted" });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to delete cost" });
+    }
+  });
+
+  // === RECURRING TASKS ROUTES ===
+  app.get('/api/recurring', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const tasks = await storage.getRecurringTasks(userId);
+      res.json(tasks);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch recurring tasks" });
+    }
+  });
+
+  app.post('/api/recurring', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const schema = z.object({
+        propertyId: z.number().int().positive(),
+        title: z.string().min(1).max(200),
+        description: z.string().max(1000).optional(),
+        frequency: z.enum(['weekly', 'biweekly', 'monthly', 'quarterly', 'biannually', 'annually']),
+        nextDueDate: z.coerce.date(),
+      });
+      const input = schema.parse(req.body);
+      const props = await storage.getProperties(userId);
+      if (!props.find(p => p.id === input.propertyId)) {
+        return res.status(400).json({ message: "Property not found" });
+      }
+      const task = await storage.createRecurringTask({
+        landlordId: userId,
+        propertyId: input.propertyId,
+        title: input.title,
+        description: input.description || null,
+        frequency: input.frequency,
+        nextDueDate: input.nextDueDate,
+        lastCompletedDate: null,
+        isActive: true,
+      });
+      res.status(201).json(task);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to create recurring task" });
+    }
+  });
+
+  app.patch('/api/recurring/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const taskId = Number(req.params.id);
+      const task = await storage.getRecurringTask(taskId);
+      if (!task || task.landlordId !== userId) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+      const schema = z.object({
+        title: z.string().min(1).max(200).optional(),
+        description: z.string().max(1000).optional(),
+        frequency: z.enum(['weekly', 'biweekly', 'monthly', 'quarterly', 'biannually', 'annually']).optional(),
+        nextDueDate: z.coerce.date().optional(),
+        isActive: z.boolean().optional(),
+      });
+      const input = schema.parse(req.body);
+      const updated = await storage.updateRecurringTask(taskId, input);
+      res.json(updated);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: err.errors[0].message });
+      }
+      res.status(500).json({ message: "Failed to update recurring task" });
+    }
+  });
+
+  app.post('/api/recurring/:id/complete', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const taskId = Number(req.params.id);
+      const task = await storage.getRecurringTask(taskId);
+      if (!task || task.landlordId !== userId) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+      const now = new Date();
+      const next = new Date(now);
+      switch (task.frequency) {
+        case 'weekly': next.setDate(next.getDate() + 7); break;
+        case 'biweekly': next.setDate(next.getDate() + 14); break;
+        case 'monthly': next.setMonth(next.getMonth() + 1); break;
+        case 'quarterly': next.setMonth(next.getMonth() + 3); break;
+        case 'biannually': next.setMonth(next.getMonth() + 6); break;
+        case 'annually': next.setFullYear(next.getFullYear() + 1); break;
+      }
+      const updated = await storage.completeRecurringTask(taskId, next);
+      res.json(updated);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to complete recurring task" });
+    }
+  });
+
+  app.delete('/api/recurring/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const taskId = Number(req.params.id);
+      const task = await storage.getRecurringTask(taskId);
+      if (!task || task.landlordId !== userId) {
+        return res.status(404).json({ message: "Task not found" });
+      }
+      await storage.deleteRecurringTask(taskId);
+      res.json({ message: "Task deleted" });
+    } catch (err) {
+      res.status(500).json({ message: "Failed to delete recurring task" });
     }
   });
 

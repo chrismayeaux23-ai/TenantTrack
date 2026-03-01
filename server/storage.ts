@@ -1,11 +1,13 @@
 import { randomBytes } from "crypto";
 import { db } from "./db";
 import {
-  properties, maintenanceRequests, maintenanceStaff, requestNotes,
+  properties, maintenanceRequests, maintenanceStaff, requestNotes, repairCosts, recurringTasks,
   type Property, type InsertProperty,
   type MaintenanceRequest, type InsertMaintenanceRequest,
   type MaintenanceStaff, type InsertMaintenanceStaff,
   type RequestNote, type InsertRequestNote,
+  type RepairCost, type InsertRepairCost,
+  type RecurringTask, type InsertRecurringTask,
 } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 
@@ -32,6 +34,18 @@ export interface IStorage {
 
   getNotesByRequest(requestId: number): Promise<RequestNote[]>;
   createNote(note: InsertRequestNote): Promise<RequestNote>;
+
+  getCostsByRequest(requestId: number): Promise<RepairCost[]>;
+  getCostsByLandlord(landlordId: string): Promise<RepairCost[]>;
+  createCost(cost: InsertRepairCost): Promise<RepairCost>;
+  deleteCost(id: number): Promise<void>;
+
+  getRecurringTasks(landlordId: string): Promise<RecurringTask[]>;
+  getRecurringTask(id: number): Promise<RecurringTask | undefined>;
+  createRecurringTask(task: InsertRecurringTask): Promise<RecurringTask>;
+  updateRecurringTask(id: number, data: Partial<InsertRecurringTask>): Promise<RecurringTask>;
+  completeRecurringTask(id: number, nextDueDate: Date): Promise<RecurringTask>;
+  deleteRecurringTask(id: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -54,7 +68,6 @@ export class DatabaseStorage implements IStorage {
       .from(maintenanceRequests)
       .innerJoin(properties, eq(maintenanceRequests.propertyId, properties.id))
       .where(eq(properties.landlordId, landlordId));
-
     return rows.map(r => r.request);
   }
 
@@ -75,19 +88,14 @@ export class DatabaseStorage implements IStorage {
         return request;
       } catch (err: any) {
         const isUniqueViolation = err?.code === '23505' && err?.constraint?.includes('tracking_code');
-        if (!isUniqueViolation || attempt === MAX_RETRIES - 1) {
-          throw err;
-        }
+        if (!isUniqueViolation || attempt === MAX_RETRIES - 1) throw err;
       }
     }
     throw new Error("Failed to generate unique tracking code");
   }
 
   async updateRequestStatus(id: number, status: string): Promise<MaintenanceRequest> {
-    const [request] = await db.update(maintenanceRequests)
-      .set({ status })
-      .where(eq(maintenanceRequests.id, id))
-      .returning();
+    const [request] = await db.update(maintenanceRequests).set({ status }).where(eq(maintenanceRequests.id, id)).returning();
     return request;
   }
 
@@ -105,18 +113,12 @@ export class DatabaseStorage implements IStorage {
   }
 
   async assignRequest(requestId: number, staffId: number): Promise<MaintenanceRequest> {
-    const [request] = await db.update(maintenanceRequests)
-      .set({ assignedTo: staffId })
-      .where(eq(maintenanceRequests.id, requestId))
-      .returning();
+    const [request] = await db.update(maintenanceRequests).set({ assignedTo: staffId }).where(eq(maintenanceRequests.id, requestId)).returning();
     return request;
   }
 
   async unassignRequest(requestId: number): Promise<MaintenanceRequest> {
-    const [request] = await db.update(maintenanceRequests)
-      .set({ assignedTo: null })
-      .where(eq(maintenanceRequests.id, requestId))
-      .returning();
+    const [request] = await db.update(maintenanceRequests).set({ assignedTo: null }).where(eq(maintenanceRequests.id, requestId)).returning();
     return request;
   }
 
@@ -126,14 +128,60 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getNotesByRequest(requestId: number): Promise<RequestNote[]> {
-    return await db.select().from(requestNotes)
-      .where(eq(requestNotes.requestId, requestId))
-      .orderBy(desc(requestNotes.createdAt));
+    return await db.select().from(requestNotes).where(eq(requestNotes.requestId, requestId)).orderBy(desc(requestNotes.createdAt));
   }
 
   async createNote(note: InsertRequestNote): Promise<RequestNote> {
     const [created] = await db.insert(requestNotes).values(note).returning();
     return created;
+  }
+
+  async getCostsByRequest(requestId: number): Promise<RepairCost[]> {
+    return await db.select().from(repairCosts).where(eq(repairCosts.requestId, requestId)).orderBy(desc(repairCosts.createdAt));
+  }
+
+  async getCostsByLandlord(landlordId: string): Promise<RepairCost[]> {
+    return await db.select().from(repairCosts).where(eq(repairCosts.landlordId, landlordId)).orderBy(desc(repairCosts.createdAt));
+  }
+
+  async createCost(cost: InsertRepairCost): Promise<RepairCost> {
+    const [created] = await db.insert(repairCosts).values(cost).returning();
+    return created;
+  }
+
+  async deleteCost(id: number): Promise<void> {
+    await db.delete(repairCosts).where(eq(repairCosts.id, id));
+  }
+
+  async getRecurringTasks(landlordId: string): Promise<RecurringTask[]> {
+    return await db.select().from(recurringTasks).where(eq(recurringTasks.landlordId, landlordId)).orderBy(recurringTasks.nextDueDate);
+  }
+
+  async getRecurringTask(id: number): Promise<RecurringTask | undefined> {
+    const [task] = await db.select().from(recurringTasks).where(eq(recurringTasks.id, id));
+    return task;
+  }
+
+  async createRecurringTask(task: InsertRecurringTask): Promise<RecurringTask> {
+    const [created] = await db.insert(recurringTasks).values(task).returning();
+    return created;
+  }
+
+  async updateRecurringTask(id: number, data: Partial<InsertRecurringTask>): Promise<RecurringTask> {
+    const [updated] = await db.update(recurringTasks).set(data).where(eq(recurringTasks.id, id)).returning();
+    return updated;
+  }
+
+  async completeRecurringTask(id: number, nextDueDate: Date): Promise<RecurringTask> {
+    const [updated] = await db.update(recurringTasks)
+      .set({ lastCompletedDate: new Date(), nextDueDate })
+      .where(eq(recurringTasks.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteRecurringTask(id: number): Promise<void> {
+    await db.delete(recurringTasks).where(eq(recurringTasks.id, id));
   }
 }
 
