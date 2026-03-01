@@ -20,27 +20,43 @@ async function seedStripeProducts() {
     const { getUncachableStripeClient } = await import('./stripeClient');
     const stripe = await getUncachableStripeClient();
     const plans = [
-      { name: 'Starter Package', description: 'Up to 5 properties. Includes QR tenant submission and basic request tracking.', metadata: { tier: 'starter', maxProperties: '5' }, priceAmount: 1900 },
-      { name: 'Growth Package', description: 'Unlimited properties. Includes priority notifications, exportable repair logs, status updates for tenants, and photo uploads.', metadata: { tier: 'growth', maxProperties: 'unlimited' }, priceAmount: 3900 },
-      { name: 'Pro Package', description: 'Unlimited properties. Includes analytics dashboard, maintenance cost tracking, and custom branding.', metadata: { tier: 'pro', maxProperties: 'unlimited' }, priceAmount: 5900 },
+      { name: 'Starter', description: 'For small landlords (1–5 units). QR maintenance system, basic dashboard, email notifications.', metadata: { tier: 'starter', maxProperties: '5' }, priceAmount: 2900 },
+      { name: 'Growth', description: 'For 6–25 units. Priority request highlighting, maintenance history tracking, basic reporting, custom QR per unit.', metadata: { tier: 'growth', maxProperties: '25' }, priceAmount: 5900 },
+      { name: 'Pro', description: 'For 25+ units. Advanced reporting, export features, priority support, early access features.', metadata: { tier: 'pro', maxProperties: 'unlimited' }, priceAmount: 9900 },
     ];
-    for (const plan of plans) {
-      const existing = await stripe.products.search({ query: `name:'${plan.name}'` });
-      let productId: string;
-      if (existing.data.length > 0) {
-        productId = existing.data[0].id;
-        if (!existing.data[0].metadata?.tier) {
-          await stripe.products.update(productId, { metadata: plan.metadata });
+    const oldNames = ['Starter Package', 'Growth Package', 'Pro Package'];
+    for (const oldName of oldNames) {
+      try {
+        const old = await stripe.products.search({ query: `name:'${oldName}'` });
+        for (const p of old.data) {
+          if (p.active) {
+            await stripe.products.update(p.id, { active: false });
+            console.log(`Archived old product: ${oldName} (${p.id})`);
+          }
         }
+      } catch {}
+    }
+
+    for (const plan of plans) {
+      const existing = await stripe.products.search({ query: `metadata['tier']:'${plan.metadata.tier}'` });
+      const activeExisting = existing.data.find(p => p.active);
+      let productId: string;
+      if (activeExisting) {
+        productId = activeExisting.id;
+        await stripe.products.update(productId, { name: plan.name, description: plan.description, metadata: plan.metadata });
       } else {
         const product = await stripe.products.create({ name: plan.name, description: plan.description, metadata: plan.metadata });
         productId = product.id;
         console.log(`Created product ${plan.name}: ${productId}`);
       }
-      const prices = await stripe.prices.list({ product: productId, active: true, limit: 1 });
-      if (prices.data.length === 0) {
+      const prices = await stripe.prices.list({ product: productId, active: true, limit: 10 });
+      const correctPrice = prices.data.find(p => p.unit_amount === plan.priceAmount);
+      if (!correctPrice) {
+        for (const oldPrice of prices.data) {
+          await stripe.prices.update(oldPrice.id, { active: false });
+        }
         await stripe.prices.create({ product: productId, unit_amount: plan.priceAmount, currency: 'usd', recurring: { interval: 'month', trial_period_days: 14 } });
-        console.log(`Created price for ${plan.name}`);
+        console.log(`Created new price for ${plan.name}: $${plan.priceAmount / 100}/mo`);
       }
     }
   } catch (err) {

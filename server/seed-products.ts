@@ -5,22 +5,22 @@ async function createProducts() {
 
   const plans = [
     {
-      name: 'Starter Package',
-      description: 'Up to 5 properties. Includes QR tenant submission and basic request tracking.',
+      name: 'Starter',
+      description: 'For small landlords (1–5 units). QR maintenance system, basic dashboard, email notifications.',
       metadata: { tier: 'starter', maxProperties: '5' },
-      priceAmount: 1900,
+      priceAmount: 2900,
     },
     {
-      name: 'Growth Package',
-      description: 'Unlimited properties. Includes priority notifications, exportable repair logs, status updates for tenants, and photo uploads.',
-      metadata: { tier: 'growth', maxProperties: 'unlimited' },
-      priceAmount: 3900,
-    },
-    {
-      name: 'Pro Package',
-      description: 'Unlimited properties. Includes analytics dashboard, maintenance cost tracking, and custom branding.',
-      metadata: { tier: 'pro', maxProperties: 'unlimited' },
+      name: 'Growth',
+      description: 'For 6–25 units. Priority request highlighting, maintenance history tracking, basic reporting, custom QR per unit.',
+      metadata: { tier: 'growth', maxProperties: '25' },
       priceAmount: 5900,
+    },
+    {
+      name: 'Pro',
+      description: 'For 25+ units. Advanced reporting, export features, priority support, early access features.',
+      metadata: { tier: 'pro', maxProperties: 'unlimited' },
+      priceAmount: 9900,
     },
   ];
 

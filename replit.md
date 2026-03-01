@@ -19,7 +19,7 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - Tenant Directory page showing all tenants who've submitted requests with contact info
 - Billing page with Stripe portal integration for payment methods, invoices, plan management
 - Printable flyer template at `/flyer/:propertyId` for landlords to post on tenant doors
-- Stripe subscription billing with 3 tiers: Starter ($19), Growth ($39), Pro ($59)
+- Stripe subscription billing with 3 tiers: Starter ($29), Growth ($59), Pro ($99)
 - Pricing page with hardcoded plan info (always displays) + Stripe checkout when products synced
 - Auto-seeding of Stripe products on startup if they don't exist in the connected Stripe account
 - Maintenance staff management: landlords add/remove team members, assign requests to staff
