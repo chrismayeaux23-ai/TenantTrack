@@ -223,6 +223,82 @@ export async function registerRoutes(
     }
   });
 
+  app.get('/api/messages/:requestId', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const landlordRequests = await storage.getRequestsByLandlord(userId);
+      const ownedRequest = landlordRequests.find(r => r.id === Number(req.params.requestId));
+      if (!ownedRequest) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+      const messages = await storage.getMessagesByRequest(Number(req.params.requestId));
+      res.json(messages);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch messages" });
+    }
+  });
+
+  app.post('/api/messages/:requestId', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const landlordRequests = await storage.getRequestsByLandlord(userId);
+      const ownedRequest = landlordRequests.find(r => r.id === Number(req.params.requestId));
+      if (!ownedRequest) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+      const { content } = req.body;
+      if (!content || !content.trim()) {
+        return res.status(400).json({ message: "Message content is required" });
+      }
+      const [user] = await db.select().from(users).where(eq(users.id, userId));
+      const senderName = user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Landlord';
+      const message = await storage.createMessage({
+        requestId: Number(req.params.requestId),
+        senderType: "landlord",
+        senderName,
+        content: content.trim(),
+      });
+      res.status(201).json(message);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to send message" });
+    }
+  });
+
+  app.get('/api/requests/track/:code/messages', async (req, res) => {
+    try {
+      const request = await storage.getRequestByTrackingCode(req.params.code);
+      if (!request) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+      const messages = await storage.getMessagesByRequest(request.id);
+      res.json(messages);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch messages" });
+    }
+  });
+
+  app.post('/api/requests/track/:code/messages', async (req, res) => {
+    try {
+      const request = await storage.getRequestByTrackingCode(req.params.code);
+      if (!request) {
+        return res.status(404).json({ message: "Request not found" });
+      }
+      const { content, senderName } = req.body;
+      if (!content || !content.trim()) {
+        return res.status(400).json({ message: "Message content is required" });
+      }
+      const message = await storage.createMessage({
+        requestId: request.id,
+        senderType: "tenant",
+        senderName: senderName?.trim() || request.tenantName,
+        content: content.trim(),
+      });
+      res.status(201).json(message);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to send message" });
+    }
+  });
+
   app.get('/api/profile', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;

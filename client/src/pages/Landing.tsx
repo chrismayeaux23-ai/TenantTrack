@@ -5,7 +5,7 @@ import {
   QrCode, Smartphone, ShieldCheck, Mail, Phone, 
   ArrowRight, Check, DollarSign, CalendarClock, 
   Users, ClipboardList, Building2, Zap, Crown,
-  ChevronDown, Star, BarChart3, FileDown, X
+  ChevronDown, Star, BarChart3, FileDown, X, MessageSquare
 } from "lucide-react";
 import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
 import heroPng from "@assets/ChatGPT_Image_Feb_27,_2026,_08_01_41_AM_1772208715787.png";
@@ -105,6 +105,11 @@ const FEATURES = [
     icon: CalendarClock,
     title: "Scheduled Maintenance",
     desc: "Set up recurring tasks like HVAC filter changes and smoke detector checks. Never miss preventive maintenance again.",
+  },
+  {
+    icon: MessageSquare,
+    title: "Tenant Messaging",
+    desc: "Two-way messaging tied to each request. Tenants message from their tracking page, landlords reply from the dashboard. No phone tag.",
   },
 ];
 

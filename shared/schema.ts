@@ -68,12 +68,22 @@ export const recurringTasks = pgTable("recurring_tasks", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const requestMessages = pgTable("request_messages", {
+  id: serial("id").primaryKey(),
+  requestId: integer("request_id").notNull(),
+  senderType: text("sender_type").notNull(),
+  senderName: text("sender_name").notNull(),
+  content: text("content").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertPropertySchema = createInsertSchema(properties).omit({ id: true, createdAt: true });
 export const insertMaintenanceRequestSchema = createInsertSchema(maintenanceRequests).omit({ id: true, createdAt: true, assignedTo: true, trackingCode: true });
 export const insertMaintenanceStaffSchema = createInsertSchema(maintenanceStaff).omit({ id: true });
 export const insertRequestNoteSchema = createInsertSchema(requestNotes).omit({ id: true, createdAt: true });
 export const insertRepairCostSchema = createInsertSchema(repairCosts).omit({ id: true, createdAt: true });
 export const insertRecurringTaskSchema = createInsertSchema(recurringTasks).omit({ id: true, createdAt: true });
+export const insertRequestMessageSchema = createInsertSchema(requestMessages).omit({ id: true, createdAt: true });
 
 export type Property = typeof properties.$inferSelect;
 export type InsertProperty = z.infer<typeof insertPropertySchema>;
@@ -92,6 +102,9 @@ export type InsertRepairCost = z.infer<typeof insertRepairCostSchema>;
 
 export type RecurringTask = typeof recurringTasks.$inferSelect;
 export type InsertRecurringTask = z.infer<typeof insertRecurringTaskSchema>;
+
+export type RequestMessage = typeof requestMessages.$inferSelect;
+export type InsertRequestMessage = z.infer<typeof insertRequestMessageSchema>;
 
 export type CreatePropertyRequest = Omit<InsertProperty, "landlordId">;
 export type CreateMaintenanceRequest = Omit<InsertMaintenanceRequest, "status">;

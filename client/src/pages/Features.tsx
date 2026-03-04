@@ -9,7 +9,7 @@ import {
   Clock, Wrench, Receipt, TrendingUp, Star,
   Zap, Crown, Shield, Globe, Layers,
   X, AlertTriangle, ThumbsUp, Percent, Timer,
-  HandCoins, Megaphone, Target, Lock
+  HandCoins, Megaphone, Target, Lock, Send
 } from "lucide-react";
 import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
 
@@ -21,6 +21,7 @@ const HERO_FEATURES = [
   "Recurring maintenance scheduling",
   "Staff assignment & management",
   "Photo uploads with requests",
+  "Tenant-landlord messaging",
   "Mobile-first dashboard",
 ];
 
@@ -84,6 +85,26 @@ const DETAILED_FEATURES = [
       { icon: Megaphone, text: "Reduces follow-up calls by up to 90%" },
     ],
     visual: "tracking",
+  },
+  {
+    id: "messaging",
+    badge: "Communication",
+    title: "Tenant-Landlord Messaging",
+    subtitle: "Talk directly. No phone tag.",
+    description: "Built-in messaging lets tenants and landlords communicate directly within each maintenance request — no phone calls, no texts lost in a thread. Tenants send messages from their tracking page using their tracking code (no login needed), and landlords reply from the dashboard. Every message is tied to the specific request, creating a complete conversation history.",
+    businessBenefit: "Phone calls get missed. Texts get buried. Emails get ignored. TenantTrack messaging keeps every conversation attached to the specific maintenance request it's about. When you need to ask a tenant for clarification, schedule access, or confirm a repair was done right, it's all in one place. If a dispute arises, you have a timestamped record of every communication. This also means less context-switching — you handle messages right where you handle the request.",
+    roiCallout: "Landlords report cutting back-and-forth communication time by 60% when messages are tied directly to each request.",
+    icon: MessageSquare,
+    color: "blue",
+    highlights: [
+      { icon: MessageSquare, text: "Two-way messaging per request" },
+      { icon: ShieldCheck, text: "No tenant login — uses tracking code" },
+      { icon: Clock, text: "Messages refresh automatically" },
+      { icon: Shield, text: "Full conversation history for records" },
+      { icon: Smartphone, text: "Works on any device, any browser" },
+      { icon: Bell, text: "Landlord sees tenant message count" },
+    ],
+    visual: "messaging",
   },
   {
     id: "cost-tracking",
@@ -267,6 +288,38 @@ function FeatureVisual({ type, color }: { type: string; color: string }) {
           <div>
             <p className="text-xs text-muted-foreground">Completed</p>
             <p className="text-[10px] text-muted-foreground">Pending</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (type === "messaging") {
+    return (
+      <div className={`rounded-3xl ${c.lightBg} border ${c.border} p-6`}>
+        <div className="flex items-center gap-2 mb-4 px-1">
+          <MessageSquare className={`h-4 w-4 ${c.text}`} />
+          <span className="text-xs font-bold text-foreground">Messages</span>
+          <Badge variant="outline" className="text-[10px] ml-auto">3</Badge>
+        </div>
+        <div className="space-y-3">
+          <div className="bg-muted/50 rounded-xl p-3 max-w-[80%]">
+            <p className="text-xs text-foreground">Hi, the kitchen faucet is still dripping after the repair. Can someone come back?</p>
+            <p className="text-[10px] text-muted-foreground mt-1">Sarah T. &middot; Mar 2, 10:15 AM</p>
+          </div>
+          <div className="bg-primary/10 rounded-xl p-3 max-w-[80%] ml-auto">
+            <p className="text-xs text-foreground">Sorry about that! I'll send the plumber back tomorrow between 9-11 AM. Will you be home?</p>
+            <p className="text-[10px] text-muted-foreground mt-1">Chris M. &middot; Mar 2, 11:30 AM</p>
+          </div>
+          <div className="bg-muted/50 rounded-xl p-3 max-w-[80%]">
+            <p className="text-xs text-foreground">Yes, I'll be here. Thank you!</p>
+            <p className="text-[10px] text-muted-foreground mt-1">Sarah T. &middot; Mar 2, 11:45 AM</p>
+          </div>
+        </div>
+        <div className="mt-4 flex gap-2">
+          <div className="flex-1 bg-card/80 border border-border rounded-lg px-3 py-2 text-xs text-muted-foreground">Type a message...</div>
+          <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
+            <Send className="h-3.5 w-3.5 text-primary" />
           </div>
         </div>
       </div>

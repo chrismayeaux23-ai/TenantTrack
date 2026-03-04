@@ -1,13 +1,14 @@
 import { randomBytes } from "crypto";
 import { db } from "./db";
 import {
-  properties, maintenanceRequests, maintenanceStaff, requestNotes, repairCosts, recurringTasks,
+  properties, maintenanceRequests, maintenanceStaff, requestNotes, repairCosts, recurringTasks, requestMessages,
   type Property, type InsertProperty,
   type MaintenanceRequest, type InsertMaintenanceRequest,
   type MaintenanceStaff, type InsertMaintenanceStaff,
   type RequestNote, type InsertRequestNote,
   type RepairCost, type InsertRepairCost,
   type RecurringTask, type InsertRecurringTask,
+  type RequestMessage, type InsertRequestMessage,
 } from "@shared/schema";
 import { eq, desc } from "drizzle-orm";
 
@@ -41,6 +42,9 @@ export interface IStorage {
   getCostsByLandlord(landlordId: string): Promise<RepairCost[]>;
   createCost(cost: InsertRepairCost): Promise<RepairCost>;
   deleteCost(id: number): Promise<void>;
+
+  getMessagesByRequest(requestId: number): Promise<RequestMessage[]>;
+  createMessage(message: InsertRequestMessage): Promise<RequestMessage>;
 
   getRecurringTasks(landlordId: string): Promise<RecurringTask[]>;
   getRecurringTask(id: number): Promise<RecurringTask | undefined>;
@@ -104,6 +108,7 @@ export class DatabaseStorage implements IStorage {
   async deleteRequest(id: number): Promise<void> {
     await db.delete(repairCosts).where(eq(repairCosts.requestId, id));
     await db.delete(requestNotes).where(eq(requestNotes.requestId, id));
+    await db.delete(requestMessages).where(eq(requestMessages.requestId, id));
     await db.delete(maintenanceRequests).where(eq(maintenanceRequests.id, id));
   }
 
@@ -159,6 +164,15 @@ export class DatabaseStorage implements IStorage {
 
   async deleteCost(id: number): Promise<void> {
     await db.delete(repairCosts).where(eq(repairCosts.id, id));
+  }
+
+  async getMessagesByRequest(requestId: number): Promise<RequestMessage[]> {
+    return await db.select().from(requestMessages).where(eq(requestMessages.requestId, requestId)).orderBy(requestMessages.createdAt);
+  }
+
+  async createMessage(message: InsertRequestMessage): Promise<RequestMessage> {
+    const [created] = await db.insert(requestMessages).values(message).returning();
+    return created;
   }
 
   async getRecurringTasks(landlordId: string): Promise<RecurringTask[]> {

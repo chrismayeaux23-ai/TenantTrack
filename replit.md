@@ -24,6 +24,7 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - Auto-seeding of Stripe products on startup if they don't exist in the connected Stripe account
 - Maintenance staff management: landlords add/remove team members, assign requests to staff
 - Tenant tracking: each request gets a unique 8-char tracking code; tenants check status at `/track/:code`
+- Tenant-landlord messaging: two-way messages per request; landlord sends from dashboard, tenant from tracking page via tracking code; no tenant auth needed; auto-refreshes every 10-15s
 - Repair cost tracking: log costs per request (description, amount, vendor), view/export reports by date/property as CSV
 - Recurring maintenance scheduling: create tasks (HVAC, smoke detectors, etc.) with frequency, auto-calculates next due date on completion, overdue highlighting
 - Plan-based feature gating: property limits (trial=2, starter=5, growth/pro=unlimited), staff assignment (growth+)
@@ -31,11 +32,11 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - Terms & Conditions and Privacy Policy pages
 
 ## File Structure
-- `shared/schema.ts` - Drizzle schema (properties, maintenanceRequests, requestNotes, maintenanceStaff, repairCosts, recurringTasks tables)
+- `shared/schema.ts` - Drizzle schema (properties, maintenanceRequests, requestNotes, requestMessages, maintenanceStaff, repairCosts, recurringTasks tables)
 - `shared/models/auth.ts` - Replit Auth schema (users, sessions tables) + Stripe fields + phone, companyName
 - `shared/routes.ts` - Shared route types
 - `server/routes.ts` - API routes (app + Stripe checkout/portal/plans + profile + notes + tenants + stats)
-- `server/storage.ts` - Storage interface (CRUD for properties, requests, staff, notes, costs, recurring tasks)
+- `server/storage.ts` - Storage interface (CRUD for properties, requests, staff, notes, messages, costs, recurring tasks)
 - `server/stripeClient.ts` - Stripe client using Replit connector credentials
 - `server/webhookHandlers.ts` - Stripe webhook processing via stripe-replit-sync
 - `server/seed-products.ts` - Script to create Stripe products/prices
@@ -69,7 +70,11 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - `PATCH /api/profile` - Update landlord profile (firstName, lastName, phone, companyName)
 - `GET /api/dashboard/stats` - Get dashboard analytics (total, new, in-progress, completed, emergencies)
 - `GET /api/tenants` - Get tenant directory (aggregated from requests)
-- `DELETE /api/requests/:id` - Delete a request (cascades: costs, notes, then request)
+- `DELETE /api/requests/:id` - Delete a request (cascades: costs, notes, messages, then request)
+- `GET /api/messages/:requestId` - Get messages for a request (landlord, protected)
+- `POST /api/messages/:requestId` - Send message to tenant (landlord, protected)
+- `GET /api/requests/track/:code/messages` - Get messages for a request (tenant, public via tracking code)
+- `POST /api/requests/track/:code/messages` - Send message to landlord (tenant, public via tracking code)
 - `GET /api/notes/:requestId` - Get notes for a request
 - `POST /api/notes/:requestId` - Add a note to a request
 - `GET /api/costs/report` - Get cost report (query: startDate, endDate, propertyId)

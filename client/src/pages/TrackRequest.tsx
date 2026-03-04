@@ -1,15 +1,117 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "wouter";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/card";
-import { Loader2, Wrench, Search, CheckCircle2, Clock, AlertTriangle, MapPin, Calendar } from "lucide-react";
+import { Loader2, Wrench, Search, CheckCircle2, Clock, AlertTriangle, MapPin, Calendar, MessageSquare, Send } from "lucide-react";
 import { format } from "date-fns";
 import type { TrackRequestResponse } from "@shared/routes";
 
-function TrackingResult({ data }: { data: TrackRequestResponse }) {
+function MessageThread({ trackingCode }: { trackingCode: string }) {
+  const [content, setContent] = useState("");
+  const queryClient = useQueryClient();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { data: messages, isLoading } = useQuery<any[]>({
+    queryKey: ["/api/requests/track", trackingCode, "messages"],
+    queryFn: async () => {
+      const res = await fetch(`/api/requests/track/${trackingCode}/messages`);
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+    refetchInterval: 10000,
+  });
+
+  const sendMessage = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/requests/track/${trackingCode}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+    onSuccess: () => {
+      setContent("");
+      queryClient.invalidateQueries({ queryKey: ["/api/requests/track", trackingCode, "messages"] });
+    },
+  });
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  return (
+    <div className="mt-6 pt-6 border-t border-border">
+      <div className="flex items-center gap-2 mb-4">
+        <MessageSquare className="h-4 w-4 text-primary" />
+        <h3 className="font-bold text-sm text-foreground">Messages</h3>
+        {(messages || []).length > 0 && (
+          <Badge variant="outline" className="text-[10px]">{(messages || []).length}</Badge>
+        )}
+      </div>
+
+      {isLoading ? (
+        <div className="flex justify-center py-4">
+          <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        </div>
+      ) : (
+        <div ref={scrollRef} className="space-y-3 max-h-64 overflow-y-auto mb-4 scroll-smooth">
+          {(messages || []).length === 0 && (
+            <div className="text-center py-6">
+              <MessageSquare className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+              <p className="text-xs text-muted-foreground">No messages yet. Send a message to your landlord about this request.</p>
+            </div>
+          )}
+          {(messages || []).map((msg: any) => (
+            <div
+              key={msg.id}
+              className={`rounded-xl p-3 max-w-[85%] ${
+                msg.senderType === "tenant"
+                  ? "bg-primary/10 ml-auto"
+                  : "bg-muted/50 mr-auto"
+              }`}
+              data-testid={`message-${msg.id}`}
+            >
+              <p className="text-sm text-foreground">{msg.content}</p>
+              <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
+                <span className={msg.senderType === "landlord" ? "text-primary font-semibold" : ""}>{msg.senderName}</span>
+                <span>&middot;</span>
+                <span>{msg.createdAt ? format(new Date(msg.createdAt), "MMM d, h:mm a") : ""}</span>
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="flex gap-2">
+        <Input
+          placeholder="Type a message..."
+          className="text-sm h-10"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter" && content.trim()) sendMessage.mutate(); }}
+          data-testid="input-tenant-message"
+        />
+        <Button
+          size="sm"
+          className="h-10 px-4"
+          disabled={!content.trim() || sendMessage.isPending}
+          onClick={() => sendMessage.mutate()}
+          data-testid="button-send-tenant-message"
+        >
+          {sendMessage.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function TrackingResult({ data, trackingCode }: { data: TrackRequestResponse; trackingCode: string }) {
   const statusSteps = ["New", "In-Progress", "Completed"];
   const currentStep = statusSteps.indexOf(data.status);
 
@@ -90,6 +192,8 @@ function TrackingResult({ data }: { data: TrackRequestResponse }) {
           <p className="text-sm font-medium" data-testid="text-description">{data.description}</p>
         </div>
       </div>
+
+      <MessageThread trackingCode={trackingCode} />
     </div>
   );
 }
@@ -128,7 +232,7 @@ export default function TrackRequest() {
           </div>
           <div>
             <h1 className="font-display font-bold text-lg leading-tight text-foreground">Track Your Request</h1>
-            <p className="text-xs font-medium text-muted-foreground">Check the status of your maintenance request</p>
+            <p className="text-xs font-medium text-muted-foreground">Check status and message your landlord</p>
           </div>
         </div>
       </header>
@@ -167,7 +271,7 @@ export default function TrackRequest() {
             </div>
           )}
 
-          {data && !isLoading && <TrackingResult data={data} />}
+          {data && !isLoading && <TrackingResult data={data} trackingCode={searchCode} />}
 
           {!searchCode && !isLoading && (
             <div className="text-center py-12">

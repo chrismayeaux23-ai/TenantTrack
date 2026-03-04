@@ -220,6 +220,95 @@ function RequestNotes({ requestId }: { requestId: number }) {
   );
 }
 
+function RequestMessages({ requestId }: { requestId: number }) {
+  const [content, setContent] = useState("");
+  const queryClient = useQueryClient();
+  const { data: messages, isLoading } = useQuery<any[]>({
+    queryKey: ["/api/messages", requestId],
+    queryFn: async () => {
+      const res = await fetch(`/api/messages/${requestId}`, { credentials: "include" });
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+    refetchInterval: 15000,
+  });
+
+  const sendMessage = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/messages/${requestId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content }),
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed");
+      return res.json();
+    },
+    onSuccess: () => {
+      setContent("");
+      queryClient.invalidateQueries({ queryKey: ["/api/messages", requestId] });
+    },
+  });
+
+  const tenantMessages = (messages || []).filter((m: any) => m.senderType === "tenant");
+  const hasUnread = tenantMessages.length > 0;
+
+  return (
+    <div className="mt-4 pt-4 border-t border-border">
+      <p className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-3 flex items-center gap-1">
+        <MessageSquare className="h-3 w-3" /> Tenant Messages
+        {hasUnread && (
+          <Badge variant="default" className="ml-1 text-[10px] px-1.5 py-0">{tenantMessages.length}</Badge>
+        )}
+      </p>
+      {isLoading ? (
+        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+      ) : (
+        <div className="space-y-2 max-h-48 overflow-y-auto mb-3">
+          {(messages || []).length === 0 && (
+            <p className="text-xs text-muted-foreground">No messages yet. Send one to start a conversation with the tenant.</p>
+          )}
+          {(messages || []).map((msg: any) => (
+            <div
+              key={msg.id}
+              className={`rounded-lg p-2.5 max-w-[85%] ${
+                msg.senderType === "landlord"
+                  ? "bg-primary/10 ml-auto text-right"
+                  : "bg-muted/50 mr-auto"
+              }`}
+              data-testid={`message-${msg.id}`}
+            >
+              <p className="text-xs text-foreground">{msg.content}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">
+                {msg.senderName} &middot; {msg.createdAt ? format(new Date(msg.createdAt), "MMM d, h:mm a") : ""}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="flex gap-2">
+        <Input
+          placeholder="Message tenant..."
+          className="text-sm h-9 bg-muted/50"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          onKeyDown={(e) => { if (e.key === "Enter" && content.trim()) sendMessage.mutate(); }}
+          data-testid={`input-message-${requestId}`}
+        />
+        <Button
+          size="sm"
+          className="h-9 px-3"
+          disabled={!content.trim() || sendMessage.isPending}
+          onClick={() => sendMessage.mutate()}
+          data-testid={`button-send-message-${requestId}`}
+        >
+          <Send className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const { data: requests, isLoading: reqLoading } = useRequests();
   const { data: properties, isLoading: propLoading } = useProperties();
@@ -529,6 +618,7 @@ export default function Dashboard() {
                       )}
                     </div>
 
+                    <RequestMessages requestId={request.id} />
                     <RequestNotes requestId={request.id} />
                     <RequestCosts requestId={request.id} />
 
