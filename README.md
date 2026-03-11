@@ -1,4 +1,4 @@
-# Tenant Management Hub
+# Tenant-Track
 
 Tenant-Track is a SaaS platform designed to help landlords and property owners manage properties, tenants, maintenance requests, and repair costs in one centralized dashboard.
 
@@ -122,27 +122,74 @@ npm run dev
 
 Create a `.env` file based on `.env.example`.
 
-Example variables:
+Example configuration:
 
-DATABASE_URL=
-SESSION_SECRET=
+```env
+NODE_ENV=development
+PORT=5000
+
+DATABASE_URL=postgresql://username:password@localhost:5432/tenanttrack
+
+SESSION_SECRET=replace_with_secure_random_string
+
 STRIPE_SECRET_KEY=
 STRIPE_WEBHOOK_SECRET=
+
+S3_BUCKET=
 S3_ACCESS_KEY=
 S3_SECRET_KEY=
-S3_BUCKET=
-
+```
 
 ---
 
 ## Project Structure
 
-client/ # React frontend
-server/ # Express backend
-db/ # Database schema and migrations
-screenshots/ # README images
-docs/ # Project documentation
+```text
+client/        # React frontend
+server/        # Express backend
+db/            # Database schema and migrations
+screenshots/   # README images
+docs/          # Project documentation
+.env.example   # Example environment variables
+README.md      # Project documentation
+LICENSE        # MIT license
+```
 
+---
+
+## Required Services
+
+Tenant Track requires the following services to run:
+
+- Node.js
+- PostgreSQL
+
+Optional integrations:
+
+- Stripe (for subscriptions)
+- S3 compatible storage for file uploads
+
+---
+
+## Development
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Build the application:
+
+```bash
+npm run build
+```
+
+Start the production server:
+
+```bash
+npm start
+```
 
 ---
 
