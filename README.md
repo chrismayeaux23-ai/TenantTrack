@@ -324,6 +324,19 @@ Planned future improvements:
 
 ---
 
+## Repository Purpose
+
+This repository contains the full source code for the TenantTrack SaaS platform.
+
+It can be used for:
+
+- running the platform locally
+- deploying the application
+- extending the maintenance management system
+- learning from the architecture of a vertical SaaS product
+
+---
+
 ## License
 
 MIT License
