@@ -13,6 +13,7 @@ import { properties, maintenanceRequests, repairCosts, recurringTasks, requestNo
 import { authStorage } from "./replit_integrations/auth/storage";
 import bcrypt from "bcryptjs";
 import { sendNewRequestEmail, sendStatusUpdateEmail, sendStaffAssignmentEmail } from "./emailService";
+import { setupGoogleAuth } from "./googleAuth";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -22,6 +23,7 @@ export async function registerRoutes(
   await setupAuth(app);
   registerAuthRoutes(app);
   registerObjectStorageRoutes(app);
+  setupGoogleAuth(app);
 
   const DEMO_USER_ID = "demo-landlord";
   const DEMO_EMAIL = "landlord@test.com";
