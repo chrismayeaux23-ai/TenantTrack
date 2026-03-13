@@ -63,12 +63,13 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - "Try the demo" link on /login redirects to /?demo=1 which auto-opens demo modal
 
 ## Email Notifications (server/emailService.ts)
-- Uses Resend SDK with RESEND_API_KEY env var (connect Resend integration to activate)
+- Uses Resend SDK with RESEND_API_KEY env var
+- TO ACTIVATE: set RESEND_API_KEY secret (get key from resend.com → API Keys) — OR connect the Resend integration via integrations panel
+- Optional: set EMAIL_FROM secret (e.g. 'TenantTrack <notifications@tenant-track.com>') — requires verified sending domain in Resend
 - sendNewRequestEmail: fired when tenant submits request → email sent to landlord
 - sendStatusUpdateEmail: fired when request status changes → email sent to tenant (if tenantEmail set)
 - sendStaffAssignmentEmail: fired when staff assigned → email sent to staff member
-- FROM address: EMAIL_FROM env var or 'TenantTrack <notifications@tenant-track.com>'
-- All email sends are fire-and-forget (non-blocking, errors logged not thrown)
+- All email sends are fire-and-forget (non-blocking, errors logged not thrown) — app works fine without RESEND_API_KEY
 
 ## Routes
 - `/login` - Email/password login and signup page (public)
