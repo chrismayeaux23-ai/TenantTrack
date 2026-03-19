@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { useAuth } from "@/hooks/use-auth";
 import { useRequests } from "@/hooks/use-requests";
 import { useProperties } from "@/hooks/use-properties";
 import { useStaff, useAssignRequest } from "@/hooks/use-staff";
@@ -639,6 +640,7 @@ function RequestMessages({ requestId }: { requestId: number }) {
 }
 
 export default function Dashboard() {
+  const { user } = useAuth();
   const { data: requests, isLoading: reqLoading } = useRequests();
   const { data: properties, isLoading: propLoading } = useProperties();
   const { data: staffList } = useStaff();
@@ -723,123 +725,192 @@ export default function Dashboard() {
     });
   };
 
+  const urgencyLeftBorder: Record<string, string> = {
+    Emergency: "border-l-[3px] border-l-red-500",
+    High:      "border-l-[3px] border-l-orange-500",
+    Medium:    "border-l-[3px] border-l-yellow-500",
+    Low:       "border-l-[3px] border-l-primary/40",
+  };
+
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+  const dispatchCount = stats?.needsDispatch ?? 0;
+
   return (
     <AppLayout>
-      {/* VendorTrust Dispatch Metrics */}
+      {/* Page header */}
+      <div className="mb-6">
+        <div className="flex items-start justify-between flex-wrap gap-3">
+          <div>
+            <h1 className="text-2xl font-display font-bold text-foreground">
+              {greeting}{user?.firstName ? `, ${user.firstName}` : ""} 👋
+            </h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {dispatchCount > 0
+                ? <span className="text-red-400 font-medium">{dispatchCount} work order{dispatchCount !== 1 ? "s" : ""} need{dispatchCount === 1 ? "s" : ""} a vendor — dispatch now.</span>
+                : "Your maintenance operations are running smoothly."
+              }
+            </p>
+          </div>
+          <Link href="/analytics">
+            <button className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors border border-border rounded-lg px-3 py-1.5" data-testid="link-analytics-shortcut">
+              <BarChart2 className="h-3.5 w-3.5" /> View Analytics
+            </button>
+          </Link>
+        </div>
+      </div>
+
+      {/* Stat cards */}
       {stats && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
           <button
-            className="bg-card rounded-2xl p-4 border border-border shadow-sm text-left hover:border-red-500/40 transition-colors"
+            className={`group relative bg-card rounded-2xl p-4 border shadow-sm text-left transition-all ${dispatchCount > 0 ? "border-red-500/30 hover:border-red-500/60" : "border-border hover:border-border/80"}`}
             onClick={() => setStatusFilter("New")}
             data-testid="stat-needs-dispatch"
           >
+            {dispatchCount > 0 && (
+              <span className="absolute top-3 right-3 h-2 w-2 rounded-full bg-red-400 animate-pulse" />
+            )}
             <div className="flex items-center gap-3">
-              <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${(stats.needsDispatch || 0) > 0 ? "bg-red-500/10" : "bg-muted"}`}>
-                <AlertTriangle className={`h-5 w-5 ${(stats.needsDispatch || 0) > 0 ? "text-red-400" : "text-muted-foreground"}`} />
+              <div className={`h-11 w-11 rounded-xl flex items-center justify-center ${dispatchCount > 0 ? "bg-red-500/10" : "bg-muted"}`}>
+                <AlertTriangle className={`h-5 w-5 ${dispatchCount > 0 ? "text-red-400" : "text-muted-foreground"}`} />
               </div>
               <div>
-                <p className={`text-2xl font-bold ${(stats.needsDispatch || 0) > 0 ? "text-red-400" : ""}`}>{stats.needsDispatch ?? 0}</p>
-                <p className="text-xs text-muted-foreground">Needs Dispatch</p>
+                <p className={`text-3xl font-display font-extrabold leading-none ${dispatchCount > 0 ? "text-red-400" : "text-foreground"}`}>{dispatchCount}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Need Dispatch</p>
               </div>
             </div>
+            <p className="text-[10px] text-muted-foreground/60 mt-2">Click to filter ↓</p>
           </button>
+
           <button
-            className="bg-card rounded-2xl p-4 border border-border shadow-sm text-left hover:border-yellow-500/40 transition-colors"
+            className="group bg-card rounded-2xl p-4 border border-border shadow-sm text-left hover:border-yellow-500/30 transition-all"
             onClick={() => setStatusFilter("In-Progress")}
             data-testid="stat-scheduled"
           >
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-yellow-500/10 flex items-center justify-center">
-                <Calendar className="h-5 w-5 text-yellow-400" />
+              <div className="h-11 w-11 rounded-xl bg-yellow-500/10 flex items-center justify-center">
+                <Zap className="h-5 w-5 text-yellow-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.scheduledToday ?? 0}</p>
-                <p className="text-xs text-muted-foreground">Scheduled Today</p>
+                <p className="text-3xl font-display font-extrabold leading-none text-foreground">{stats.inProgress ?? 0}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">In Progress</p>
               </div>
             </div>
+            <p className="text-[10px] text-muted-foreground/60 mt-2">Click to filter ↓</p>
           </button>
+
           <button
-            className="bg-card rounded-2xl p-4 border border-border shadow-sm text-left hover:border-green-500/40 transition-colors"
+            className="group bg-card rounded-2xl p-4 border border-border shadow-sm text-left hover:border-green-500/30 transition-all"
             onClick={() => setStatusFilter("Completed")}
             data-testid="stat-completed-week"
           >
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-green-500/10 flex items-center justify-center">
+              <div className="h-11 w-11 rounded-xl bg-green-500/10 flex items-center justify-center">
                 <CheckCircle2 className="h-5 w-5 text-green-400" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{stats.completedThisWeek ?? 0}</p>
-                <p className="text-xs text-muted-foreground">Done This Week</p>
+                <p className="text-3xl font-display font-extrabold leading-none text-foreground">{stats.completedThisWeek ?? 0}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Done This Week</p>
               </div>
             </div>
+            <p className="text-[10px] text-muted-foreground/60 mt-2">Click to filter ↓</p>
           </button>
+
           <Link href="/analytics">
-            <div className="bg-card rounded-2xl p-4 border border-border shadow-sm hover:border-primary/40 transition-colors cursor-pointer" data-testid="stat-avg-rating">
+            <div className="bg-card rounded-2xl p-4 border border-border shadow-sm hover:border-primary/30 transition-all cursor-pointer h-full" data-testid="stat-avg-rating">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-yellow-400/10 flex items-center justify-center">
+                <div className="h-11 w-11 rounded-xl bg-yellow-400/10 flex items-center justify-center">
                   <Star className="h-5 w-5 text-yellow-400" />
                 </div>
                 <div>
-                  <p className="text-2xl font-bold">{stats.avgVendorRating ? stats.avgVendorRating.toFixed(1) : "—"}</p>
-                  <p className="text-xs text-muted-foreground">Avg Vendor Rating</p>
+                  <p className="text-3xl font-display font-extrabold leading-none text-foreground">{stats.avgVendorRating ? stats.avgVendorRating.toFixed(1) : "—"}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">Avg Vendor Rating</p>
                 </div>
               </div>
+              <p className="text-[10px] text-muted-foreground/60 mt-2">View full analytics →</p>
             </div>
           </Link>
         </div>
       )}
 
-      {/* Top Vendors Strip */}
+      {/* Trusted vendor strip */}
       {stats?.topVendors && stats.topVendors.length > 0 && (
-        <div className="mb-6 bg-card rounded-2xl border border-border p-4 shadow-sm">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3 flex items-center gap-1">
-            <ShieldCheck className="h-3.5 w-3.5 text-primary" /> Most Trusted Vendors
-          </p>
-          <div className="flex gap-2 overflow-x-auto pb-1">
-            {stats.topVendors.map((v: any) => (
-              <div key={v.id} className="flex-shrink-0 flex items-center gap-2 bg-muted/50 rounded-xl px-3 py-2 border border-border/50">
-                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs flex-shrink-0">
-                  {v.name.charAt(0)}
+        <div className="mb-6 bg-card rounded-2xl border border-border p-4">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">
+              <ShieldCheck className="h-3.5 w-3.5 text-primary" /> Top Vendors
+            </p>
+            <Link href="/vendors">
+              <span className="text-xs text-primary hover:underline">View all</span>
+            </Link>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-0.5 -mx-1 px-1">
+            {stats.topVendors.slice(0, 6).map((v: any) => (
+              <Link key={v.id} href={`/vendors/${v.id}`}>
+                <div className="flex-shrink-0 flex items-center gap-2 bg-muted/40 hover:bg-muted/70 rounded-xl px-3 py-2 border border-border/40 hover:border-border transition-all cursor-pointer">
+                  <div className="h-7 w-7 rounded-full bg-primary/15 flex items-center justify-center text-primary font-bold text-xs shrink-0">
+                    {v.name.charAt(0)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold truncate max-w-[90px]">{v.name}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{v.tradeCategory}</p>
+                  </div>
+                  <TrustScoreBadge score={v.trustScore} />
                 </div>
-                <div className="min-w-0">
-                  <p className="text-xs font-medium truncate">{v.name}</p>
-                  <p className="text-[10px] text-muted-foreground">{v.tradeCategory}</p>
-                </div>
-                <TrustScoreBadge score={v.trustScore} />
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       )}
 
-      <div className="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      {/* Work orders header + filters */}
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-display font-bold text-foreground">Dispatch Center</h1>
-          <p className="text-muted-foreground mt-1">Assign vendors, track status, and verify completion.</p>
+          <h2 className="text-lg font-display font-bold text-foreground">Work Orders</h2>
+          <p className="text-xs text-muted-foreground">{filteredRequests.length} of {(requests || []).length} showing</p>
         </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input placeholder="Search tenant or issue..." className="pl-10 w-full sm:w-64 bg-card" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} data-testid="input-search-requests" />
-          </div>
-          <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
-            options={[
-              { label: "All Statuses", value: "All" },
-              { label: "New", value: "New" },
-              { label: "In-Progress", value: "In-Progress" },
-              { label: "Completed", value: "Completed" }
-            ]}
-            className="w-full sm:w-48 bg-card" data-testid="select-status-filter" />
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Search tenant, issue, property…" className="pl-9 w-full sm:w-56 h-9 bg-muted/40 border-border/60 text-sm" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} data-testid="input-search-requests" />
         </div>
       </div>
 
+      {/* Filter tabs */}
+      <div className="flex gap-1 p-1 bg-muted/40 rounded-xl mb-5 w-full sm:w-auto" data-testid="filter-tabs">
+        {[
+          { label: "All", value: "All", count: (requests || []).length },
+          { label: "New", value: "New", count: (requests || []).filter(r => r.status === "New").length },
+          { label: "In Progress", value: "In-Progress", count: (requests || []).filter(r => r.status === "In-Progress").length },
+          { label: "Completed", value: "Completed", count: (requests || []).filter(r => r.status === "Completed").length },
+        ].map(({ label, value, count }) => (
+          <button
+            key={value}
+            onClick={() => setStatusFilter(value)}
+            data-testid={`filter-tab-${value.toLowerCase().replace(/\s+/g, "-")}`}
+            className={`flex-1 sm:flex-none flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+              ${statusFilter === value ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+          >
+            {label}
+            <span className={`text-[10px] px-1 py-0.5 rounded-md ${statusFilter === value ? "bg-muted text-muted-foreground" : "text-muted-foreground/50"}`}>{count}</span>
+          </button>
+        ))}
+      </div>
+
       {filteredRequests.length === 0 ? (
-        <div className="bg-card border border-border border-dashed rounded-3xl p-12 text-center flex flex-col items-center">
-          <div className="h-20 w-20 bg-muted rounded-full flex items-center justify-center mb-6">
-            <AlertCircle className="h-10 w-10 text-muted-foreground" />
+        <div className="bg-card border border-border/60 border-dashed rounded-2xl p-10 text-center flex flex-col items-center">
+          <div className="h-16 w-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
+            <CheckSquare className="h-8 w-8 text-primary" />
           </div>
-          <h3 className="text-xl font-bold mb-2">No requests found</h3>
-          <p className="text-muted-foreground max-w-md mx-auto">You're all caught up! No maintenance requests match your current filters.</p>
+          <h3 className="text-lg font-display font-bold mb-1">
+            {statusFilter === "All" ? "No work orders yet" : `No ${statusFilter === "In-Progress" ? "in-progress" : statusFilter.toLowerCase()} orders`}
+          </h3>
+          <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+            {statusFilter !== "All"
+              ? `No work orders match "${statusFilter === "In-Progress" ? "In Progress" : statusFilter}" right now. `
+              : "When tenants submit maintenance requests via QR code, they'll appear here. "}
+            {statusFilter !== "All" && <button onClick={() => setStatusFilter("All")} className="text-primary hover:underline">Show all orders</button>}
+          </p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -851,8 +922,10 @@ export default function Dashboard() {
               && !["Completed", "Cancelled"].includes(request.status)
               && differenceInDays(new Date(), new Date(request.createdAt)) >= 7;
 
+            const leftBorder = urgencyLeftBorder[request.urgency] || "border-l-[3px] border-l-muted";
+
             return (
-              <div key={request.id} className={`bg-card rounded-2xl border shadow-sm transition-all ${isOverdue ? "border-orange-500/60 shadow-orange-500/10" : "border-border"}`} data-testid={`request-card-${request.id}`}>
+              <div key={request.id} className={`bg-card rounded-2xl border shadow-sm transition-all overflow-hidden ${leftBorder} ${isOverdue ? "border-orange-500/50 shadow-orange-500/5" : "border-border"}`} data-testid={`request-card-${request.id}`}>
                 {isOverdue && (
                   <div className="px-4 pt-2 pb-0 flex items-center gap-1.5">
                     <AlertTriangle className="h-3.5 w-3.5 text-orange-400" />

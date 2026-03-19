@@ -230,19 +230,20 @@ export default function Analytics() {
             <TrendingUp className="h-4 w-4 text-primary" />
             <h2 className="font-semibold text-foreground">Request Volume — Last 6 Months</h2>
           </div>
-          <div className="flex items-end gap-3 h-32">
-            {data.monthlyTrend.map(t => {
-              const pct = maxTrend > 0 ? Math.max((t.count / maxTrend) * 100, t.count > 0 ? 8 : 0) : 0;
+          <div className="flex items-end gap-2 h-36 px-1">
+            {data.monthlyTrend.map((t, i) => {
+              const pct = maxTrend > 0 ? Math.max((t.count / maxTrend) * 100, t.count > 0 ? 6 : 0) : 0;
+              const isLast = i === data.monthlyTrend.length - 1;
               return (
-                <div key={t.month} className="flex-1 flex flex-col items-center gap-2">
-                  <span className="text-xs font-medium text-foreground">{t.count > 0 ? t.count : ""}</span>
-                  <div className="w-full bg-muted rounded-t-md overflow-hidden" style={{ height: "80px" }}>
-                    <div
-                      className="w-full bg-primary/70 rounded-t-md transition-all duration-700 mt-auto"
-                      style={{ height: `${pct}%`, marginTop: `${100 - pct}%` }}
-                    />
-                  </div>
-                  <span className="text-[10px] text-muted-foreground">{t.month}</span>
+                <div key={t.month} className="flex-1 flex flex-col items-center justify-end gap-1.5 h-full">
+                  {t.count > 0 && (
+                    <span className="text-xs font-bold text-foreground">{t.count}</span>
+                  )}
+                  <div
+                    className={`w-full rounded-t-lg transition-all duration-700 ${isLast ? "bg-primary" : "bg-primary/40"}`}
+                    style={{ height: `${pct}%`, minHeight: t.count > 0 ? "8px" : "0" }}
+                  />
+                  <span className="text-[10px] text-muted-foreground whitespace-nowrap">{t.month}</span>
                 </div>
               );
             })}
@@ -254,35 +255,36 @@ export default function Analytics() {
           {/* Status Summary */}
           <div className="bg-card border border-border rounded-2xl p-6">
             <h2 className="font-semibold text-foreground mb-4">Request Status</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-blue-400" />
-                  <span className="text-sm text-muted-foreground">New</span>
-                </div>
-                <span className="font-semibold text-foreground">{data.statusSummary.new}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-                  <span className="text-sm text-muted-foreground">In Progress</span>
-                </div>
-                <span className="font-semibold text-foreground">{data.statusSummary.inProgress}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
-                  <span className="text-sm text-muted-foreground">Completed</span>
-                </div>
-                <span className="font-semibold text-foreground">{data.statusSummary.completed}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                  <span className="text-sm text-muted-foreground">Overdue (&gt;7d open)</span>
-                </div>
-                <span className="font-semibold text-foreground">{data.overdueRequests}</span>
-              </div>
+            <div className="space-y-3">
+              {[
+                { label: "New", value: data.statusSummary.new, color: "bg-blue-400" },
+                { label: "In Progress", value: data.statusSummary.inProgress, color: "bg-yellow-400" },
+                { label: "Completed", value: data.statusSummary.completed, color: "bg-green-400" },
+                { label: "Overdue (>7d)", value: data.overdueRequests, color: "bg-red-400" },
+              ].map(item => {
+                const pct = data.statusSummary.total > 0 ? Math.round((item.value / data.statusSummary.total) * 100) : 0;
+                return (
+                  <div key={item.label}>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full ${item.color}`} />
+                        <span className="text-sm text-muted-foreground">{item.label}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground">{pct}%</span>
+                        <span className="text-sm font-bold text-foreground w-5 text-right">{item.value}</span>
+                      </div>
+                    </div>
+                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                      <div className={`h-1.5 rounded-full ${item.color} transition-all duration-500`} style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
+              <span className="text-xs text-muted-foreground">Completion rate</span>
+              <span className={`text-lg font-display font-extrabold ${completionRate >= 70 ? "text-green-400" : completionRate >= 40 ? "text-yellow-400" : "text-red-400"}`}>{completionRate}%</span>
             </div>
           </div>
 

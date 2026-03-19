@@ -30,19 +30,27 @@ const JOB_STATUS_CONFIG: Record<string, { label: string; color: string }> = {
 };
 
 function TrustMeter({ score }: { score: number }) {
-  const color = score >= 80 ? "bg-green-400" : score >= 60 ? "bg-yellow-400" : "bg-red-400";
-  const label = score >= 80 ? "High Trust" : score >= 60 ? "Medium Trust" : "Low Trust";
+  const tier = score >= 80 ? { label: "Excellent", color: "text-green-400", bar: "bg-green-400", bg: "bg-green-400/10", border: "border-green-400/20" }
+    : score >= 60 ? { label: "Good", color: "text-yellow-400", bar: "bg-yellow-400", bg: "bg-yellow-400/10", border: "border-yellow-400/20" }
+    : { label: "At Risk", color: "text-red-400", bar: "bg-red-400", bg: "bg-red-400/10", border: "border-red-400/20" };
+
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-center justify-between mb-0.5">
-        <span className="text-sm text-muted-foreground">Trust Score</span>
-        <span className="text-lg font-bold text-foreground flex items-center gap-1">
-          <ShieldCheck className="h-4 w-4 text-primary" />{score}
-          <span className="text-xs font-normal text-muted-foreground ml-1">{label}</span>
-        </span>
+    <div className={`rounded-2xl border p-4 ${tier.bg} ${tier.border}`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <ShieldCheck className={`h-4 w-4 ${tier.color}`} />
+          <span className="text-sm font-semibold text-foreground">Trust Score</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={`text-3xl font-display font-extrabold ${tier.color}`}>{score}</span>
+          <span className={`text-xs font-semibold px-2 py-0.5 rounded-lg ${tier.bg} ${tier.color} border ${tier.border}`}>{tier.label}</span>
+        </div>
       </div>
-      <div className="h-2 bg-muted rounded-full overflow-hidden">
-        <div className={`h-2 rounded-full ${color} transition-all duration-700`} style={{ width: `${score}%` }} />
+      <div className="h-2.5 bg-black/20 rounded-full overflow-hidden">
+        <div className={`h-2.5 rounded-full ${tier.bar} transition-all duration-700`} style={{ width: `${score}%` }} />
+      </div>
+      <div className="flex justify-between mt-1.5 text-[10px] text-muted-foreground/50">
+        <span>0</span><span>25</span><span>50</span><span>75</span><span>100</span>
       </div>
     </div>
   );

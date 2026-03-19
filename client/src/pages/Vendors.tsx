@@ -198,8 +198,8 @@ function VendorDetail({ vendor, onClose }: { vendor: Vendor; onClose: () => void
   return (
     <div className="space-y-4 max-h-[70vh] overflow-y-auto pr-1">
       <div className="flex items-start gap-3">
-        <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-          <Briefcase className="h-6 w-6 text-primary" />
+        <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 font-display font-extrabold text-primary text-xl">
+          {vendor.name.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -213,26 +213,34 @@ function VendorDetail({ vendor, onClose }: { vendor: Vendor; onClose: () => void
 
       {stats && (
         <div className="space-y-3">
-          {(stats as any).trustScore !== undefined && (
-            <div className="flex items-center gap-3 bg-muted/40 rounded-xl p-3">
-              <ShieldCheck className="h-5 w-5 text-primary shrink-0" />
-              <div className="flex-1">
-                <p className="text-xs text-muted-foreground mb-0.5">VendorTrust Score</p>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 bg-muted rounded-full h-2">
-                    <div
-                      className={`h-2 rounded-full transition-all ${(stats as any).trustScore >= 80 ? "bg-green-400" : (stats as any).trustScore >= 60 ? "bg-yellow-400" : "bg-red-400"}`}
-                      style={{ width: `${(stats as any).trustScore}%` }}
-                    />
-                  </div>
-                  <span className={`text-sm font-bold ${(stats as any).trustScore >= 80 ? "text-green-400" : (stats as any).trustScore >= 60 ? "text-yellow-400" : "text-red-400"}`}>
-                    {(stats as any).trustScore}/100
-                  </span>
+          {(stats as any).trustScore !== undefined && (() => {
+            const sc = (stats as any).trustScore;
+            const tier = sc >= 80
+              ? { label: "Excellent", color: "text-green-400", bar: "bg-green-400", bg: "bg-green-400/10 border-green-400/20" }
+              : sc >= 60
+              ? { label: "Good", color: "text-yellow-400", bar: "bg-yellow-400", bg: "bg-yellow-400/10 border-yellow-400/20" }
+              : { label: "At Risk", color: "text-red-400", bar: "bg-red-400", bg: "bg-red-400/10 border-red-400/20" };
+            return (
+            <div className={`rounded-2xl border p-3 ${tier.bg}`}>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-1.5">
+                  <ShieldCheck className={`h-4 w-4 ${tier.color}`} />
+                  <span className="text-xs font-semibold text-foreground">Trust Score</span>
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-1">Based on ratings, completion rate, and experience</p>
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-2xl font-display font-extrabold ${tier.color}`}>{sc}</span>
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${tier.color} bg-black/10`}>{tier.label}</span>
+                </div>
+              </div>
+              <div className="h-2 bg-black/20 rounded-full overflow-hidden">
+                <div className={`h-2 rounded-full ${tier.bar} transition-all duration-700`} style={{ width: `${sc}%` }} />
+              </div>
+              <div className="flex justify-between mt-1 text-[9px] text-muted-foreground/40">
+                <span>0</span><span>50</span><span>100</span>
               </div>
             </div>
-          )}
+            );
+          })()}
           <div className="grid grid-cols-3 gap-2">
             {[
               { label: "Jobs Done", val: stats.totalJobs },
@@ -328,8 +336,8 @@ function VendorCard({
   return (
     <div className={`bg-card border border-border rounded-2xl p-4 flex flex-col gap-3 transition-opacity ${isArchived ? "opacity-60" : ""}`} data-testid={`vendor-card-${vendor.id}`}>
       <div className="flex items-start gap-3">
-        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-          <Briefcase className="h-5 w-5 text-primary" />
+        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 font-display font-extrabold text-primary text-sm">
+          {vendor.name.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
