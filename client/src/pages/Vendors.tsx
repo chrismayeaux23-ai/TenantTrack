@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -400,8 +401,13 @@ function VendorCard({
       {showActions && (
         <div className="flex gap-2 pt-1 border-t border-border animate-in fade-in duration-150">
           <Button size="sm" variant="outline" className="flex-1 h-8 text-xs gap-1" onClick={onViewDetail} data-testid={`button-vendor-detail-${vendor.id}`}>
-            View Details
+            Quick View
           </Button>
+          <Link href={`/vendors/${vendor.id}`}>
+            <Button size="sm" variant="default" className="h-8 text-xs gap-1" data-testid={`button-view-vendor-${vendor.id}`}>
+              Full Profile
+            </Button>
+          </Link>
           <Button size="sm" variant="outline" className="h-8 text-xs gap-1" onClick={onEdit} data-testid={`button-vendor-edit-${vendor.id}`}>
             <Edit2 className="h-3 w-3" />
           </Button>

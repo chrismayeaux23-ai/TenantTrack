@@ -288,6 +288,20 @@ export async function registerRoutes(
     }
   });
 
+  app.get('/api/requests/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const requestId = Number(req.params.id);
+      const request = await storage.getRequest(requestId);
+      if (!request) return res.status(404).json({ message: "Request not found" });
+      const prop = await storage.getProperty(request.propertyId);
+      if (!prop || prop.landlordId !== userId) return res.status(403).json({ message: "Forbidden" });
+      res.json(request);
+    } catch {
+      res.status(500).json({ message: "Failed to fetch request" });
+    }
+  });
+
   app.post(api.requests.create.path, async (req, res) => {
     try {
       const bodySchema = api.requests.create.input.extend({
@@ -1226,6 +1240,146 @@ export async function registerRoutes(
       res.json(reviews);
     } catch {
       res.status(500).json({ message: "Failed to fetch reviews" });
+    }
+  });
+
+  // ── Vendor Job History ─────────────────────────────────────────────────────
+  app.get('/api/vendors/:id/jobs', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const vendorId = Number(req.params.id);
+      const vendor = await storage.getVendor(vendorId);
+      if (!vendor || vendor.landlordId !== userId) return res.status(404).json({ message: "Vendor not found" });
+
+      const assignments = await db.select().from(vendorAssignments)
+        .where(and(eq(vendorAssignments.vendorId, vendorId), eq(vendorAssignments.landlordId, userId)))
+        .orderBy(desc(vendorAssignments.assignedAt));
+
+      const jobsWithDetails = await Promise.all(assignments.map(async (a) => {
+        const request = await storage.getRequest(a.requestId);
+        const prop = request ? await storage.getProperty(request.propertyId) : null;
+        const review = await storage.getVendorReviewForRequest(a.requestId);
+        return { ...a, request, property: prop, review };
+      }));
+
+      res.json(jobsWithDetails);
+    } catch {
+      res.status(500).json({ message: "Failed to fetch vendor jobs" });
+    }
+  });
+
+  // ── Analytics ───────────────────────────────────────────────────────────────
+  app.get('/api/analytics', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const allRequests = await storage.getRequestsByLandlord(userId);
+      const allProps = await storage.getProperties(userId);
+      const allVendors = await storage.getVendorsByLandlord(userId);
+      const allAssignments = await db.select().from(vendorAssignments).where(eq(vendorAssignments.landlordId, userId));
+      const allReviews = await db.select().from(vendorReviews).where(eq(vendorReviews.landlordId, userId));
+
+      // -- Category breakdown
+      const categoryMap: Record<string, number> = {};
+      for (const r of allRequests) {
+        categoryMap[r.issueType] = (categoryMap[r.issueType] || 0) + 1;
+      }
+      const categoryBreakdown = Object.entries(categoryMap)
+        .sort((a, b) => b[1] - a[1])
+        .map(([category, count]) => ({ category, count }));
+
+      // -- Volume by property
+      const propMap: Record<number, { name: string; count: number }> = {};
+      for (const p of allProps) propMap[p.id] = { name: p.name, count: 0 };
+      for (const r of allRequests) {
+        if (propMap[r.propertyId]) propMap[r.propertyId].count++;
+      }
+      const volumeByProperty = Object.values(propMap).sort((a, b) => b.count - a.count);
+
+      // -- Request status summary
+      const statusSummary = {
+        new: allRequests.filter(r => r.status === 'New').length,
+        inProgress: allRequests.filter(r => r.status === 'In-Progress').length,
+        completed: allRequests.filter(r => r.status === 'Completed').length,
+        total: allRequests.length,
+      };
+
+      // -- Overdue: open requests older than 7 days
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+      const overdueRequests = allRequests.filter(r =>
+        r.status !== 'Completed' && new Date(r.createdAt!) < sevenDaysAgo
+      );
+
+      // -- Avg days to complete (from createdAt to completedAt on assignments)
+      const completedAssignments = allAssignments.filter(a => a.completedAt && a.assignedAt);
+      const avgDaysToComplete = completedAssignments.length > 0
+        ? Math.round(completedAssignments.reduce((sum, a) => {
+            return sum + (new Date(a.completedAt!).getTime() - new Date(a.assignedAt!).getTime()) / (1000 * 60 * 60 * 24);
+          }, 0) / completedAssignments.length * 10) / 10
+        : null;
+
+      // -- Monthly trend (last 6 months)
+      const monthlyTrend: Array<{ month: string; count: number }> = [];
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date();
+        d.setMonth(d.getMonth() - i);
+        const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const monthLabel = d.toLocaleString('default', { month: 'short', year: '2-digit' });
+        const count = allRequests.filter(r => {
+          const rd = new Date(r.createdAt!);
+          return rd.getFullYear() === d.getFullYear() && rd.getMonth() === d.getMonth();
+        }).length;
+        monthlyTrend.push({ month: monthLabel, count });
+      }
+
+      // -- Vendor leaderboard
+      const activeVendors = allVendors.filter(v => v.status === 'active');
+      const leaderboard = await Promise.all(activeVendors.map(async (v) => {
+        const stats = await storage.getVendorStats(v.id, userId);
+        return {
+          id: v.id,
+          name: v.name,
+          companyName: v.companyName,
+          tradeCategory: v.tradeCategory,
+          preferredVendor: v.preferredVendor,
+          trustScore: stats.trustScore,
+          totalJobs: stats.totalJobs,
+          completedJobs: stats.completedJobs,
+          avgRating: stats.avgOverallRating,
+          totalSpent: stats.totalSpent,
+        };
+      }));
+      leaderboard.sort((a, b) => b.trustScore - a.trustScore);
+
+      // -- Urgency breakdown
+      const urgencyBreakdown = {
+        emergency: allRequests.filter(r => r.urgency === 'Emergency').length,
+        high: allRequests.filter(r => r.urgency === 'High').length,
+        medium: allRequests.filter(r => r.urgency === 'Medium').length,
+        low: allRequests.filter(r => r.urgency === 'Low').length,
+      };
+
+      // -- Avg rating across all reviews
+      const ratings = allReviews.map(r => r.overallRating).filter((r): r is number => r !== null);
+      const avgRating = ratings.length > 0 ? Math.round((ratings.reduce((a, b) => a + b, 0) / ratings.length) * 10) / 10 : null;
+
+      res.json({
+        statusSummary,
+        categoryBreakdown,
+        volumeByProperty,
+        overdueRequests: overdueRequests.length,
+        overdueList: overdueRequests.slice(0, 10),
+        avgDaysToComplete,
+        monthlyTrend,
+        leaderboard,
+        urgencyBreakdown,
+        avgRating,
+        totalVendors: allVendors.filter(v => v.status === 'active').length,
+        totalAssignments: allAssignments.length,
+      });
+    } catch (err) {
+      console.error('Analytics error:', err);
+      res.status(500).json({ message: "Failed to fetch analytics" });
     }
   });
 

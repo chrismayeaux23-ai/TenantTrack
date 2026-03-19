@@ -1,0 +1,447 @@
+You are a senior full-stack SaaS engineer, product designer, and systems architect. Your job is to transform my existing landlord/property-management MVP into a polished SaaS platform called VendorTrust.
+
+IMPORTANT:
+- Do not build a toy app.
+- Do not simplify the product into a generic dashboard.
+- Build this like a real subscription SaaS that could be sold to landlords and small property managers.
+- Keep the code clean, modular, production-minded, and easy to extend.
+- Maintain existing useful functionality where possible, but refactor aggressively if needed.
+- Make smart product decisions without asking unnecessary questions.
+- Focus on speed, clarity, and business value.
+
+==================================================
+PRODUCT VISION
+==================================================
+
+VendorTrust is a landlord and property manager platform focused on one painful problem:
+
+Finding, tracking, and trusting vendors for maintenance and repair work.
+
+Landlords constantly deal with:
+- unreliable contractors
+- bad communication
+- no centralized vendor history
+- no proof of who did good work
+- lost maintenance records
+- no easy way to compare vendors
+- no accountability on price, speed, quality, or professionalism
+
+VendorTrust should become the system of record for:
+1. maintenance requests
+2. vendor assignments
+3. vendor performance history
+4. trusted vendor relationships
+5. work order tracking
+6. maintenance analytics for landlords
+
+This is NOT a marketplace like Angi or Thumbtack.
+It is a landlord-first vendor intelligence and maintenance operations platform.
+
+==================================================
+TARGET USERS
+==================================================
+
+Primary users:
+- small landlords
+- self-managing landlords
+- property managers with small to mid-sized portfolios
+
+Secondary users:
+- maintenance coordinators
+- office admins
+- vendors/contractors invited into jobs
+
+==================================================
+CORE VALUE PROPOSITION
+==================================================
+
+VendorTrust helps landlords and property managers:
+- track every maintenance issue in one place
+- assign vendors faster
+- see which vendors are actually reliable
+- keep performance records tied to real jobs
+- reduce bad hires and repeated vendor mistakes
+- create a trustworthy maintenance workflow
+
+==================================================
+PRODUCT POSITIONING
+==================================================
+
+The app should feel like:
+“Your maintenance command center and vendor trust system.”
+
+Not:
+- a basic form app
+- a generic CRM
+- a directory clone
+- an enterprise bloated tool
+
+==================================================
+DESIGN DIRECTION
+==================================================
+
+Design the app to look:
+- modern
+- clean
+- premium
+- practical
+- trustworthy
+- landlord-friendly
+- fast and easy to scan
+
+Style:
+- polished SaaS UI
+- strong spacing
+- great card layout
+- clear data hierarchy
+- sharp tables
+- clean forms
+- mobile responsive
+- dashboard with strong visual clarity
+
+Use a professional color palette.
+Avoid childish gradients or gimmicky effects.
+The UI should feel like a product people would pay $29-$99/month for.
+
+==================================================
+PRIMARY FEATURES TO BUILD
+==================================================
+
+Build the following feature set:
+
+1. AUTHENTICATION
+- Secure login/signup
+- Protected routes
+- User sessions
+- Password reset flow if feasible
+- Role-ready architecture for future expansion
+
+2. LANDLORD DASHBOARD
+Main dashboard showing:
+- open maintenance requests
+- requests awaiting vendor assignment
+- in-progress jobs
+- completed jobs
+- top-rated vendors
+- recent activity feed
+- overdue jobs
+- quick stats
+
+3. PROPERTIES & UNITS
+- Create/edit/delete properties
+- Add units under properties
+- Associate maintenance requests with a property/unit
+- Clean list and detail views
+
+4. MAINTENANCE REQUESTS / WORK ORDERS
+Each request should support:
+- title
+- description
+- category (plumbing, electrical, paint, appliance, HVAC, general, etc.)
+- priority
+- status
+- property
+- unit
+- tenant name/contact if needed
+- photos/files placeholder support if feasible
+- created date
+- due date
+- notes/internal comments
+
+Statuses like:
+- new
+- needs vendor
+- assigned
+- scheduled
+- in progress
+- completed
+- cancelled
+
+5. VENDOR MANAGEMENT
+This is the heart of the app.
+
+Build a dedicated vendor system with:
+- vendor profile
+- company/person name
+- trade/category
+- phone/email
+- service area
+- license/insurance fields
+- notes
+- tags
+- active/inactive status
+
+Vendor detail page should show:
+- contact details
+- trade type
+- jobs completed
+- average rating
+- on-time percentage
+- average response time
+- average cost per job
+- internal notes
+- recent work history
+
+6. VENDOR TRUST SCORE
+Create a simple but powerful internal vendor scoring model.
+
+Build a calculated score based on factors such as:
+- average rating
+- completion rate
+- on-time completion
+- communication responsiveness
+- repeat usage
+- number of completed jobs
+- issue/complaint count
+
+Display this as:
+- trust score badge
+- vendor ranking
+- sortable vendor list
+
+Make the formula modular in code so I can adjust weights later.
+
+7. ASSIGN VENDORS TO JOBS
+- Assign one vendor to a maintenance request
+- Show vendor selection dropdown/modal
+- Track assignment date
+- Track scheduling date
+- Show vendor on job card and detail page
+- Make reassignment possible
+
+8. JOB COMPLETION + VENDOR REVIEW LOOP
+When a job is completed, landlord/property manager can review vendor on:
+- quality
+- speed
+- communication
+- professionalism
+- cost fairness
+- overall rating
+- private notes
+
+These reviews must feed the Vendor Trust Score.
+
+9. VENDOR WORK HISTORY
+Each vendor should have a job history timeline including:
+- job title
+- property
+- category
+- dates
+- status
+- cost if available
+- review outcome
+- notes
+
+10. SEARCH, FILTERS, SORTING
+Support across main views:
+- filter requests by status, priority, property, category
+- filter vendors by trade, score, status, tags
+- sort vendors by trust score, recent activity, rating, job count
+- search by vendor name, property, request title, unit
+
+11. ACTIVITY FEED
+Track important events:
+- request created
+- vendor assigned
+- status changed
+- request completed
+- vendor reviewed
+- property added
+
+Show a useful landlord-facing activity feed on dashboard.
+
+12. BASIC ANALYTICS
+Create a lightweight analytics section showing:
+- average completion time
+- most common maintenance categories
+- vendor leaderboard
+- open vs completed requests
+- overdue requests
+- average vendor rating
+- maintenance volume by property
+
+13. SUBSCRIPTION-READY ARCHITECTURE
+Even if full billing is not fully wired yet, structure app so it can easily support:
+- Starter plan
+- Pro plan
+- Portfolio plan
+
+Plan gating ideas:
+- number of properties
+- number of vendors
+- analytics access
+- advanced vendor score features
+
+If Stripe integration is feasible, scaffold it cleanly.
+If not, prepare the architecture for it.
+
+==================================================
+IMPORTANT DIFFERENTIATORS
+==================================================
+
+This app should feel more valuable than a simple repair request tool.
+
+Build these differentiators into the UX:
+
+A. Vendor intelligence
+The user should quickly see which vendors are reliable.
+
+B. Operational memory
+Every job should make the system smarter over time.
+
+C. Trust through real work history
+Not anonymous public reviews — internal performance records tied to actual jobs.
+
+D. Fast landlord workflow
+The user should be able to go from issue -> vendor -> completion -> review with minimal friction.
+
+==================================================
+RECOMMENDED PAGES / ROUTES
+==================================================
+
+Create a clear information architecture with pages such as:
+
+- /login
+- /signup
+- /dashboard
+- /properties
+- /properties/[id]
+- /requests
+- /requests/[id]
+- /vendors
+- /vendors/[id]
+- /analytics
+- /settings
+- /billing (scaffold if needed)
+
+==================================================
+DATA MODEL / DATABASE
+==================================================
+
+Design a clean database schema with tables or equivalent models for:
+
+- users
+- organizations or accounts (if multi-tenant ready)
+- properties
+- units
+- maintenance_requests
+- vendors
+- vendor_reviews
+- vendor_assignments
+- activity_logs
+- subscriptions (if scaffolded)
+- notes/internal_comments (if useful)
+
+Relationships should be logical and future-friendly.
+
+==================================================
+TECHNICAL EXPECTATIONS
+==================================================
+
+Use the existing stack if possible, unless parts clearly need refactoring.
+
+General expectations:
+- clean component structure
+- reusable UI components
+- strong form validation
+- loading states
+- empty states
+- error states
+- modular services/helpers
+- clear file organization
+- responsive layout
+- realistic seed/demo data if useful
+
+Refactor messy code where necessary.
+Do not leave the codebase feeling hacked together.
+
+==================================================
+UX EXPECTATIONS
+==================================================
+
+The app should include:
+- helpful empty states
+- clear CTA buttons
+- concise labels
+- polished tables/cards
+- clean modals/drawers
+- intuitive navigation
+- dashboard widgets that actually matter
+
+Avoid clutter.
+Every page should feel useful.
+
+==================================================
+COPY / MICROCOPY
+==================================================
+
+Use strong product copy throughout the app.
+
+Examples of tone:
+- professional
+- clear
+- helpful
+- confident
+
+Examples:
+- “Track vendor performance across real jobs.”
+- “Know who to trust before assigning the next repair.”
+- “Turn maintenance history into better vendor decisions.”
+
+==================================================
+WHAT TO PRIORITIZE FIRST
+==================================================
+
+Implement in this order if needed:
+
+Phase 1:
+- auth
+- dashboard
+- properties/units
+- maintenance requests
+- vendors
+- vendor assignment
+- vendor reviews
+- trust score
+
+Phase 2:
+- analytics
+- activity feed refinement
+- billing architecture
+- improved polish
+- advanced filters
+- file/photo support scaffolding
+
+==================================================
+DELIVERABLES
+==================================================
+
+I want you to:
+1. Refactor and upgrade the current app into VendorTrust
+2. Preserve useful existing code where practical
+3. Improve overall UX/UI substantially
+4. Create a coherent SaaS product structure
+5. Build a believable MVP that could start charging users
+6. Add demo/sample data if needed so the app looks alive
+7. Leave the project organized and readable
+
+Also:
+- update branding references from the old product where appropriate
+- rename navigation, headings, and page language to fit VendorTrust
+- remove low-value placeholder content
+- make the product feel premium and focused
+
+==================================================
+SUCCESS CRITERIA
+==================================================
+
+When finished, the product should feel like:
+- a real SaaS MVP
+- clearly differentiated from a generic maintenance tracker
+- worth showing to landlords and small property managers
+- something that could plausibly charge subscriptions soon
+
+Do not stop at surface-level visual changes.
+Improve product structure, logic, and value perception.
+
+Begin by auditing the current codebase structure, identifying what can be reused, then execute the rebuild with clear priorities.

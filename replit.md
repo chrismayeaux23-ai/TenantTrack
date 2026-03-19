@@ -32,6 +32,12 @@ A mobile-first SaaS web app where landlords manage maintenance requests via QR c
 - Vendor Management: landlords maintain a private network of contractors (vendors) per trade category (Plumbing, Electrical, HVAC, etc.), with preferred vendor flagging, contact info, license/insurance tracking, private notes, and ratings
 - Vendor Assignment: assign a vendor to any maintenance request from the dashboard expanded card, set priority (Normal/High/Emergency), mark as contacted, reassign or clear
 - Vendor Reviews: internal star ratings per job (quality, speed, communication, price, overall) with notes — visible in vendor detail panel and aggregated into stats
+- Vendor Detail Page (/vendors/:id): full-page vendor profile with trust score meter, performance stats (totalJobs, avgRating, completionRate, lastJobDate), job history timeline, review history, edit dialog, and mark-preferred/archive quick actions
+- Request Detail Page (/requests/:id): dedicated full work order view with property/unit info, tenant contact, urgency badge, dispatch panel, notes thread, cost log, and activity timeline
+- Analytics Page (/analytics): stat header row (total, open, completed, overdue, avg days, avg rating), vendor leaderboard table with trust scores, category breakdown bars, property volume, monthly trend, urgency breakdown
+- Dashboard overdue highlighting: request cards open >7 days with non-completed status show orange border with day count banner
+- Dashboard stat cards are now interactive buttons: click "Needs Dispatch" to filter New, "Scheduled Today" for In-Progress, "Done This Week" for Completed; "Avg Vendor Rating" links to Analytics
+- Dashboard "View Full Details" button in expanded card panel links to /requests/:id
 - Plan-based feature gating: property limits (trial=2, starter=5, growth/pro=unlimited), staff assignment (growth+)
 - Landlord profile page: edit name, phone, company name
 - Terms & Conditions and Privacy Policy pages

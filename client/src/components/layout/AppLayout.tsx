@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
-import { Building2, ClipboardList, LogOut, Menu, X, CreditCard, Users, UserCircle, Receipt, DollarSign, CalendarClock, Briefcase, ShieldCheck } from "lucide-react";
+import { Building2, ClipboardList, LogOut, Menu, X, CreditCard, Users, UserCircle, Receipt, DollarSign, CalendarClock, Briefcase, ShieldCheck, BarChart2 } from "lucide-react";
 import { Button } from "../ui/Button";
 import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
 
@@ -10,12 +10,18 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
+  const isActive = (href: string) => {
+    if (href === "/") return location === "/" || location === "/dashboard";
+    return location === href || location.startsWith(href + "/");
+  };
+
   const navigation = [
     { name: "Requests", href: "/", icon: ClipboardList },
     { name: "Properties", href: "/properties", icon: Building2 },
     { name: "Tenants", href: "/tenants", icon: UserCircle },
     { name: "Staff", href: "/staff", icon: Users },
     { name: "Vendors", href: "/vendors", icon: Briefcase },
+    { name: "Analytics", href: "/analytics", icon: BarChart2 },
     { name: "Costs", href: "/costs", icon: DollarSign },
     { name: "Scheduled", href: "/scheduled", icon: CalendarClock },
     { name: "Billing", href: "/billing", icon: Receipt },
@@ -24,8 +30,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   const bottomNav = [
     { name: "Requests", href: "/", icon: ClipboardList },
-    { name: "Properties", href: "/properties", icon: Building2 },
     { name: "Vendors", href: "/vendors", icon: Briefcase },
+    { name: "Analytics", href: "/analytics", icon: BarChart2 },
     { name: "More", href: "__menu__", icon: Menu },
   ];
 
@@ -59,19 +65,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
         <nav className="flex-1 px-4 py-6 md:py-4 space-y-1">
           {navigation.map((item) => {
-            const isActive = location === item.href;
+            const active = isActive(item.href);
             return (
               <Link 
                 key={item.name} 
                 href={item.href}
                 className={`
                   flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200
-                  ${isActive 
+                  ${active 
                     ? "bg-primary text-primary-foreground shadow-md shadow-primary/20" 
                     : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   }
                 `}
                 onClick={() => setIsMobileMenuOpen(false)}
+                data-testid={`nav-${item.name.toLowerCase()}`}
               >
                 <item.icon className="h-5 w-5 flex-shrink-0" />
                 {item.name}
@@ -122,15 +129,15 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                 </button>
               );
             }
-            const isActive = location === item.href;
+            const active = isActive(item.href);
             return (
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex flex-col items-center gap-1 px-3 py-1 ${isActive ? "text-primary" : "text-muted-foreground"}`}
+                className={`flex flex-col items-center gap-1 px-3 py-1 ${active ? "text-primary" : "text-muted-foreground"}`}
                 data-testid={`button-bottom-${item.name.toLowerCase()}`}
               >
-                <item.icon className={`h-5 w-5 ${isActive ? "text-primary" : ""}`} />
+                <item.icon className={`h-5 w-5 ${active ? "text-primary" : ""}`} />
                 <span className="text-xs font-medium">{item.name}</span>
               </Link>
             );

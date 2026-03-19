@@ -25,6 +25,9 @@ import CostTracking from "@/pages/CostTracking";
 import RecurringMaintenance from "@/pages/RecurringMaintenance";
 import Features from "@/pages/Features";
 import Vendors from "@/pages/Vendors";
+import VendorDetail from "@/pages/VendorDetail";
+import Analytics from "@/pages/Analytics";
+import RequestDetail from "@/pages/RequestDetail";
 
 function ProtectedRoute({ component: Component }: { component: React.ComponentType }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -98,8 +101,20 @@ function Router() {
         <ProtectedRoute component={RecurringMaintenance} />
       </Route>
 
+      <Route path="/vendors/:id">
+        <ProtectedRoute component={VendorDetail} />
+      </Route>
+
       <Route path="/vendors">
         <ProtectedRoute component={Vendors} />
+      </Route>
+
+      <Route path="/analytics">
+        <ProtectedRoute component={Analytics} />
+      </Route>
+
+      <Route path="/requests/:id">
+        <ProtectedRoute component={RequestDetail} />
       </Route>
 
       <Route path="/pricing">

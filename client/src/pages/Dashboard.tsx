@@ -1,16 +1,17 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useRequests } from "@/hooks/use-requests";
 import { useProperties } from "@/hooks/use-properties";
 import { useStaff, useAssignRequest } from "@/hooks/use-staff";
 import { Badge } from "@/components/ui/Badge";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import { Dialog } from "@/components/ui/Dialog";
 import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { useUpdateRequestStatus } from "@/hooks/use-requests";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, AlertCircle, Phone, Mail, MapPin, Search, UserCheck, MessageSquare, Send, ClipboardList, AlertTriangle, CheckCircle2, Clock, DollarSign, Trash2, ChevronDown, ChevronUp, Briefcase, X, Star, Calendar, Zap, ShieldCheck, ThumbsUp, CheckSquare, ChevronRight, Circle } from "lucide-react";
+import { Loader2, AlertCircle, Phone, Mail, MapPin, Search, UserCheck, MessageSquare, Send, ClipboardList, AlertTriangle, CheckCircle2, Clock, DollarSign, Trash2, ChevronDown, ChevronUp, Briefcase, X, Star, Calendar, Zap, ShieldCheck, ThumbsUp, CheckSquare, ChevronRight, Circle, ExternalLink, BarChart2 } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { useVendors, useVendorAssignment, useAssignVendor, useClearVendorAssignment, useMarkVendorContacted } from "@/hooks/use-vendors";
 
@@ -727,7 +728,11 @@ export default function Dashboard() {
       {/* VendorTrust Dispatch Metrics */}
       {stats && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-          <div className="bg-card rounded-2xl p-4 border border-border shadow-sm" data-testid="stat-needs-dispatch">
+          <button
+            className="bg-card rounded-2xl p-4 border border-border shadow-sm text-left hover:border-red-500/40 transition-colors"
+            onClick={() => setStatusFilter("New")}
+            data-testid="stat-needs-dispatch"
+          >
             <div className="flex items-center gap-3">
               <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${(stats.needsDispatch || 0) > 0 ? "bg-red-500/10" : "bg-muted"}`}>
                 <AlertTriangle className={`h-5 w-5 ${(stats.needsDispatch || 0) > 0 ? "text-red-400" : "text-muted-foreground"}`} />
@@ -737,8 +742,12 @@ export default function Dashboard() {
                 <p className="text-xs text-muted-foreground">Needs Dispatch</p>
               </div>
             </div>
-          </div>
-          <div className="bg-card rounded-2xl p-4 border border-border shadow-sm" data-testid="stat-scheduled">
+          </button>
+          <button
+            className="bg-card rounded-2xl p-4 border border-border shadow-sm text-left hover:border-yellow-500/40 transition-colors"
+            onClick={() => setStatusFilter("In-Progress")}
+            data-testid="stat-scheduled"
+          >
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-yellow-500/10 flex items-center justify-center">
                 <Calendar className="h-5 w-5 text-yellow-400" />
@@ -748,8 +757,12 @@ export default function Dashboard() {
                 <p className="text-xs text-muted-foreground">Scheduled Today</p>
               </div>
             </div>
-          </div>
-          <div className="bg-card rounded-2xl p-4 border border-border shadow-sm" data-testid="stat-completed-week">
+          </button>
+          <button
+            className="bg-card rounded-2xl p-4 border border-border shadow-sm text-left hover:border-green-500/40 transition-colors"
+            onClick={() => setStatusFilter("Completed")}
+            data-testid="stat-completed-week"
+          >
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-green-500/10 flex items-center justify-center">
                 <CheckCircle2 className="h-5 w-5 text-green-400" />
@@ -759,18 +772,20 @@ export default function Dashboard() {
                 <p className="text-xs text-muted-foreground">Done This Week</p>
               </div>
             </div>
-          </div>
-          <div className="bg-card rounded-2xl p-4 border border-border shadow-sm" data-testid="stat-avg-rating">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-yellow-400/10 flex items-center justify-center">
-                <Star className="h-5 w-5 text-yellow-400" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{stats.avgVendorRating ? stats.avgVendorRating.toFixed(1) : "—"}</p>
-                <p className="text-xs text-muted-foreground">Avg Vendor Rating</p>
+          </button>
+          <Link href="/analytics">
+            <div className="bg-card rounded-2xl p-4 border border-border shadow-sm hover:border-primary/40 transition-colors cursor-pointer" data-testid="stat-avg-rating">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-yellow-400/10 flex items-center justify-center">
+                  <Star className="h-5 w-5 text-yellow-400" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold">{stats.avgVendorRating ? stats.avgVendorRating.toFixed(1) : "—"}</p>
+                  <p className="text-xs text-muted-foreground">Avg Vendor Rating</p>
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
         </div>
       )}
 
@@ -832,8 +847,18 @@ export default function Dashboard() {
             const isExpanded = expandedCards.has(request.id);
             const staffName = getStaffName(request.assignedTo);
 
+            const isOverdue = request.createdAt
+              && !["Completed", "Cancelled"].includes(request.status)
+              && differenceInDays(new Date(), new Date(request.createdAt)) >= 7;
+
             return (
-              <div key={request.id} className="bg-card rounded-2xl border border-border shadow-sm transition-all" data-testid={`request-card-${request.id}`}>
+              <div key={request.id} className={`bg-card rounded-2xl border shadow-sm transition-all ${isOverdue ? "border-orange-500/60 shadow-orange-500/10" : "border-border"}`} data-testid={`request-card-${request.id}`}>
+                {isOverdue && (
+                  <div className="px-4 pt-2 pb-0 flex items-center gap-1.5">
+                    <AlertTriangle className="h-3.5 w-3.5 text-orange-400" />
+                    <span className="text-xs font-semibold text-orange-400">Overdue — open for {differenceInDays(new Date(), new Date(request.createdAt!))} days</span>
+                  </div>
+                )}
                 <button
                   className="w-full text-left p-4 md:p-5 flex items-center gap-4 cursor-pointer active:bg-muted/30 transition-colors rounded-2xl"
                   onClick={() => toggleCard(request.id)}
@@ -868,6 +893,13 @@ export default function Dashboard() {
 
                 {isExpanded && (
                   <div className="px-4 md:px-5 pb-5 border-t border-border pt-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="flex items-center justify-end mb-3">
+                      <Link href={`/requests/${request.id}`} onClick={(e) => e.stopPropagation()}>
+                        <Button variant="outline" size="sm" className="h-8 px-3 text-xs gap-1.5" data-testid={`link-view-details-${request.id}`}>
+                          <ExternalLink className="h-3 w-3" /> View Full Details
+                        </Button>
+                      </Link>
+                    </div>
                     <div className="flex items-center justify-between mb-4 text-xs text-muted-foreground">
                       <span>Submitted {request.createdAt ? format(new Date(request.createdAt), 'MMM d, yyyy — h:mm a') : ''}</span>
                       {request.trackingCode && (
@@ -925,7 +957,7 @@ export default function Dashboard() {
                     <RequestNotes requestId={request.id} />
                     <RequestCosts requestId={request.id} />
 
-                    <div className="mt-4 pt-4 border-t border-border flex justify-end">
+                    <div className="mt-4 pt-4 border-t border-border flex items-center justify-end">
                       {deleteConfirm === request.id ? (
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-red-400">Delete this request and all its data?</span>
