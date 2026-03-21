@@ -1,0 +1,123 @@
+You are working inside my EXISTING app called VendorTrust.
+
+VendorTrust already has:
+- landlord auth
+- properties
+- maintenance requests
+- vendor directory
+- vendor trust scores
+- vendor recommendations by trade
+- manual vendor assignment
+- dispatch statuses
+- scheduled date + arrival window
+- completion notes / invoice / materials / final cost
+- dashboard stats
+
+Your task is to build ONLY a secure vendor magic-link portal for assigned jobs.
+
+GOAL
+Let a vendor receive a secure link and interact with a specific assigned work order without creating a full account.
+
+SCOPE
+Do not rebuild the app.
+Do not redesign unrelated areas.
+Do not change billing/auth unless absolutely necessary.
+Work inside the current architecture and extend it cleanly.
+
+BUILD THESE FEATURES
+
+1. MAGIC-LINK ACCESS
+- Create secure, signed, expiring magic links for vendors
+- Link must be scoped to:
+  - one specific vendor
+  - one specific request/work order
+- Link should expire after a reasonable MVP timeframe such as 7 days
+- Add ability for landlord/admin to resend link
+- Add ability to revoke/regenerate link if vendor changes
+- Prevent access to unrelated jobs or any admin pages
+
+2. VENDOR PORTAL PAGE
+Create a limited-access vendor job page where vendor can view:
+- property name
+- unit
+- issue title/category
+- request description
+- urgency
+- scheduled date/time if present
+- arrival window if present
+- manager contact info if already appropriate in app logic
+- assigned vendor name/company
+- current job status
+
+3. VENDOR ACTIONS
+Vendor can perform these actions:
+- Accept job
+- Decline job
+- Propose new time
+- Mark En Route
+- Mark Started
+- Mark Completed
+- Add short notes
+- Add completion notes
+
+If easy in current stack, also support proof-of-completion photo upload.
+If not easy, leave clean hooks/placeholders for later.
+
+4. RESPONSE STATES
+Add and wire up vendor response states:
+- pending-response
+- accepted
+- declined
+- proposed-new-time
+- no-response
+
+5. TIMESTAMPS / DATA
+Add fields as needed, such as:
+- vendorPortalToken / hashed token storage if appropriate
+- vendorLinkExpiresAt
+- vendorLinkSentAt
+- vendorRespondedAt
+- acceptedAt
+- declinedAt
+- proposedTime
+- proposedTimeNote
+- proposedTimeAt
+- enRouteAt
+- startedAt
+- completedAt
+- vendorLastAction
+- vendorLastActionNote
+
+6. LANDLORD REQUEST DETAIL INTEGRATION
+Inside the existing landlord/admin request detail view:
+- show vendor response status clearly
+- show last vendor action
+- show link status: active / expired / revoked
+- add actions:
+  - send magic link
+  - resend magic link
+  - revoke magic link
+- if vendor declines, make the request clearly return to dispatch attention
+
+7. EMAIL INTEGRATION
+Reuse the current email structure if present.
+Send a vendor assignment email containing:
+- property
+- issue summary
+- urgency
+- scheduled time if available
+- clear button/link to open the vendor portal
+
+TECHNICAL RULES
+- Preserve existing code style and architecture
+- Reuse existing hooks, routes, and schema patterns where possible
+- Add proper TypeScript types
+- Keep this focused on MVP usefulness
+- Avoid dead code and giant rewrites
+
+WHEN DONE, PROVIDE
+1. summary of files changed
+2. summary of new database fields
+3. summary of new API routes/endpoints
+4. test checklist for vendor portal flow
+5. any env vars needed
