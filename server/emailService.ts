@@ -16,7 +16,7 @@ async function getResendClient(): Promise<{ client: Resend; fromEmail: string } 
       if (!apiKey) return null;
       return {
         client: new Resend(apiKey),
-        fromEmail: process.env.EMAIL_FROM || 'TenantTrack <notifications@tenant-track.com>',
+        fromEmail: process.env.EMAIL_FROM || 'VendorTrust <notifications@vendortrust.com>',
       };
     }
 
@@ -34,7 +34,7 @@ async function getResendClient(): Promise<{ client: Resend; fromEmail: string } 
 
     return {
       client: new Resend(data.settings.api_key),
-      fromEmail: data.settings.from_email || process.env.EMAIL_FROM || 'TenantTrack <notifications@tenant-track.com>',
+      fromEmail: data.settings.from_email || process.env.EMAIL_FROM || 'VendorTrust <notifications@vendortrust.com>',
     };
   } catch (err) {
     console.error('Failed to get Resend client:', err);
@@ -42,7 +42,7 @@ async function getResendClient(): Promise<{ client: Resend; fromEmail: string } 
   }
 }
 
-const APP_URL = process.env.APP_URL || 'https://www.tenant-track.com';
+const APP_URL = process.env.APP_URL || 'https://www.vendortrust.com';
 
 export async function sendNewRequestEmail(opts: {
   landlordEmail: string;
@@ -66,7 +66,7 @@ export async function sendNewRequestEmail(opts: {
         <div style="font-family:sans-serif;max-width:560px;margin:0 auto;background:#0f1a12;color:#f0faf2;padding:32px;border-radius:12px">
           <h2 style="color:#4ade80;margin-top:0">New Maintenance Request</h2>
           <p>Hi ${opts.landlordName},</p>
-          <p>A tenant submitted a new maintenance request through TenantTrack.</p>
+          <p>A tenant submitted a new maintenance request through VendorTrust.</p>
           <table style="width:100%;border-collapse:collapse;margin:20px 0">
             <tr><td style="padding:8px;color:#94a3b8;width:140px">Property</td><td style="padding:8px;color:#f0faf2">${opts.propertyName}</td></tr>
             <tr style="background:#1a2e1e"><td style="padding:8px;color:#94a3b8">Unit</td><td style="padding:8px;color:#f0faf2">${opts.unitNumber}</td></tr>
@@ -77,7 +77,7 @@ export async function sendNewRequestEmail(opts: {
           </table>
           <p style="color:#94a3b8;font-size:13px">Tracking code: <strong style="color:#4ade80">${opts.trackingCode}</strong></p>
           <a href="${APP_URL}" style="display:inline-block;background:#22c55e;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;margin-top:8px">View in Dashboard →</a>
-          <p style="color:#4b5563;font-size:12px;margin-top:24px">You're receiving this because you're a TenantTrack landlord.</p>
+          <p style="color:#4b5563;font-size:12px;margin-top:24px">You're receiving this because you're a VendorTrust landlord.</p>
         </div>
       `,
     });

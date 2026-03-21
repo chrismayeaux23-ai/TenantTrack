@@ -3,7 +3,7 @@ import { useProperty } from "@/hooks/use-properties";
 import { QRCodeSVG } from "qrcode.react";
 import { Loader2, Printer, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
+import logoPng from "@assets/vendortrust-logo.png";
 
 export default function PrintFlyer() {
   const { propertyId } = useParams<{ propertyId: string }>();
@@ -47,8 +47,8 @@ export default function PrintFlyer() {
         <div className="bg-white rounded-3xl print:rounded-none shadow-xl print:shadow-none border border-border print:border-0 overflow-hidden">
           <div className="bg-gradient-to-br from-green-800 to-green-950 text-white p-8 sm:p-12 text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <img src={logoPng} alt="TenantTrack" className="h-14 w-14 rounded-xl" />
-              <span className="text-3xl sm:text-4xl font-bold tracking-tight">TenantTrack</span>
+              <img src={logoPng} alt="VendorTrust" className="h-14 w-14 rounded-xl" />
+              <span className="text-3xl sm:text-4xl font-bold tracking-tight">VendorTrust</span>
             </div>
             <div className="w-16 h-1 bg-white/40 rounded-full mx-auto mb-4"></div>
             <p className="text-green-200 text-lg">Fast. Easy. Maintenance Reporting.</p>
@@ -101,7 +101,7 @@ export default function PrintFlyer() {
 
             <div className="mt-8 text-center">
               <p className="text-xs text-gray-400">No app download required. Works on any smartphone browser.</p>
-              <p className="text-xs text-gray-400 mt-1">Powered by TenantTrack</p>
+              <p className="text-xs text-gray-400 mt-1">Powered by VendorTrust</p>
             </div>
           </div>
         </div>

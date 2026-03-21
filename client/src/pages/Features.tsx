@@ -11,7 +11,7 @@ import {
   X, AlertTriangle, ThumbsUp, Percent, Timer,
   HandCoins, Megaphone, Target, Lock, Send
 } from "lucide-react";
-import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
+import logoPng from "@assets/vendortrust-logo.png";
 
 const HERO_FEATURES = [
   "QR code maintenance system",
@@ -53,7 +53,7 @@ const DETAILED_FEATURES = [
     subtitle: "Every request, one screen. Zero chaos.",
     description: "See all maintenance requests across your entire portfolio in a single, filterable view. Color-coded status badges (red for emergencies, yellow for in-progress, green for completed) let you triage at a glance. Each request card shows tenant contact info, photos, urgency level, assigned staff, logged costs, and a full internal notes timeline.",
     businessBenefit: "No more spreadsheets, sticky notes, or trying to remember which tenant texted you about a leaky faucet. Every request is documented with a complete audit trail — who reported it, when, what photos they sent, who you assigned it to, how much it cost, and when it was resolved. This protects you in disputes and simplifies insurance claims.",
-    roiCallout: "Property managers using TenantTrack resolve requests 40% faster with full documentation from start to finish.",
+    roiCallout: "Property managers using VendorTrust resolve requests 40% faster with full documentation from start to finish.",
     icon: ClipboardList,
     color: "blue",
     highlights: [
@@ -72,8 +72,8 @@ const DETAILED_FEATURES = [
     title: "Tenant Request Tracking",
     subtitle: "Happy tenants. Fewer phone calls. Better reviews.",
     description: "After submitting a request, tenants receive a unique 8-character tracking code. They can check their request status anytime at your tracking page — no account or login needed. When you update a status from 'New' to 'In-Progress' to 'Completed', tenants see it immediately. The tracking page shows a clear visual timeline so tenants always know exactly where things stand.",
-    businessBenefit: "The number one source of tenant frustration is feeling ignored. TenantTrack gives tenants visibility into their request status without requiring a single phone call from you. This dramatically reduces 'when is this getting fixed?' follow-ups and builds trust. Better maintenance communication is consistently cited as a top factor in lease renewals and positive reviews on rental platforms.",
-    roiCallout: "Landlords see up to 90% fewer follow-up calls and texts after switching to TenantTrack's tracking system.",
+    businessBenefit: "The number one source of tenant frustration is feeling ignored. VendorTrust gives tenants visibility into their request status without requiring a single phone call from you. This dramatically reduces 'when is this getting fixed?' follow-ups and builds trust. Better maintenance communication is consistently cited as a top factor in lease renewals and positive reviews on rental platforms.",
+    roiCallout: "Landlords see up to 90% fewer follow-up calls and texts after switching to VendorTrust's tracking system.",
     icon: Smartphone,
     color: "rose",
     highlights: [
@@ -92,7 +92,7 @@ const DETAILED_FEATURES = [
     title: "Tenant-Landlord Messaging",
     subtitle: "Talk directly. No phone tag.",
     description: "Built-in messaging lets tenants and landlords communicate directly within each maintenance request — no phone calls, no texts lost in a thread. Tenants send messages from their tracking page using their tracking code (no login needed), and landlords reply from the dashboard. Every message is tied to the specific request, creating a complete conversation history.",
-    businessBenefit: "Phone calls get missed. Texts get buried. Emails get ignored. TenantTrack messaging keeps every conversation attached to the specific maintenance request it's about. When you need to ask a tenant for clarification, schedule access, or confirm a repair was done right, it's all in one place. If a dispute arises, you have a timestamped record of every communication. This also means less context-switching — you handle messages right where you handle the request.",
+    businessBenefit: "Phone calls get missed. Texts get buried. Emails get ignored. VendorTrust messaging keeps every conversation attached to the specific maintenance request it's about. When you need to ask a tenant for clarification, schedule access, or confirm a repair was done right, it's all in one place. If a dispute arises, you have a timestamped record of every communication. This also means less context-switching — you handle messages right where you handle the request.",
     roiCallout: "Landlords report cutting back-and-forth communication time by 60% when messages are tied directly to each request.",
     icon: MessageSquare,
     color: "blue",
@@ -112,7 +112,7 @@ const DETAILED_FEATURES = [
     title: "Repair Cost Tracking & Reports",
     subtitle: "Know what you spend. Prove it at tax time.",
     description: "Log the cost of every repair directly on the maintenance request — description, dollar amount, and vendor name. See spending summaries across your entire portfolio, filtered by date range and property. When tax season arrives, export everything to CSV with one click. Know exactly what you spent, where you spent it, who did the work, and which property it was for. No more digging through receipts or bank statements.",
-    businessBenefit: "Maintenance is typically the largest operating expense for rental property owners, yet most landlords can't tell you what they spent last quarter. TenantTrack gives you instant visibility into your maintenance spending by property, by vendor, and by time period. This data helps you identify problem properties, negotiate better rates with vendors, budget accurately for the next year, and maximize your tax deductions with complete, exportable records.",
+    businessBenefit: "Maintenance is typically the largest operating expense for rental property owners, yet most landlords can't tell you what they spent last quarter. VendorTrust gives you instant visibility into your maintenance spending by property, by vendor, and by time period. This data helps you identify problem properties, negotiate better rates with vendors, budget accurately for the next year, and maximize your tax deductions with complete, exportable records.",
     roiCallout: "Landlords using cost tracking report finding an average of $1,200/year in previously undocumented tax-deductible repairs.",
     icon: DollarSign,
     color: "yellow",
@@ -131,8 +131,8 @@ const DETAILED_FEATURES = [
     badge: "Preventive",
     title: "Recurring Maintenance Scheduling",
     subtitle: "Stop waiting for things to break.",
-    description: "Set up recurring tasks like HVAC filter changes, smoke detector battery replacements, gutter cleaning, pest control inspections, and fire extinguisher checks. Choose from six frequency options (weekly, biweekly, monthly, quarterly, biannually, annually) and TenantTrack automatically tracks when each task is due. Overdue tasks are highlighted in red, upcoming tasks in yellow, so nothing slips through the cracks.",
-    businessBenefit: "Preventive maintenance costs a fraction of emergency repairs. A $30 HVAC filter change every 3 months prevents a $3,000 compressor replacement. A $15 smoke detector battery swap prevents code violations and liability. TenantTrack shifts your maintenance from reactive (expensive, stressful) to proactive (cheap, planned). It also demonstrates due diligence if you ever face a habitability complaint — you have documented proof that inspections and maintenance were performed on schedule.",
+    description: "Set up recurring tasks like HVAC filter changes, smoke detector battery replacements, gutter cleaning, pest control inspections, and fire extinguisher checks. Choose from six frequency options (weekly, biweekly, monthly, quarterly, biannually, annually) and VendorTrust automatically tracks when each task is due. Overdue tasks are highlighted in red, upcoming tasks in yellow, so nothing slips through the cracks.",
+    businessBenefit: "Preventive maintenance costs a fraction of emergency repairs. A $30 HVAC filter change every 3 months prevents a $3,000 compressor replacement. A $15 smoke detector battery swap prevents code violations and liability. VendorTrust shifts your maintenance from reactive (expensive, stressful) to proactive (cheap, planned). It also demonstrates due diligence if you ever face a habitability complaint — you have documented proof that inspections and maintenance were performed on schedule.",
     roiCallout: "Proactive maintenance reduces emergency repair costs by up to 40% and extends the life of major systems by years.",
     icon: CalendarClock,
     color: "purple",
@@ -152,8 +152,8 @@ const DETAILED_FEATURES = [
     title: "Maintenance Staff Management",
     subtitle: "Assign work. Track progress. Stay in control.",
     description: "Add your maintenance team — handymen, plumbers, electricians, HVAC techs, property managers — and assign incoming requests to the right person with one click. See who's handling what, how many open assignments each person has, and keep everyone accountable. No more group texts, missed messages, or 'I thought you were handling that' conversations.",
-    businessBenefit: "As your portfolio grows, you can't do everything yourself. TenantTrack lets you delegate without losing visibility. Assign a leaky faucet to your plumber, an electrical issue to your electrician, and a general repair to your handyman — all from the same dashboard. Staff members are tied to your account, so you maintain full control over assignments and can reassign work instantly if someone is unavailable.",
-    roiCallout: "Multi-property landlords save an average of 6 hours per week by streamlining staff coordination through TenantTrack.",
+    businessBenefit: "As your portfolio grows, you can't do everything yourself. VendorTrust lets you delegate without losing visibility. Assign a leaky faucet to your plumber, an electrical issue to your electrician, and a general repair to your handyman — all from the same dashboard. Staff members are tied to your account, so you maintain full control over assignments and can reassign work instantly if someone is unavailable.",
+    roiCallout: "Multi-property landlords save an average of 6 hours per week by streamlining staff coordination through VendorTrust.",
     icon: Users,
     color: "orange",
     highlights: [
@@ -426,8 +426,8 @@ export default function Features() {
       <nav className="fixed top-0 w-full z-50 glass-panel border-b-0">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2" data-testid="link-home">
-            <img src={logoPng} alt="TenantTrack Logo" className="h-10 w-10 object-contain rounded-lg" />
-            <span className="font-display font-bold text-xl text-foreground">TenantTrack</span>
+            <img src={logoPng} alt="VendorTrust Logo" className="h-10 w-10 object-contain rounded-lg" />
+            <span className="font-display font-bold text-xl text-foreground">VendorTrust</span>
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/" className="hidden sm:inline text-sm text-muted-foreground hover:text-foreground transition-colors" data-testid="link-back-home">
@@ -447,7 +447,7 @@ export default function Features() {
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-rose-300">Nothing they don't.</span>
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6 leading-relaxed" data-testid="text-features-subtitle">
-          TenantTrack replaces scattered texts, spreadsheets, and sticky notes with one organized system built specifically for independent landlords and small property managers. Here's exactly what you get.
+          VendorTrust replaces scattered texts, spreadsheets, and sticky notes with one organized system built specifically for independent landlords and small property managers. Here's exactly what you get.
         </p>
         <p className="text-base text-muted-foreground/80 max-w-2xl mx-auto mb-10 leading-relaxed">
           No bloated enterprise software. No features you'll never use. Just the tools that actually save you time, protect your investment, and keep tenants happy.
@@ -545,7 +545,7 @@ export default function Features() {
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-4 text-sm px-4 py-1.5">Why Switch</Badge>
             <h2 className="text-3xl md:text-4xl font-display font-extrabold text-foreground mb-4">
-              TenantTrack vs. The Old Way
+              VendorTrust vs. The Old Way
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Most landlords manage maintenance with phone calls, texts, and spreadsheets. Here's what changes when you switch to a purpose-built system.
@@ -564,7 +564,7 @@ export default function Features() {
                       <div className="h-6 w-6 rounded-full bg-red-500/10 flex items-center justify-center">
                         <X className="h-3.5 w-3.5 text-red-400" />
                       </div>
-                      <span className="text-xs font-bold text-red-400 uppercase tracking-wide">Without TenantTrack</span>
+                      <span className="text-xs font-bold text-red-400 uppercase tracking-wide">Without VendorTrust</span>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">{item.old}</p>
                   </div>
@@ -573,7 +573,7 @@ export default function Features() {
                       <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
                         <Check className="h-3.5 w-3.5 text-primary" />
                       </div>
-                      <span className="text-xs font-bold text-primary uppercase tracking-wide">With TenantTrack</span>
+                      <span className="text-xs font-bold text-primary uppercase tracking-wide">With VendorTrust</span>
                     </div>
                     <p className="text-sm text-foreground leading-relaxed">{item.tenanttrack}</p>
                   </div>
@@ -589,10 +589,10 @@ export default function Features() {
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-4 text-sm px-4 py-1.5">Built For You</Badge>
             <h2 className="text-3xl md:text-4xl font-display font-extrabold text-foreground mb-4">
-              Who TenantTrack Is Built For
+              Who VendorTrust Is Built For
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              We're not trying to be everything to everyone. TenantTrack is purpose-built for independent landlords and small property managers who want a simple, modern system without enterprise complexity.
+              We're not trying to be everything to everyone. VendorTrust is purpose-built for independent landlords and small property managers who want a simple, modern system without enterprise complexity.
             </p>
           </div>
 
@@ -605,12 +605,12 @@ export default function Features() {
               },
               {
                 title: "Small Property Managers",
-                desc: "Managing 10-50 units for yourself or clients? TenantTrack scales with you — add properties, assign staff, track costs, and keep every owner informed with exportable data.",
+                desc: "Managing 10-50 units for yourself or clients? VendorTrust scales with you — add properties, assign staff, track costs, and keep every owner informed with exportable data.",
                 icon: Layers,
               },
               {
                 title: "Self-Managing Owners",
-                desc: "Don't want to pay a property manager 8-10% of rent? TenantTrack gives you the organized system you need to self-manage professionally without the overhead.",
+                desc: "Don't want to pay a property manager 8-10% of rent? VendorTrust gives you the organized system you need to self-manage professionally without the overhead.",
                 icon: Crown,
               },
               {
@@ -625,7 +625,7 @@ export default function Features() {
               },
               {
                 title: "Tax-Conscious Investors",
-                desc: "Every repair is a deductible expense — but only if it's documented. TenantTrack's cost tracking and CSV export means you never miss a deduction again.",
+                desc: "Every repair is a deductible expense — but only if it's documented. VendorTrust's cost tracking and CSV export means you never miss a deduction again.",
                 icon: Receipt,
               },
             ].map((persona, i) => (
@@ -646,7 +646,7 @@ export default function Features() {
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-4 text-sm px-4 py-1.5">What Makes Us Different</Badge>
             <h2 className="text-3xl md:text-4xl font-display font-extrabold text-foreground mb-4">
-              Why Landlords Choose TenantTrack
+              Why Landlords Choose VendorTrust
             </h2>
           </div>
 
@@ -669,7 +669,7 @@ export default function Features() {
               },
               {
                 title: "Not Enterprise Software",
-                desc: "We're not Yardi, Buildium, or AppFolio. Those platforms are built for property management companies with 500+ units and full-time staff. TenantTrack is built for you — the landlord who manages their own properties.",
+                desc: "We're not Yardi, Buildium, or AppFolio. Those platforms are built for property management companies with 500+ units and full-time staff. VendorTrust is built for you — the landlord who manages their own properties.",
                 icon: Target,
               },
               {
@@ -844,8 +844,8 @@ export default function Features() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
-                <img src={logoPng} alt="TenantTrack" className="h-10 w-10 rounded-lg" />
-                <span className="font-display font-bold text-xl text-foreground">TenantTrack</span>
+                <img src={logoPng} alt="VendorTrust" className="h-10 w-10 rounded-lg" />
+                <span className="font-display font-bold text-xl text-foreground">VendorTrust</span>
               </div>
               <p className="text-sm text-muted-foreground max-w-sm leading-relaxed">
                 The modern maintenance request system built for independent landlords and small property managers. QR-powered, mobile-first, and designed to save you time, money, and headaches.
@@ -882,7 +882,7 @@ export default function Features() {
             </div>
           </div>
           <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-            <p>&copy; {new Date().getFullYear()} TenantTrack. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} VendorTrust. All rights reserved.</p>
             <div className="flex gap-4">
               <Link href="/terms" className="hover:text-primary transition-colors">Terms & Conditions</Link>
               <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>

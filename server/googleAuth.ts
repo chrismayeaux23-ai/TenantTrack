@@ -20,7 +20,7 @@ export function setupGoogleAuth(app: Express) {
 
   const callbackURL =
     process.env.GOOGLE_CALLBACK_URL ||
-    "https://www.tenant-track.com/api/auth/google/callback";
+    "https://www.vendortrust.com/api/auth/google/callback";
 
   passport.use(
     new GoogleStrategy(

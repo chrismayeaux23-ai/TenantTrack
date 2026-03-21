@@ -315,13 +315,13 @@ export default function TrackRequest() {
 
       <footer className="py-6 px-4 text-center">
         <a
-          href="https://www.tenant-track.com"
+          href="https://www.vendortrust.com"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors"
         >
           <Wrench className="h-3 w-3" />
-          Powered by TenantTrack
+          Powered by VendorTrust
         </a>
       </footer>
     </div>

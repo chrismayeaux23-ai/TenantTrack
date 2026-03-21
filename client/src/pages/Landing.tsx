@@ -10,7 +10,7 @@ import {
   LogIn, ChevronLeft, ChevronRight,
   Camera, Bell, Wrench, BarChart2, MapPin, Printer
 } from "lucide-react";
-import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
+import logoPng from "@assets/vendortrust-logo.png";
 import heroPng from "@assets/ChatGPT_Image_Feb_27,_2026,_08_01_41_AM_1772208715787.png";
 
 const PLANS = [

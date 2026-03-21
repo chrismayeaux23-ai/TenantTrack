@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useAuth } from "@/hooks/use-auth";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
+import logoPng from "@assets/vendortrust-logo.png";
 
 const params = new URLSearchParams(window.location.search);
 const errorMessages: Record<string, string> = {

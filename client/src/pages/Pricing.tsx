@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
 import { Link } from "wouter";
-import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
+import logoPng from "@assets/vendortrust-logo.png";
 
 const PLANS = [
   {

@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import logoPng from "@assets/file_000000001adc71f58731a09f21d2988d_1772208715788.png";
+import logoPng from "@assets/vendortrust-logo.png";
 
 export default function Privacy() {
   return (
@@ -9,8 +9,8 @@ export default function Privacy() {
       <div className="sticky top-0 z-10 bg-card border-b border-border p-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={logoPng} alt="TenantTrack" className="h-8 w-8 rounded-lg" />
-            <span className="font-display font-bold text-xl">TenantTrack</span>
+            <img src={logoPng} alt="VendorTrust" className="h-8 w-8 rounded-lg" />
+            <span className="font-display font-bold text-xl">VendorTrust</span>
           </div>
           <Link href="/">
             <Button variant="ghost" size="sm" data-testid="button-back-home">
@@ -39,7 +39,7 @@ export default function Privacy() {
           <section>
             <h2 className="text-xl font-bold text-foreground mb-3">2. How We Use Your Information</h2>
             <ul className="list-disc pl-6 text-sm space-y-2">
-              <li>To provide and maintain the TenantTrack Service</li>
+              <li>To provide and maintain the VendorTrust Service</li>
               <li>To process maintenance requests and connect tenants with landlords</li>
               <li>To manage subscriptions and billing</li>
               <li>To send service-related communications and notifications</li>
@@ -92,9 +92,9 @@ export default function Privacy() {
             <h2 className="text-xl font-bold text-foreground mb-3">10. Contact Us</h2>
             <p className="text-sm leading-relaxed">If you have questions about this Privacy Policy or your data, contact us at:</p>
             <div className="mt-3 text-sm space-y-1">
-              <p>Email: support@tenant-track.com</p>
+              <p>Email: support@vendortrust.com</p>
               <p>Phone: (503) 380-6482</p>
-              <p>Website: www.tenant-track.com</p>
+              <p>Website: www.vendortrust.com</p>
             </div>
           </section>
         </div>
