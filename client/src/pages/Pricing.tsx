@@ -340,8 +340,8 @@ export default function Pricing() {
           </Button>
           <p className="text-xs text-muted-foreground mt-3">
             Questions? Email us at{" "}
-            <a href="mailto:support@tenant-track.com" className="text-primary hover:underline">
-              support@tenant-track.com
+            <a href="mailto:support@vendortrust.com" className="text-primary hover:underline">
+              support@vendortrust.com
             </a>
           </p>
         </div>

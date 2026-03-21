@@ -11,7 +11,7 @@ import {
   Camera, Bell, Wrench, BarChart2, MapPin, Printer
 } from "lucide-react";
 import logoPng from "@assets/vendortrust-logo.png";
-import heroPng from "@assets/ChatGPT_Image_Feb_27,_2026,_08_01_41_AM_1772208715787.png";
+import heroPng from "@assets/vendortrust-hero.png";
 
 const PLANS = [
   {
@@ -1297,9 +1297,9 @@ export default function Landing() {
               <h4 className="font-bold text-sm mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <a href="mailto:support@tenant-track.com" className="flex items-center gap-2 hover:text-primary transition-colors" data-testid="link-email">
+                  <a href="mailto:support@vendortrust.com" className="flex items-center gap-2 hover:text-primary transition-colors" data-testid="link-email">
                     <Mail className="h-4 w-4" />
-                    support@tenant-track.com
+                    support@vendortrust.com
                   </a>
                 </li>
                 <li>

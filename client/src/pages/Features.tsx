@@ -172,27 +172,27 @@ const COMPARISON_ITEMS = [
   {
     category: "Tenant submits a request",
     old: "Tenant calls, texts, or emails. You get a vague message with no photos. You call back for details. Multiple rounds of back-and-forth.",
-    tenanttrack: "Tenant scans a QR code, fills out a 60-second form with photos, urgency, and unit number. You get a complete, structured request instantly.",
+    vendortrust: "Tenant scans a QR code, fills out a 60-second form with photos, urgency, and unit number. You get a complete, structured request instantly.",
   },
   {
     category: "Tracking repair status",
     old: "You try to remember which request is where. Tenants call repeatedly asking for updates. Details get lost in text threads.",
-    tenanttrack: "Every request has a visual status pipeline. Tenants check their own tracking code — no calls needed. Full audit trail on every request.",
+    vendortrust: "Every request has a visual status pipeline. Tenants check their own tracking code — no calls needed. Full audit trail on every request.",
   },
   {
     category: "Logging repair costs",
     old: "Receipts pile up in a shoebox or a folder. At tax time, you dig through bank statements trying to match expenses to properties.",
-    tenanttrack: "Costs are logged per repair with vendor and description. Filter by property and date. Export to CSV with one click for your accountant.",
+    vendortrust: "Costs are logged per repair with vendor and description. Filter by property and date. Export to CSV with one click for your accountant.",
   },
   {
     category: "Preventive maintenance",
     old: "You try to remember when you last changed the HVAC filter or checked smoke detectors. Things slip until they break.",
-    tenanttrack: "Recurring tasks auto-track due dates. Overdue items are flagged in red. Mark complete and the next date is calculated automatically.",
+    vendortrust: "Recurring tasks auto-track due dates. Overdue items are flagged in red. Mark complete and the next date is calculated automatically.",
   },
   {
     category: "Coordinating with staff",
     old: "Group texts, phone calls, 'I thought you were handling that.' No central record of who's doing what.",
-    tenanttrack: "Assign requests to specific staff in one click. See everyone's workload. Full accountability with zero miscommunication.",
+    vendortrust: "Assign requests to specific staff in one click. See everyone's workload. Full accountability with zero miscommunication.",
   },
 ];
 
@@ -575,7 +575,7 @@ export default function Features() {
                       </div>
                       <span className="text-xs font-bold text-primary uppercase tracking-wide">With VendorTrust</span>
                     </div>
-                    <p className="text-sm text-foreground leading-relaxed">{item.tenanttrack}</p>
+                    <p className="text-sm text-foreground leading-relaxed">{item.vendortrust}</p>
                   </div>
                 </div>
               </div>
@@ -867,9 +867,9 @@ export default function Features() {
               <h4 className="font-bold text-sm mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <a href="mailto:support@tenant-track.com" className="flex items-center gap-2 hover:text-primary transition-colors" data-testid="link-email">
+                  <a href="mailto:support@vendortrust.com" className="flex items-center gap-2 hover:text-primary transition-colors" data-testid="link-email">
                     <Mail className="h-4 w-4" />
-                    support@tenant-track.com
+                    support@vendortrust.com
                   </a>
                 </li>
                 <li>
