@@ -8,7 +8,8 @@ import {
   Users, ClipboardList, Building2, Zap, Crown,
   ChevronDown, Star, BarChart3, FileDown, X, MessageSquare,
   LogIn, ChevronLeft, ChevronRight,
-  Camera, Bell, Wrench, BarChart2, MapPin, Printer
+  Camera, Bell, Wrench, BarChart2, MapPin, Printer,
+  Sparkles, Link2, Calendar, Columns3, Globe, Send
 } from "lucide-react";
 import logoPng from "@assets/vendortrust-full-nobg.png";
 
@@ -22,7 +23,8 @@ const PLANS = [
     features: [
       "QR maintenance system",
       "Vendor dispatch & tracking",
-      "VendorTrust scores",
+      "VendorTrust scores (0–100)",
+      "Vendor magic link portal",
       "Email notifications",
       "Photo uploads",
     ],
@@ -36,10 +38,10 @@ const PLANS = [
     highlight: true,
     features: [
       "Everything in Starter",
-      "Smart vendor recommendations",
+      "Auto-dispatch engine",
+      "Scheduling calendar",
       "Job status pipeline",
       "Proof of completion capture",
-      "Activity timeline per job",
       "Staff assignment",
     ],
   },
@@ -53,7 +55,7 @@ const PLANS = [
       "Everything in Growth",
       "Advanced vendor analytics",
       "Cost tracking & CSV export",
-      "Scheduled maintenance",
+      "Dispatch board (Kanban)",
       "Bilingual tenant UI",
       "Priority support",
     ],
@@ -64,7 +66,7 @@ const SLIDES = [
   // ── HOW IT WORKS ──────────────────────────────────────
   {
     section: "How It Works",
-    stepLabel: "Step 1 of 6",
+    stepLabel: "Step 1 of 9",
     tabLabel: "Add Properties",
     title: "Sign Up & Add Your Properties",
     description: "Create your account in seconds. Add your rental properties with name and address — each one instantly gets its own unique QR code.",
@@ -74,8 +76,8 @@ const SLIDES = [
   },
   {
     section: "How It Works",
-    stepLabel: "Step 2 of 6",
-    tabLabel: "Get QR Code",
+    stepLabel: "Step 2 of 9",
+    tabLabel: "QR Codes",
     title: "Get a Unique QR Code for Every Property",
     description: "Each property and unit gets its own scannable QR code. Print it, laminate it, and stick it near the door. Your tenants will always know where to report issues.",
     bullets: ["Print-ready flyer included, one click", "Works with iPhone and Android camera", "Each unit can have its own separate code"],
@@ -84,7 +86,7 @@ const SLIDES = [
   },
   {
     section: "How It Works",
-    stepLabel: "Step 3 of 6",
+    stepLabel: "Step 3 of 9",
     tabLabel: "Tenant Reports",
     title: "Tenants Report Issues in Under 60 Seconds",
     description: "No app to download. No account to create. Tenants open their phone camera, point it at the QR code, and a simple form opens instantly in their browser.",
@@ -94,8 +96,8 @@ const SLIDES = [
   },
   {
     section: "How It Works",
-    stepLabel: "Step 4 of 6",
-    tabLabel: "Instant Alert",
+    stepLabel: "Step 4 of 9",
+    tabLabel: "Instant Alerts",
     title: "You're Notified the Moment It's Submitted",
     description: "The instant a tenant submits a request, you receive an email with every detail — property, unit, issue type, urgency level, description, tenant contact, and photos.",
     bullets: ["Instant email with full details", "Tenant receives a unique tracking code", "No more missed texts or voicemails"],
@@ -104,18 +106,63 @@ const SLIDES = [
   },
   {
     section: "How It Works",
-    stepLabel: "Step 5 of 6",
+    stepLabel: "Step 5 of 9",
+    tabLabel: "Auto-Dispatch",
+    title: "Smart Vendor Dispatch — Manual, Recommend, or Auto",
+    description: "Choose how you want to assign jobs. VendorTrust's dispatch engine scores every vendor based on trade match, trust score, emergency availability, workload, and more — then recommends the best fit or assigns them automatically.",
+    bullets: [
+      "Vendors ranked by trust score, trade match & availability",
+      "Auto-assign mode dispatches your top vendor instantly",
+      "See the full scoring breakdown — why each vendor was picked",
+      "Preferred vendors get priority; no-shows get penalized",
+    ],
+    accent: "from-primary/20 to-yellow-500/10",
+    visual: "auto-dispatch",
+  },
+  {
+    section: "How It Works",
+    stepLabel: "Step 6 of 9",
+    tabLabel: "Vendor Portal",
+    title: "Vendors Accept Jobs via Secure Magic Link",
+    description: "When you dispatch a vendor, they receive an email with a one-click magic link — no login, no app. They can accept, decline, propose a new time, add notes, and mark jobs complete — all from their phone.",
+    bullets: [
+      "One-click magic link — no vendor account needed",
+      "Vendor can accept, decline, or propose a new time",
+      "Add job notes and mark work as complete",
+      "Links expire after 7 days; revoke or regenerate anytime",
+    ],
+    accent: "from-blue-500/20 to-violet-500/10",
+    visual: "vendor-portal",
+  },
+  {
+    section: "How It Works",
+    stepLabel: "Step 7 of 9",
+    tabLabel: "Scheduling",
+    title: "Visual Scheduling Calendar with Conflict Detection",
+    description: "Schedule vendor visits on a full calendar view — week, day, or list. VendorTrust automatically detects scheduling conflicts and shows urgency at a glance so you never double-book a vendor.",
+    bullets: [
+      "Week, day, and list views for full visibility",
+      "Drag-and-drop scheduling with conflict warnings",
+      "Urgency color coding: emergency, high, medium, low",
+      "Reschedule or unschedule jobs with one click",
+    ],
+    accent: "from-green-500/20 to-primary/10",
+    visual: "scheduling",
+  },
+  {
+    section: "How It Works",
+    stepLabel: "Step 8 of 9",
     tabLabel: "Dashboard",
-    title: "Dispatch & Track Every Job from One Dashboard",
-    description: "Your dispatch center shows every open request — with smart vendor recommendations, job status pipeline, scheduling, and proof of completion. Assign, track, and close jobs without leaving the dashboard.",
-    bullets: ["Smart vendor picks ranked by trust score", "Job pipeline: Assigned → Scheduled → Completed", "Proof of completion with invoice and notes"],
+    title: "Track Every Job from One Command Center",
+    description: "Your dispatch board shows every open request with real-time status, vendor assignment, and a full activity timeline. Move jobs through the pipeline and capture proof of completion — all without leaving the dashboard.",
+    bullets: ["Job pipeline: Assigned → Scheduled → In-Progress → Completed", "Full activity timeline with timestamps on every action", "Proof of completion with invoice, notes, and materials"],
     accent: "from-orange-500/20 to-primary/10",
     visual: "dashboard",
   },
   {
     section: "How It Works",
-    stepLabel: "Step 6 of 6",
-    tabLabel: "Costs & Schedule",
+    stepLabel: "Step 9 of 9",
+    tabLabel: "Costs & Reports",
     title: "Track Repair Costs & Stay Ahead of Maintenance",
     description: "Log the cost of every repair with vendor details. Set up recurring tasks — HVAC filters, smoke detector checks, fire extinguisher inspections — so nothing falls through the cracks. Export everything to CSV at tax time.",
     bullets: ["Log costs per repair with vendor info", "Recurring reminders for preventive tasks", "Export full cost history as CSV for taxes"],
@@ -146,9 +193,9 @@ const SLIDES = [
     description: "VendorTrust gives every contractor a performance score based on ratings, completion rate, and job history. Dispatch smarter, track every status change, and capture proof of completion — all in one place.",
     bullets: [
       "VendorTrust scores eliminate the guesswork",
-      "Job pipeline: Assigned → Scheduled → Completed",
-      "Completion notes, invoice numbers, materials recorded",
-      "Activity log on every request — full paper trail",
+      "Auto-dispatch assigns your top vendor in seconds",
+      "Vendors respond via magic link — no app needed",
+      "Full activity log on every request — complete paper trail",
     ],
     accent: "from-primary/15 to-indigo-900/15",
     visual: "why-comparison",
@@ -189,37 +236,62 @@ const FEATURES = [
   {
     icon: ShieldCheck,
     title: "VendorTrust Scores",
-    desc: "Every vendor gets a 0–100 trust score based on ratings, completion rate, job history, and reliability. Dispatch with confidence.",
+    desc: "Every vendor gets a 0–100 trust score based on ratings, completion rate, no-show history, and job tenure. Know who's reliable before you call.",
   },
   {
     icon: QrCode,
     title: "QR Maintenance Requests",
-    desc: "Tenants scan a property QR code and submit an issue in 60 seconds. No app, no account — just a simple mobile form.",
+    desc: "Tenants scan a property QR code and submit an issue in 60 seconds — with photos, urgency, and contact info. No app, no account required.",
   },
   {
-    icon: Zap,
-    title: "Smart Dispatch",
-    desc: "Get vendor recommendations ranked by trust score and trade match. Assign, schedule, and track job status — all in one place.",
+    icon: Sparkles,
+    title: "Auto-Dispatch Engine",
+    desc: "Score vendors on trade match, trust score, workload, emergency availability, and service area. Recommend the best or auto-assign them instantly.",
+  },
+  {
+    icon: Link2,
+    title: "Vendor Portal & Magic Links",
+    desc: "Vendors receive a secure one-click link to accept, decline, or propose a new time. No login needed — works on any phone.",
+  },
+  {
+    icon: Calendar,
+    title: "Scheduling Calendar",
+    desc: "Visual week, day, and list views with conflict detection. Schedule vendor visits, see urgency at a glance, and reschedule with one click.",
   },
   {
     icon: ClipboardList,
     title: "Job Status Pipeline",
-    desc: "Move jobs through: Assigned → Contacted → Scheduled → In-Progress → Completed. Full visibility at every step.",
+    desc: "Track every job from New → Assigned → Scheduled → In-Progress → Completed. Full visibility with activity timeline and timestamps.",
+  },
+  {
+    icon: Columns3,
+    title: "Dispatch Board",
+    desc: "Kanban-style dispatch board shows all requests by status. Drag jobs through the pipeline, assign vendors, and track progress visually.",
+  },
+  {
+    icon: Send,
+    title: "Email Notifications",
+    desc: "Automated emails to landlords, vendors, and tenants at every stage — new requests, dispatch confirmations, vendor responses, and completions.",
   },
   {
     icon: Check,
     title: "Proof of Completion",
-    desc: "Record completion notes, invoice numbers, and materials used when a job is done. Always have a paper trail.",
+    desc: "Capture completion notes, invoice numbers, materials used, and vendor photos when a job is done. Full paper trail on every request.",
   },
   {
     icon: DollarSign,
-    title: "Cost Tracking",
-    desc: "Log repair costs per request with vendor details. Export to CSV for tax time — your accountant will love you.",
+    title: "Cost Tracking & Export",
+    desc: "Log repair costs per request with vendor details. Export your full cost history to CSV at tax time — your accountant will love you.",
+  },
+  {
+    icon: Globe,
+    title: "Bilingual Tenant UI",
+    desc: "Tenant-facing forms support English and Spanish out of the box. Tenants choose their language — no extra setup needed.",
   },
   {
     icon: CalendarClock,
     title: "Scheduled Maintenance",
-    desc: "Set up recurring tasks like HVAC filter changes and fire extinguisher checks. Never miss preventive maintenance again.",
+    desc: "Set up recurring tasks like HVAC filter changes, smoke detector checks, and fire extinguisher inspections. Never miss preventive maintenance.",
   },
 ];
 
@@ -470,6 +542,164 @@ function SlideVisual({ type }: { type: string }) {
     </div>
   );
 
+  if (type === "auto-dispatch") return (
+    <div className="space-y-2.5 w-full max-w-sm mx-auto">
+      <div className="bg-card rounded-2xl border border-border p-4 shadow-xl">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
+            <Sparkles className="h-4 w-4 text-primary" />
+          </div>
+          <div>
+            <p className="text-xs font-bold">Dispatch Recommendation</p>
+            <p className="text-[10px] text-muted-foreground">Unit 3A — Plumbing</p>
+          </div>
+          <div className="ml-auto px-2 h-5 rounded-full bg-primary/10 text-[9px] text-primary font-bold flex items-center">Auto</div>
+        </div>
+        <div className="space-y-2">
+          {[
+            { name: "Portland Plumbing Co", score: 92, badge: "Best Match", top: true, reasons: ["Trade match", "Trust: 94", "Low workload"] },
+            { name: "QuickFix Contractors", score: 78, badge: "", top: false, reasons: ["Trade match", "Trust: 82", "2 active jobs"] },
+            { name: "AllPro Maintenance", score: 61, badge: "", top: false, reasons: ["General trade", "Trust: 70", "No-show: -8"] },
+          ].map((v, i) => (
+            <div key={i} className={`p-2.5 rounded-xl border ${v.top ? "bg-primary/5 border-primary/30" : "bg-muted/30 border-border"}`}>
+              <div className="flex items-center gap-2 mb-1">
+                <div className={`h-5 w-5 rounded-full flex items-center justify-center text-[9px] font-bold ${v.top ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>
+                  {i + 1}
+                </div>
+                <span className="text-xs font-medium flex-1">{v.name}</span>
+                <span className={`text-xs font-bold ${v.top ? "text-primary" : "text-muted-foreground"}`}>{v.score}</span>
+              </div>
+              <div className="flex flex-wrap gap-1 ml-7">
+                {v.reasons.map(r => (
+                  <span key={r} className="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{r}</span>
+                ))}
+              </div>
+              {v.top && (
+                <div className="mt-2 ml-7 h-7 bg-primary rounded-lg flex items-center justify-center gap-1 text-[10px] font-semibold text-primary-foreground">
+                  <Zap className="h-3 w-3" /> Auto-Assign Top Vendor
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="bg-card rounded-xl border border-border p-3 flex items-center gap-2.5">
+        <div className="h-6 w-6 rounded-lg bg-green-500/20 flex items-center justify-center shrink-0">
+          <Check className="h-3 w-3 text-green-500" />
+        </div>
+        <p className="text-[10px] text-muted-foreground"><span className="font-medium text-foreground">Scoring factors:</span> trade, trust, workload, area, emergency, preferred, no-shows</p>
+      </div>
+    </div>
+  );
+
+  if (type === "vendor-portal") return (
+    <div className="space-y-2.5 w-full max-w-sm mx-auto">
+      <div className="bg-card rounded-2xl border border-border p-4 shadow-xl">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="h-8 w-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+            <Link2 className="h-4 w-4 text-blue-500" />
+          </div>
+          <div>
+            <p className="text-xs font-bold">Vendor Job Portal</p>
+            <p className="text-[10px] text-muted-foreground">Secure magic link — no login needed</p>
+          </div>
+        </div>
+        <div className="bg-muted/50 rounded-xl p-3 mb-3 border border-border">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-bold text-foreground">Job Details</span>
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-orange-500/10 text-orange-400 font-bold">High Urgency</span>
+          </div>
+          <div className="space-y-1 text-[10px] text-muted-foreground">
+            <div className="flex gap-2"><span className="font-medium text-foreground w-14 shrink-0">Property:</span><span>Sunset Apartments</span></div>
+            <div className="flex gap-2"><span className="font-medium text-foreground w-14 shrink-0">Unit:</span><span>3A</span></div>
+            <div className="flex gap-2"><span className="font-medium text-foreground w-14 shrink-0">Issue:</span><span>Plumbing — Kitchen faucet leak</span></div>
+            <div className="flex gap-2"><span className="font-medium text-foreground w-14 shrink-0">Scheduled:</span><span>Tomorrow, 10:00 AM</span></div>
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <div className="h-9 bg-green-600 rounded-xl flex items-center justify-center gap-1.5 text-xs font-bold text-white">
+            <Check className="h-3.5 w-3.5" /> Accept Job
+          </div>
+          <div className="grid grid-cols-2 gap-1.5">
+            <div className="h-8 bg-muted border border-border rounded-lg flex items-center justify-center gap-1 text-[10px] font-medium text-muted-foreground">
+              <CalendarClock className="h-3 w-3" /> Propose Time
+            </div>
+            <div className="h-8 bg-muted border border-border rounded-lg flex items-center justify-center gap-1 text-[10px] font-medium text-muted-foreground">
+              <X className="h-3 w-3" /> Decline
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-card rounded-xl border border-primary/20 p-3 flex items-center gap-2.5">
+        <div className="h-6 w-6 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
+          <ShieldCheck className="h-3 w-3 text-primary" />
+        </div>
+        <p className="text-[10px] text-muted-foreground"><span className="font-medium text-foreground">Secure link</span> — expires in 7 days, revoke or regenerate anytime</p>
+      </div>
+    </div>
+  );
+
+  if (type === "scheduling") return (
+    <div className="space-y-2.5 w-full max-w-sm mx-auto">
+      <div className="bg-card rounded-2xl border border-border p-4 shadow-xl">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-primary" />
+            <span className="text-xs font-bold">This Week</span>
+          </div>
+          <div className="flex gap-1">
+            {["Week", "Day", "List"].map(v => (
+              <div key={v} className={`px-2 h-5 rounded-full text-[10px] flex items-center font-medium ${v === "Week" ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}>{v}</div>
+            ))}
+          </div>
+        </div>
+        <div className="grid grid-cols-5 gap-1">
+          {["Mon", "Tue", "Wed", "Thu", "Fri"].map((day, di) => (
+            <div key={day} className="text-center">
+              <p className="text-[9px] text-muted-foreground mb-1">{day}</p>
+              <div className="space-y-1 min-h-[80px]">
+                {di === 0 && (
+                  <div className="p-1 rounded bg-red-500/15 border border-red-500/20">
+                    <p className="text-[8px] font-bold text-red-400 truncate">Electrical</p>
+                    <p className="text-[7px] text-muted-foreground">9 AM</p>
+                  </div>
+                )}
+                {di === 1 && (
+                  <>
+                    <div className="p-1 rounded bg-orange-500/15 border border-orange-500/20">
+                      <p className="text-[8px] font-bold text-orange-400 truncate">Plumbing</p>
+                      <p className="text-[7px] text-muted-foreground">10 AM</p>
+                    </div>
+                    <div className="p-1 rounded bg-blue-500/15 border border-blue-500/20">
+                      <p className="text-[8px] font-bold text-blue-400 truncate">HVAC</p>
+                      <p className="text-[7px] text-muted-foreground">2 PM</p>
+                    </div>
+                  </>
+                )}
+                {di === 3 && (
+                  <div className="p-1 rounded bg-yellow-500/15 border border-yellow-500/20">
+                    <p className="text-[8px] font-bold text-yellow-400 truncate">General</p>
+                    <p className="text-[7px] text-muted-foreground">11 AM</p>
+                  </div>
+                )}
+                {di === 4 && (
+                  <div className="p-1 rounded bg-green-500/15 border border-green-500/20">
+                    <p className="text-[8px] font-bold text-green-400 truncate">Painting</p>
+                    <p className="text-[7px] text-muted-foreground">1 PM</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="bg-yellow-950/30 rounded-xl border border-yellow-500/20 p-2.5 flex items-center gap-2">
+        <div className="h-5 w-5 rounded-full bg-yellow-500/20 flex items-center justify-center shrink-0 text-yellow-500 text-[9px] font-bold">!</div>
+        <p className="text-[10px] text-yellow-400"><span className="font-bold">Conflict detected:</span> Portland Plumbing already booked Tue 10 AM</p>
+      </div>
+    </div>
+  );
+
   if (type === "costs") return (
     <div className="space-y-2.5 w-full max-w-sm mx-auto">
       <div className="grid grid-cols-3 gap-2">
@@ -573,9 +803,9 @@ function SlideVisual({ type }: { type: string }) {
           <ul className="space-y-1.5">
             {[
               "Random texts & calls",
-              "No record of requests",
+              "Dispatch by gut feel",
+              "No vendor accountability",
               "Excel for costs (maybe)",
-              "Staff via group chat",
               "Missed maintenance",
               "Tenant frustration",
             ].map(t => (
@@ -592,11 +822,11 @@ function SlideVisual({ type }: { type: string }) {
           <ul className="space-y-1.5">
             {[
               "QR scan, instant form",
-              "Every request logged",
-              "CSV cost reports",
-              "Staff assigned in app",
-              "Recurring reminders",
-              "Tenant tracking codes",
+              "Auto-dispatch engine",
+              "Vendor trust scores",
+              "Magic link portal",
+              "Scheduling calendar",
+              "Full activity timeline",
             ].map(t => (
               <li key={t} className="flex items-center gap-1.5 text-[10px] text-primary/90">
                 <Check className="h-2.5 w-2.5 text-primary shrink-0" /> {t}
@@ -657,17 +887,17 @@ function SlideVisual({ type }: { type: string }) {
         {
           name: "Starter", price: "$29", desc: "1–5 units", highlight: false,
           icon: Building2, iconColor: "text-muted-foreground",
-          features: ["QR maintenance system", "Email notifications", "Photo uploads", "Basic dashboard"],
+          features: ["QR maintenance system", "Trust scores (0–100)", "Vendor magic links", "Email notifications"],
         },
         {
           name: "Growth", price: "$59", desc: "6–25 units", highlight: true,
           icon: Zap, iconColor: "text-primary",
-          features: ["Everything in Starter", "Staff assignment", "Priority highlighting", "Custom QR per unit"],
+          features: ["Everything in Starter", "Auto-dispatch engine", "Scheduling calendar", "Staff assignment"],
         },
         {
           name: "Pro", price: "$99", desc: "25+ units", highlight: false,
           icon: Crown, iconColor: "text-yellow-400",
-          features: ["Everything in Growth", "Cost tracking & CSV", "Scheduled maintenance", "Priority support"],
+          features: ["Everything in Growth", "Dispatch board", "Cost tracking & CSV", "Bilingual tenant UI"],
         },
       ].map(plan => (
         <div key={plan.name} className={`rounded-2xl border p-3.5 flex items-center gap-3 ${plan.highlight ? "bg-primary/10 border-primary/40 ring-1 ring-primary/20" : "bg-card border-border"}`}>
@@ -836,7 +1066,7 @@ export default function Landing() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-300">Built on Trust.</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed">
-              Know who to call, when they showed up, and what they did. VendorTrust scores every contractor automatically — so you dispatch with confidence, not guesswork.
+              Score every contractor. Auto-dispatch the best one. Track the job from assignment to completion. VendorTrust replaces spreadsheets, texts, and guesswork with a real dispatch command center.
             </p>
             <div className="flex flex-col sm:flex-row items-center gap-4">
               <Button size="lg" className="w-full sm:w-auto rounded-full text-lg shadow-xl shadow-primary/20 gap-2" onClick={() => window.location.href = '/login?signup=1'} data-testid="button-get-started">
@@ -1043,23 +1273,23 @@ export default function Landing() {
       <section id="features" className="py-24 px-6 bg-card/30 border-y border-border">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4 text-sm px-4 py-1">What You Get</Badge>
+            <Badge variant="outline" className="mb-4 text-sm px-4 py-1">Everything You Get</Badge>
             <h2 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-4">
-              Stop Managing Maintenance in Texts and Spreadsheets
+              One Platform. Every Feature You Need.
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              VendorTrust gives you a purpose-built command center — QR requests, vendor trust scores, dispatch tracking, and proof of completion.
+              From QR tenant requests to auto-dispatch, vendor portals, scheduling calendars, and automated notifications — VendorTrust covers the full maintenance lifecycle.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {FEATURES.map((feature, i) => (
-              <div key={i} className="p-8 rounded-3xl bg-card border border-border shadow-lg shadow-black/10 hover-elevate group transition-all" data-testid={`feature-card-${i}`}>
-                <div className="h-14 w-14 rounded-2xl bg-primary/15 flex items-center justify-center mb-6 group-hover:bg-primary/25 transition-colors">
-                  <feature.icon className="h-7 w-7 text-primary" />
+              <div key={i} className="p-6 rounded-2xl bg-card border border-border shadow-lg shadow-black/10 hover-elevate group transition-all" data-testid={`feature-card-${i}`}>
+                <div className="h-12 w-12 rounded-xl bg-primary/15 flex items-center justify-center mb-4 group-hover:bg-primary/25 transition-colors">
+                  <feature.icon className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-foreground">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{feature.desc}</p>
+                <h3 className="text-lg font-bold mb-2 text-foreground">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
               </div>
             ))}
           </div>
@@ -1082,8 +1312,9 @@ export default function Landing() {
                 "Dispatching contractors by memory or gut feel",
                 "No-shows with no record to reference",
                 "\"Job done\" with no proof, no invoice, no notes",
-                "Repeating bad contractors you forgot were bad",
+                "Vendors ghosting with zero accountability",
                 "No visibility between assigned and completed",
+                "Scheduling conflicts and double-bookings",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                   <X className="h-4 w-4 text-red-400 mt-0.5 shrink-0" />
@@ -1096,11 +1327,12 @@ export default function Landing() {
             <h3 className="text-xl font-bold mb-4 text-primary">With VendorTrust</h3>
             <ul className="space-y-3">
               {[
-                "Trust scores surface your best vendor instantly",
-                "No-show history logged and visible forever",
-                "Proof of completion with invoice and materials",
-                "Full job status pipeline with timestamps",
-                "Activity timeline on every request",
+                "Auto-dispatch engine picks the best vendor for you",
+                "Trust scores with no-show tracking and penalty",
+                "Magic links let vendors accept, decline, or reschedule",
+                "Visual scheduling calendar with conflict detection",
+                "Full job pipeline with activity timeline and timestamps",
+                "Automated email notifications at every stage",
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
                   <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
@@ -1231,6 +1463,14 @@ export default function Landing() {
               {
                 q: "How does the vendor trust score work?",
                 a: "Each vendor gets a score from 0–100 based on ratings, job completion rate, no-show history, and tenure. The higher the score, the more reliable the vendor has proven to be.",
+              },
+              {
+                q: "What is auto-dispatch and how does it work?",
+                a: "Auto-dispatch scores every vendor in your network using trade match, trust score, workload, emergency availability, service area, and preferred status. You can let VendorTrust recommend the best vendor, or auto-assign them instantly. The vendor gets a magic link to accept, decline, or propose a new time — no app or login required.",
+              },
+              {
+                q: "Do vendors need to create an account?",
+                a: "No. When you dispatch a vendor, they receive an email with a secure magic link. One tap and they see the job details, can accept or decline, and mark the job complete — all from their phone browser. The link expires after 7 days.",
               },
               {
                 q: "What happens after the 14-day trial?",
