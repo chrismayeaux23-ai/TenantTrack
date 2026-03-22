@@ -18,11 +18,18 @@ export function setupGoogleAuth(app: Express) {
     return;
   }
 
-  const replitDomain = process.env.REPLIT_DEPLOYMENT_URL || process.env.REPLIT_DEV_DOMAIN;
-  const autoCallbackURL = replitDomain
-    ? `https://${replitDomain}/api/auth/google/callback`
-    : "https://tenant-track.com/api/auth/google/callback";
-  const callbackURL = process.env.GOOGLE_CALLBACK_URL || autoCallbackURL;
+  const isProduction = process.env.NODE_ENV === "production" || !!process.env.REPLIT_DEPLOYMENT;
+  let callbackURL: string;
+  if (process.env.GOOGLE_CALLBACK_URL) {
+    callbackURL = process.env.GOOGLE_CALLBACK_URL;
+  } else if (isProduction) {
+    callbackURL = "https://tenant-track.com/api/auth/google/callback";
+  } else {
+    const devDomain = process.env.REPLIT_DEV_DOMAIN;
+    callbackURL = devDomain
+      ? `https://${devDomain}/api/auth/google/callback`
+      : "https://tenant-track.com/api/auth/google/callback";
+  }
 
   passport.use(
     new GoogleStrategy(
