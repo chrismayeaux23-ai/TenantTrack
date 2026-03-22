@@ -11,7 +11,7 @@ import { PhotoUploadGroup } from "@/components/PhotoUploadGroup";
 import { Wrench, CheckCircle2, Loader2, Info, Globe } from "lucide-react";
 import type { MaintenanceRequestInput } from "@shared/routes";
 import { type Lang, t } from "@/lib/i18n";
-import logoPng from "@assets/tenanttrack-logo-nobg.png";
+import logoPng from "@assets/tenanttrack-final-logo.png";
 
 function PoweredBy() {
   return (

@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import logoPng from "@assets/tenanttrack-logo-nobg.png";
+import logoPng from "@assets/tenanttrack-final-logo.png";
 
 export default function Privacy() {
   return (

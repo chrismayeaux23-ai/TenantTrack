@@ -10,27 +10,27 @@
     --font-display: 'Space Grotesk', sans-serif;
 
     /* Deep navy base */
-    --background: 226 32% 5%;
-    --foreground: 214 22% 94%;
+    --background: 222 47% 6%;
+    --foreground: 210 20% 94%;
 
-    --card: 226 26% 8%;
-    --card-foreground: 214 22% 94%;
+    --card: 222 40% 9%;
+    --card-foreground: 210 20% 94%;
 
-    --popover: 226 26% 9%;
-    --popover-foreground: 214 22% 94%;
+    --popover: 222 40% 10%;
+    --popover-foreground: 210 20% 94%;
 
-    /* Neon orange (matches logo) */
-    --primary: 24 95% 55%;
+    /* Royal blue (matches TenantTrack logo) */
+    --primary: 217 89% 51%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 226 22% 12%;
-    --secondary-foreground: 214 16% 78%;
+    --secondary: 222 30% 13%;
+    --secondary-foreground: 210 16% 78%;
 
-    --muted: 226 20% 12%;
-    --muted-foreground: 218 12% 50%;
+    --muted: 222 28% 13%;
+    --muted-foreground: 215 14% 50%;
 
-    --accent: 226 22% 14%;
-    --accent-foreground: 214 16% 82%;
+    --accent: 222 30% 15%;
+    --accent-foreground: 210 16% 82%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
@@ -41,15 +41,15 @@
     --warning: 38 92% 50%;
     --warning-foreground: 38 100% 10%;
 
-    --border: 226 20% 15%;
-    --input: 226 20% 15%;
-    --ring: 24 95% 55%;
+    --border: 222 24% 16%;
+    --input: 222 24% 16%;
+    --ring: 217 89% 51%;
 
     --radius: 0.875rem;
 
-    --sidebar-background: 226 34% 4%;
-    --sidebar-foreground: 214 20% 88%;
-    --sidebar-border: 226 22% 12%;
+    --sidebar-background: 222 47% 5%;
+    --sidebar-foreground: 210 20% 88%;
+    --sidebar-border: 222 28% 13%;
   }
 
   body {
@@ -69,7 +69,7 @@
   }
   .hover-elevate:hover {
     @apply -translate-y-1;
-    box-shadow: 0 12px 32px -8px rgba(0,0,0,0.4), 0 0 0 1px hsl(226 20% 22%);
+    box-shadow: 0 12px 32px -8px rgba(0,0,0,0.4), 0 0 0 1px hsl(222 24% 22%);
   }
   .active-elevate {
     @apply transition-transform duration-100 ease-in;
@@ -79,22 +79,22 @@
   }
 
   .glass-panel {
-    background: rgba(12, 16, 30, 0.75);
+    background: rgba(10, 15, 30, 0.75);
     @apply backdrop-blur-xl border border-white/[0.06] shadow-2xl shadow-black/40;
   }
 
   .neon-glow {
-    box-shadow: 0 0 16px -4px hsl(24 95% 55% / 0.5);
+    box-shadow: 0 0 16px -4px hsl(217 89% 51% / 0.5);
   }
 
   .card-glass {
-    background: linear-gradient(135deg, hsl(226 26% 9%) 0%, hsl(226 22% 7%) 100%);
-    border: 1px solid hsl(226 20% 16%);
+    background: linear-gradient(135deg, hsl(222 40% 10%) 0%, hsl(222 36% 8%) 100%);
+    border: 1px solid hsl(222 24% 17%);
   }
 
   .gradient-heading {
     @apply text-transparent bg-clip-text;
-    background-image: linear-gradient(135deg, hsl(214 22% 94%) 0%, hsl(214 16% 70%) 100%);
+    background-image: linear-gradient(135deg, hsl(210 20% 94%) 0%, hsl(210 16% 70%) 100%);
   }
 }
 

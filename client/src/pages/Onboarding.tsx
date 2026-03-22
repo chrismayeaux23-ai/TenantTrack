@@ -10,7 +10,7 @@ import {
   Building2, Users, CheckCircle2, ArrowRight, Loader2,
   ShieldCheck, Zap, Check, Sparkles
 } from "lucide-react";
-import logoPng from "@assets/tenanttrack-logo-nobg.png";
+import logoPng from "@assets/tenanttrack-final-logo.png";
 
 const TRADE_CATEGORIES = [
   "Plumbing", "Electrical", "HVAC", "General Handyman",

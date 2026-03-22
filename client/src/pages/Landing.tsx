@@ -11,7 +11,10 @@ import {
   Camera, Bell, Wrench, BarChart2, MapPin, Printer,
   Sparkles, Link2, Calendar, Columns3, Globe, Send
 } from "lucide-react";
-import logoPng from "@assets/tenanttrack-logo-nobg.png";
+import logoPng from "@assets/tenanttrack-final-logo.png";
+import logoWide from "@assets/tenanttrack-wide-logo.png";
+import bgGeo from "@assets/I_need_a_navy_blue,_white,_and_grey_background_image_of_geo-me_1774148774611.jpg";
+import bgBuildings from "@assets/I_need_a_navy_blue,_white,_and_grey_background_image_of_rental_1774148774612.jpg";
 
 const PLANS = [
   {
@@ -71,7 +74,7 @@ const SLIDES = [
     title: "Sign Up & Add Your Properties",
     description: "Create your account in seconds. Add your rental properties with name and address — each one instantly gets its own unique QR code.",
     bullets: ["Takes under 5 minutes to set up", "Add unlimited units per property", "No technical knowledge needed"],
-    accent: "from-orange-500/15 to-primary/10",
+    accent: "from-blue-500/15 to-primary/10",
     visual: "add-property",
   },
   {
@@ -156,7 +159,7 @@ const SLIDES = [
     title: "Track Every Job from One Command Center",
     description: "Your dispatch board shows every open request with real-time status, vendor assignment, and a full activity timeline. Move jobs through the pipeline and capture proof of completion — all without leaving the dashboard.",
     bullets: ["Job pipeline: Assigned → Scheduled → In-Progress → Completed", "Full activity timeline with timestamps on every action", "Proof of completion with invoice, notes, and materials"],
-    accent: "from-orange-500/20 to-primary/10",
+    accent: "from-blue-500/20 to-primary/10",
     visual: "dashboard",
   },
   {
@@ -166,7 +169,7 @@ const SLIDES = [
     title: "Track Repair Costs & Stay Ahead of Maintenance",
     description: "Log the cost of every repair with vendor details. Set up recurring tasks — HVAC filters, smoke detector checks, fire extinguisher inspections — so nothing falls through the cracks. Export everything to CSV at tax time.",
     bullets: ["Log costs per repair with vendor info", "Recurring reminders for preventive tasks", "Export full cost history as CSV for taxes"],
-    accent: "from-orange-500/20 to-primary/10",
+    accent: "from-blue-500/20 to-primary/10",
     visual: "costs",
   },
   // ── WHY TENANTTRACK ───────────────────────────────────
@@ -227,7 +230,7 @@ const SLIDES = [
       "Upgrade or downgrade at any time",
       "All plans include QR codes, dashboard & email alerts",
     ],
-    accent: "from-orange-500/15 to-blue-500/10",
+    accent: "from-blue-500/15 to-blue-400/10",
     visual: "pricing",
   },
 ];
@@ -1063,7 +1066,7 @@ export default function Landing() {
             </div>
             <h1 className="text-5xl md:text-7xl font-display font-extrabold tracking-tight text-foreground leading-[1.1] mb-6">
               Vendor Dispatch <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-300">Built on Trust.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-300">Built on Trust.</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-10 leading-relaxed">
               Score every contractor. Auto-dispatch the best one. Track the job from assignment to completion. TenantTrack replaces spreadsheets, texts, and guesswork with a real dispatch command center.
@@ -1488,7 +1491,7 @@ export default function Landing() {
       </section>
 
       <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-primary/10 to-orange-500/5 rounded-3xl p-12 md:p-16 border border-primary/20">
+        <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-primary/10 to-blue-500/5 rounded-3xl p-12 md:p-16 border border-primary/20">
           <h2 className="text-3xl md:text-5xl font-display font-extrabold text-foreground mb-4">
             Stop chasing vendors.<br className="hidden sm:block" /> Start managing maintenance.
           </h2>

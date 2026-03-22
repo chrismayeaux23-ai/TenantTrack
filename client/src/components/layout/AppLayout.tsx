@@ -6,7 +6,7 @@ import {
   Receipt, DollarSign, CalendarClock, Briefcase, BarChart2,
   ChevronRight, Columns3, Calendar
 } from "lucide-react";
-import logoIcon from "@assets/tenanttrack-logo-nobg.png";
+import logoIcon from "@assets/tenanttrack-final-logo.png";
 import { Button } from "../ui/Button";
 import { TrialBanner } from "@/components/TrialBanner";
 
@@ -125,8 +125,8 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                         }
                       `}
                       style={active ? {
-                        background: "linear-gradient(90deg, hsl(24 95% 55% / 0.12) 0%, hsl(24 95% 55% / 0.04) 100%)",
-                        borderLeft: "2px solid hsl(24 95% 55%)",
+                        background: "linear-gradient(90deg, hsl(217 89% 51% / 0.12) 0%, hsl(217 89% 51% / 0.04) 100%)",
+                        borderLeft: "2px solid hsl(217 89% 51%)",
                         marginLeft: "2px",
                         paddingLeft: "10px",
                       } : {

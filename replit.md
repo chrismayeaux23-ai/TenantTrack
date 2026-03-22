@@ -4,7 +4,7 @@
 TenantTrack is a mobile-first SaaS web application designed for landlords to efficiently manage maintenance requests. It utilizes QR codes for tenant submissions and provides a comprehensive system for vendor management, including trust scoring, dispatch coordination, and detailed analytics. The platform aims to streamline property maintenance, enhance communication between landlords, tenants, and vendors, and improve the overall efficiency and accountability of repair processes. Key capabilities include property management, tenant request tracking, staff and vendor assignment, cost logging, recurring maintenance scheduling, and subscription billing.
 
 ## User Preferences
-The user prefers a dark mode theme with a dark navy and neon orange color scheme (matching the logo). Headings should use the 'Space Grotesk' font, and body text should use 'Inter'. Active navigation items in the sidebar should have an orange left border, and the sidebar itself should have a deep near-black background. Semantic colors should be used for status indicators (e.g., green for "Completed/Excellent") and CTAs/UI accents (orange/primary).
+The user prefers a dark mode theme with a dark navy and royal blue color scheme (matching the logo). Headings should use the 'Space Grotesk' font, and body text should use 'Inter'. Active navigation items in the sidebar should have a blue left border, and the sidebar itself should have a deep near-black background. Semantic colors should be used for status indicators (e.g., green for "Completed/Excellent", orange for "High urgency" and "In Progress") and CTAs/UI accents (blue/primary).
 
 ## System Architecture
 The application follows a mobile-first design philosophy.
@@ -14,13 +14,14 @@ The application follows a mobile-first design philosophy.
 - **Authentication**: Supports email/password login and Google OAuth, both managed via Passport sessions. User data includes `passwordHash` and is generated with `crypto.randomUUID()` on signup.
 - **Storage**: Replit Object Storage is used for tenant photo uploads.
 - **Domain**: tenant-track.com (custom domain), tenant-management-hub.replit.app (Replit domain)
-- **Logo**: TenantTrack hexagonal logo at `@assets/tenanttrack-logo-nobg.png`
+- **Logo**: TenantTrack circular logo at `@assets/tenanttrack-final-logo.png` (circular badge with TT letters, house, key, clipboard). Wide version at `@assets/tenanttrack-wide-logo.png`.
+- **Background images**: `@assets/I_need_a_navy_blue,_white,_and_grey_background_image_of_geo-me_1774148774611.jpg` (geometric), `@assets/I_need_a_navy_blue,_white,_and_grey_background_image_of_rental_1774148774612.jpg` (buildings), `@assets/Untitled_design_(1)_1774148774613.jpg` (building icon)
 - **UI/UX**:
-    - **Color Scheme**: Dark navy background (`--background: 226 32% 5%`) with neon orange primary (`--primary: 24 95% 55%`).
+    - **Color Scheme**: Dark navy background (`--background: 222 47% 6%`) with royal blue primary (`--primary: 217 89% 51%`).
     - **Typography**: Space Grotesk for headings, Inter for body text.
     - **Layout**: Left sidebar navigation with active indicator, mobile-first responsiveness including a bottom navigation bar.
     - **Theming**: Always dark mode; no light mode toggle.
-    - **Logo**: TenantTrack hexagonal node network emblem with checkmark.
+    - **Logo**: TenantTrack circular badge with TT letters, house, key, and clipboard icons — navy blue/white palette.
 - **Core Features**:
     - QR code generation for properties, linking to public tenant maintenance request forms.
     - Tenant photo uploads for maintenance requests (up to 3 photos).

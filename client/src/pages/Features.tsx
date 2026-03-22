@@ -11,7 +11,7 @@ import {
   X, AlertTriangle, ThumbsUp, Percent, Timer,
   HandCoins, Megaphone, Target, Lock, Send
 } from "lucide-react";
-import logoPng from "@assets/tenanttrack-logo-nobg.png";
+import logoPng from "@assets/tenanttrack-final-logo.png";
 
 const HERO_FEATURES = [
   "QR code maintenance system",
@@ -155,7 +155,7 @@ const DETAILED_FEATURES = [
     businessBenefit: "As your portfolio grows, you can't do everything yourself. TenantTrack lets you delegate without losing visibility. Assign a leaky faucet to your plumber, an electrical issue to your electrician, and a general repair to your handyman — all from the same dashboard. Staff members are tied to your account, so you maintain full control over assignments and can reassign work instantly if someone is unavailable.",
     roiCallout: "Multi-property landlords save an average of 6 hours per week by streamlining staff coordination through TenantTrack.",
     icon: Users,
-    color: "orange",
+    color: "blue",
     highlights: [
       { icon: Users, text: "Add unlimited staff with role and contact info" },
       { icon: ClipboardList, text: "One-click assignment on any request" },
@@ -199,10 +199,10 @@ const COMPARISON_ITEMS = [
 const COLOR_MAP: Record<string, { bg: string; text: string; border: string; lightBg: string }> = {
   primary: { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20", lightBg: "bg-primary/5" },
   blue: { bg: "bg-blue-500/10", text: "text-blue-400", border: "border-blue-500/20", lightBg: "bg-blue-500/5" },
-  rose: { bg: "bg-orange-500/10", text: "text-orange-400", border: "border-orange-500/20", lightBg: "bg-orange-500/5" },
+  rose: { bg: "bg-blue-500/10", text: "text-blue-400", border: "border-blue-500/20", lightBg: "bg-blue-500/5" },
   yellow: { bg: "bg-yellow-500/10", text: "text-yellow-400", border: "border-yellow-500/20", lightBg: "bg-yellow-500/5" },
   purple: { bg: "bg-purple-500/10", text: "text-purple-400", border: "border-purple-500/20", lightBg: "bg-purple-500/5" },
-  orange: { bg: "bg-orange-500/10", text: "text-orange-400", border: "border-orange-500/20", lightBg: "bg-orange-500/5" },
+  orange: { bg: "bg-blue-500/10", text: "text-blue-400", border: "border-blue-500/20", lightBg: "bg-blue-500/5" },
 };
 
 function FeatureVisual({ type, color }: { type: string; color: string }) {
@@ -402,7 +402,7 @@ function FeatureVisual({ type, color }: { type: string; color: string }) {
             { name: "James T.", role: "General", assigned: 5 },
           ].map((staff, i) => (
             <div key={i} className="bg-card/80 rounded-xl p-4 flex items-center gap-3 border border-border">
-              <div className="h-10 w-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-400 font-bold text-sm shrink-0">
+              <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 font-bold text-sm shrink-0">
                 {staff.name.charAt(0)}
               </div>
               <div className="flex-1 min-w-0">
@@ -444,7 +444,7 @@ export default function Features() {
         <Badge variant="outline" className="mb-6 text-sm px-4 py-1.5" data-testid="badge-features">All Features</Badge>
         <h1 className="text-4xl md:text-6xl font-display font-extrabold tracking-tight text-foreground leading-[1.1] mb-6" data-testid="text-features-title">
           Everything a landlord needs. <br className="hidden md:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-orange-300">Nothing they don't.</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-300">Nothing they don't.</span>
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-6 leading-relaxed" data-testid="text-features-subtitle">
           TenantTrack replaces scattered texts, spreadsheets, and sticky notes with one organized system built specifically for independent landlords and small property managers. Here's exactly what you get.
@@ -821,7 +821,7 @@ export default function Features() {
       </section>
 
       <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-primary/10 to-orange-500/5 rounded-3xl p-12 md:p-16 border border-primary/20">
+        <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-primary/10 to-blue-500/5 rounded-3xl p-12 md:p-16 border border-primary/20">
           <h2 className="text-3xl md:text-5xl font-display font-extrabold text-foreground mb-4" data-testid="text-cta-heading">
             Ready to get organized?
           </h2>

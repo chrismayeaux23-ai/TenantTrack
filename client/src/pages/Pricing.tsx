@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
 import { Link } from "wouter";
-import logoPng from "@assets/tenanttrack-logo-nobg.png";
+import logoPng from "@assets/tenanttrack-final-logo.png";
 
 const PLANS = [
   {
@@ -324,7 +324,7 @@ export default function Pricing() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16 py-12 bg-gradient-to-br from-primary/10 to-orange-500/5 rounded-3xl border border-primary/20 px-8">
+        <div className="text-center mt-16 py-12 bg-gradient-to-br from-primary/10 to-blue-500/5 rounded-3xl border border-primary/20 px-8">
           <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-3">
             Ready to bring order to your maintenance chaos?
           </h2>

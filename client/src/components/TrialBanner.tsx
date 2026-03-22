@@ -33,7 +33,7 @@ export function TrialBanner() {
     <div className="w-full px-4 py-2.5 flex items-center justify-between gap-3 text-sm"
       style={{
         background: urgent
-          ? "linear-gradient(90deg, hsl(24 60% 15%) 0%, hsl(226 34% 8%) 100%)"
+          ? "linear-gradient(90deg, hsl(217 60% 15%) 0%, hsl(222 34% 8%) 100%)"
           : "linear-gradient(90deg, hsl(226 34% 7%) 0%, hsl(226 30% 9%) 100%)",
         borderBottom: "1px solid hsl(226 22% 14%)",
       }}>
