@@ -30,6 +30,35 @@ export async function registerRoutes(
   const DEMO_EMAIL = "landlord@test.com";
   const DEMO_PASSWORD = "demo123";
 
+  async function ensureOwnerAccount() {
+    try {
+      const ownerEmail = "chrismayeaux23@gmail.com";
+      const [existing] = await db.select().from(users).where(eq(users.email, ownerEmail)).limit(1);
+      if (!existing) {
+        const passwordHash = await bcrypt.hash("Jetta23871$$", 12);
+        await db.insert(users).values({
+          id: crypto.randomUUID(),
+          email: ownerEmail,
+          firstName: "Chris",
+          lastName: "Mayeaux",
+          passwordHash,
+          subscriptionTier: "pro",
+        });
+        console.log("Owner account created");
+      } else if (existing.subscriptionTier !== "pro" || !existing.passwordHash) {
+        const updates: any = { subscriptionTier: "pro" };
+        if (!existing.passwordHash) {
+          updates.passwordHash = await bcrypt.hash("Jetta23871$$", 12);
+        }
+        await db.update(users).set(updates).where(eq(users.id, existing.id));
+        console.log("Owner account updated to Pro");
+      }
+    } catch (err) {
+      console.error("Failed to ensure owner account:", err);
+    }
+  }
+  ensureOwnerAccount();
+
   async function seedDemoData() {
     const existing = await storage.getProperties(DEMO_USER_ID);
     if (existing.length > 0) return;
