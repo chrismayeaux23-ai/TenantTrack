@@ -6,6 +6,8 @@ TenantTrack is a mobile-first SaaS application that streamlines property mainten
 
 **Website:** [tenant-track.com](https://tenant-track.com)
 
+**Design:** Dark navy UI with royal blue accents. Mobile-first, always dark mode.
+
 ---
 
 ## The Problem
@@ -154,6 +156,13 @@ TenantTrack replaces the chaos with a structured, automated workflow:
 |----------|-------------|
 | `GOOGLE_CLIENT_ID` | Google OAuth client ID |
 | `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+
+### Optional
+
+| Variable | Description |
+|----------|-------------|
+| `EMAIL_FROM` | Sender email address for notifications |
+| `APP_URL` | Public application URL (defaults to Replit domain) |
 
 ---
 
