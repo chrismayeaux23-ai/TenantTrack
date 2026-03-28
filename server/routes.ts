@@ -27,7 +27,7 @@ export async function registerRoutes(
   setupGoogleAuth(app);
 
   const DEMO_USER_ID = "demo-landlord";
-  const DEMO_EMAIL = "chrismayeaux23@gmail.com";
+  const DEMO_EMAIL = "tenanttrackapp@gmail.com";
   const DEMO_PASSWORD = "demo123";
 
   async function ensureOwnerAccount() {
