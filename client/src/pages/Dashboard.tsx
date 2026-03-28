@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Select";
 import { useUpdateRequestStatus } from "@/hooks/use-requests";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Loader2, AlertCircle, Phone, Mail, MapPin, Search, UserCheck, MessageSquare, Send, ClipboardList, AlertTriangle, CheckCircle2, Clock, DollarSign, Trash2, ChevronDown, ChevronUp, Briefcase, X, Star, Calendar, Zap, ShieldCheck, ThumbsUp, CheckSquare, ChevronRight, Circle, ExternalLink, BarChart2 } from "lucide-react";
+import { Loader2, AlertCircle, Phone, Mail, MapPin, Search, UserCheck, MessageSquare, Send, ClipboardList, AlertTriangle, CheckCircle2, Clock, DollarSign, Trash2, ChevronDown, ChevronUp, Briefcase, X, Star, Calendar, Zap, ShieldCheck, ThumbsUp, CheckSquare, ChevronRight, Circle, ExternalLink, BarChart2, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { useVendors, useVendorAssignment, useAssignVendor, useClearVendorAssignment, useMarkVendorContacted } from "@/hooks/use-vendors";
 
@@ -102,6 +102,25 @@ function DispatchPanel({ requestId, issueType }: { requestId: number; issueType:
       queryClient.invalidateQueries({ queryKey: ["/api/dashboard/stats"] });
       setShowDispatchEdit(false);
       setShowProof(false);
+    },
+  });
+
+  const autoDispatch = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(`/api/requests/${requestId}/auto-dispatch`, {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.message || "Auto-dispatch failed");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/requests"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/vendor-assignment", requestId] });
+      queryClient.invalidateQueries({ queryKey: ["/api/dashboard/stats"] });
     },
   });
 
@@ -312,11 +331,20 @@ function DispatchPanel({ requestId, issueType }: { requestId: number; issueType:
         </div>
       ) : (
         !showPicker && (
-          <Button size="sm" variant="outline" className="h-8 px-3 text-xs gap-1.5 w-full"
-            onClick={() => setShowPicker(true)}
-            data-testid={`button-assign-vendor-${requestId}`}>
-            <ShieldCheck className="h-3.5 w-3.5" /> Assign & Dispatch Vendor
-          </Button>
+          <div className="flex gap-2">
+            <Button size="sm" className="h-8 px-3 text-xs gap-1.5 flex-1 shadow-sm shadow-primary/20"
+              onClick={() => autoDispatch.mutate()}
+              disabled={autoDispatch.isPending}
+              data-testid={`button-auto-dispatch-${requestId}`}>
+              {autoDispatch.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+              Auto-Dispatch
+            </Button>
+            <Button size="sm" variant="outline" className="h-8 px-3 text-xs gap-1.5 flex-1"
+              onClick={() => setShowPicker(true)}
+              data-testid={`button-assign-vendor-${requestId}`}>
+              <ShieldCheck className="h-3.5 w-3.5" /> Manual Assign
+            </Button>
+          </div>
         )
       )}
 
