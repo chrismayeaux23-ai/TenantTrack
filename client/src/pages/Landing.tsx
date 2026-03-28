@@ -966,34 +966,34 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-background selection:bg-primary/20">
       <nav className="fixed top-0 w-full z-50 glass-panel border-b-0">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src={logoPng} alt="TenantTrack Logo" className="h-10 w-10 object-contain rounded-lg" />
-            <span className="font-display font-bold text-xl text-foreground">TenantTrack</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 shrink-0">
+            <img src={logoPng} alt="TenantTrack Logo" className="h-8 w-8 sm:h-10 sm:w-10 object-contain rounded-lg" />
+            <span className="font-display font-bold text-lg sm:text-xl text-foreground">TenantTrack</span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
             <Link href="/features" className="hover:text-foreground transition-colors" data-testid="nav-features">Features</Link>
             <button onClick={() => scrollTo("how-it-works")} className="hover:text-foreground transition-colors" data-testid="nav-how-it-works">How It Works</button>
             <button onClick={() => scrollTo("pricing")} className="hover:text-foreground transition-colors" data-testid="nav-pricing">Pricing</button>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <Link href="/guide" className="hidden md:inline-flex">
               <Button variant="ghost" className="rounded-full text-muted-foreground hover:text-foreground" data-testid="button-nav-guide">
                 Guide
               </Button>
             </Link>
-            <Button onClick={() => window.location.href = '/login'} variant="outline" className="rounded-full border-primary/30 text-primary hover:bg-primary/10" data-testid="button-nav-login">
-              <LogIn className="h-4 w-4 mr-1.5" />
+            <Button onClick={() => window.location.href = '/login'} variant="outline" className="rounded-full border-primary/30 text-primary hover:bg-primary/10 text-xs sm:text-sm px-3 sm:px-4 h-8 sm:h-10 whitespace-nowrap" data-testid="button-nav-login">
+              <LogIn className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1 sm:mr-1.5" />
               Log In
             </Button>
-            <Button onClick={() => window.location.href = '/login?signup=1'} className="rounded-full shadow-lg shadow-primary/20" data-testid="button-nav-signup">
+            <Button onClick={() => window.location.href = '/login?signup=1'} className="rounded-full shadow-lg shadow-primary/20 text-xs sm:text-sm px-3 sm:px-4 h-8 sm:h-10 whitespace-nowrap" data-testid="button-nav-signup">
               Start Free Trial
             </Button>
           </div>
         </div>
       </nav>
 
-      <section className="pt-32 pb-16 px-6 lg:pt-48 lg:pb-32 max-w-7xl mx-auto">
+      <section className="pt-24 pb-16 px-4 sm:px-6 sm:pt-32 lg:pt-48 lg:pb-32 max-w-7xl mx-auto">
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="text-left max-w-2xl animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
