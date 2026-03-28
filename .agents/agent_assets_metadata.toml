@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "U3OwjVOVbunWCsbxJTjh1"
+uri = "file://TenantTrack_Quick_Start_Guide.md"
+type = "text"
+title = "TenantTrack Quick Start Guide"
