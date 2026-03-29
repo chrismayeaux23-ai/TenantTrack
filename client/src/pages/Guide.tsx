@@ -9,6 +9,8 @@ import {
   Users, Mail, Phone, BookOpen,
 } from "lucide-react";
 import logoPng from "@assets/tenanttrack-final-logo.png";
+import bgMain2 from "@assets/main2_1774750600098.jpg";
+import bgSaas from "@assets/A_dark,_high-end_SaaS_background_with_a_deep_navy_blue_to_blac_1774750600093.jpg";
 
 const GUIDE_SECTIONS = [
   {
@@ -324,7 +326,11 @@ export default function Guide() {
     : GUIDE_SECTIONS;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <div className="absolute top-0 left-0 right-0 h-[500px] -z-10 overflow-hidden">
+        <img src={bgMain2} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/70 to-background" />
+      </div>
       <nav className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-30 px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
@@ -403,17 +409,22 @@ export default function Guide() {
           </div>
         )}
 
-        <div className="mt-16 bg-gradient-to-br from-primary/10 to-orange-500/5 rounded-3xl p-10 border border-primary/20 text-center">
-          <h2 className="text-2xl font-display font-bold text-foreground mb-3">
-            Ready to get started?
-          </h2>
-          <p className="text-muted-foreground mb-6">
-            Set up your first property in under 5 minutes. No credit card required.
-          </p>
-          <Button size="lg" className="rounded-full gap-2 px-8 shadow-lg shadow-primary/20" onClick={() => window.location.href = "/login?signup=1"} data-testid="button-guide-cta">
-            Start Free Trial
-            <ArrowRight className="h-5 w-5" />
-          </Button>
+        <div className="mt-16 bg-gradient-to-br from-primary/10 to-orange-500/5 rounded-3xl p-10 border border-primary/20 text-center relative overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <img src={bgSaas} alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 rounded-3xl" />
+          </div>
+          <div className="relative z-10">
+            <h2 className="text-2xl font-display font-bold text-foreground mb-3">
+              Ready to get started?
+            </h2>
+            <p className="text-muted-foreground mb-6">
+              Set up your first property in under 5 minutes. No credit card required.
+            </p>
+            <Button size="lg" className="rounded-full gap-2 px-8 shadow-lg shadow-primary/20" onClick={() => window.location.href = "/login?signup=1"} data-testid="button-guide-cta">
+              Start Free Trial
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
 
         <div className="mt-12 text-center space-y-3">

@@ -7,6 +7,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/hooks/use-auth";
 import { Link } from "wouter";
 import logoPng from "@assets/tenanttrack-final-logo.png";
+import bgFeatures2 from "@assets/featurespricingsection2_1774750600095.jpg";
+import bgSaas from "@assets/A_dark,_high-end_SaaS_background_with_a_deep_navy_blue_to_blac_1774750600093.jpg";
 
 const PLANS = [
   {
@@ -144,7 +146,11 @@ export default function Pricing() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <div className="absolute top-0 left-0 right-0 h-[600px] -z-10 overflow-hidden">
+        <img src={bgFeatures2} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
+      </div>
       {/* Nav */}
       <nav className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-30 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -324,26 +330,31 @@ export default function Pricing() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16 py-12 bg-gradient-to-br from-primary/10 to-orange-500/5 rounded-3xl border border-primary/20 px-8">
-          <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-3">
-            Ready to bring order to your maintenance chaos?
-          </h2>
-          <p className="text-muted-foreground mb-6">Start your free 14-day trial — no credit card, no setup fees.</p>
-          <Button
-            size="lg"
-            className="rounded-full px-10 gap-2 text-base shadow-lg shadow-primary/20"
-            onClick={() => window.location.href = isAuthenticated ? "/dashboard" : "/login?signup=1"}
-            data-testid="button-cta-pricing-bottom"
-          >
-            {isAuthenticated ? "Go to Dashboard" : "Start Free Trial"}
-            <ArrowRight className="h-5 w-5" />
-          </Button>
-          <p className="text-xs text-muted-foreground mt-3">
-            Questions? Email us at{" "}
-            <a href="mailto:support@tenant-track.com" className="text-primary hover:underline">
-              support@tenant-track.com
-            </a>
-          </p>
+        <div className="text-center mt-16 py-12 bg-gradient-to-br from-primary/10 to-orange-500/5 rounded-3xl border border-primary/20 px-8 relative overflow-hidden">
+          <div className="absolute inset-0 -z-10">
+            <img src={bgSaas} alt="" className="absolute inset-0 w-full h-full object-cover opacity-15 rounded-3xl" />
+          </div>
+          <div className="relative z-10">
+            <h2 className="text-2xl md:text-3xl font-display font-bold text-foreground mb-3">
+              Ready to bring order to your maintenance chaos?
+            </h2>
+            <p className="text-muted-foreground mb-6">Start your free 14-day trial — no credit card, no setup fees.</p>
+            <Button
+              size="lg"
+              className="rounded-full px-10 gap-2 text-base shadow-lg shadow-primary/20"
+              onClick={() => window.location.href = isAuthenticated ? "/dashboard" : "/login?signup=1"}
+              data-testid="button-cta-pricing-bottom"
+            >
+              {isAuthenticated ? "Go to Dashboard" : "Start Free Trial"}
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+            <p className="text-xs text-muted-foreground mt-3">
+              Questions? Email us at{" "}
+              <a href="mailto:support@tenant-track.com" className="text-primary hover:underline">
+                support@tenant-track.com
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

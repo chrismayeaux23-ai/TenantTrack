@@ -12,6 +12,9 @@ import {
   HandCoins, Megaphone, Target, Lock, Send
 } from "lucide-react";
 import logoPng from "@assets/tenanttrack-final-logo.png";
+import bgDashboard2 from "@assets/dashboardpreview2_1774750600094.jpg";
+import bgMain3 from "@assets/main3_1774750600098.jpg";
+import bgFeatures2 from "@assets/featurespricingsection2_1774750600095.jpg";
 
 const HERO_FEATURES = [
   "QR code maintenance system",
@@ -440,7 +443,11 @@ export default function Features() {
         </div>
       </nav>
 
-      <section className="pt-32 pb-16 px-6 lg:pt-44 lg:pb-20 max-w-5xl mx-auto text-center">
+      <section className="pt-32 pb-16 px-6 lg:pt-44 lg:pb-20 max-w-5xl mx-auto text-center relative">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <img src={bgDashboard2} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/70 to-background" />
+        </div>
         <Badge variant="outline" className="mb-6 text-sm px-4 py-1.5" data-testid="badge-features">All Features</Badge>
         <h1 className="text-4xl md:text-6xl font-display font-extrabold tracking-tight text-foreground leading-[1.1] mb-6" data-testid="text-features-title">
           Everything a landlord needs. <br className="hidden md:block" />
@@ -540,7 +547,11 @@ export default function Features() {
         })}
       </div>
 
-      <section className="py-20 px-6 border-y border-border bg-card/30" data-testid="section-comparison">
+      <section className="py-20 px-6 border-y border-border relative overflow-hidden" data-testid="section-comparison">
+        <div className="absolute inset-0 -z-10">
+          <img src={bgMain3} alt="" className="absolute inset-0 w-full h-full object-cover opacity-15" />
+          <div className="absolute inset-0 bg-background/80" />
+        </div>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-4 text-sm px-4 py-1.5">Why Switch</Badge>
@@ -725,7 +736,11 @@ export default function Features() {
         </div>
       </section>
 
-      <section className="py-16 px-6 max-w-5xl mx-auto" data-testid="section-pricing">
+      <section className="py-16 px-6 max-w-5xl mx-auto relative" data-testid="section-pricing">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <img src={bgFeatures2} alt="" className="absolute inset-0 w-full h-full object-cover opacity-15" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/85 to-background" />
+        </div>
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-display font-extrabold text-foreground mb-4">
             Simple, Transparent Pricing

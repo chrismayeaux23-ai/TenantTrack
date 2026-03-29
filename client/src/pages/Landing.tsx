@@ -15,6 +15,15 @@ import logoPng from "@assets/tenanttrack-final-logo.png";
 import logoWide from "@assets/tenanttrack-wide-logo.png";
 import bgGeo from "@assets/I_need_a_navy_blue,_white,_and_grey_background_image_of_geo-me_1774148774611.jpg";
 import bgBuildings from "@assets/I_need_a_navy_blue,_white,_and_grey_background_image_of_rental_1774148774612.jpg";
+import bgHeroTop from "@assets/homepagetop1_1774750600097.jpg";
+import bgHomepage2 from "@assets/homepage2_1774750600096.jpg";
+import bgFeatures1 from "@assets/featurespricingsection1_1774750600095.jpg";
+import bgFeatures2 from "@assets/featurespricingsection2_1774750600095.jpg";
+import bgFeatures3 from "@assets/featurespricingsection3_1774750600096.jpg";
+import bgDashboard1 from "@assets/dashboard_preview1_1774750600094.jpg";
+import bgMain1 from "@assets/main1_1774750600097.jpg";
+import bgMain4 from "@assets/main4_1774750600099.jpg";
+import bgSaas from "@assets/A_dark,_high-end_SaaS_background_with_a_deep_navy_blue_to_blac_1774750600093.jpg";
 
 const PLANS = [
   {
@@ -993,7 +1002,11 @@ export default function Landing() {
         </div>
       </nav>
 
-      <section className="pt-24 pb-16 px-4 sm:px-6 sm:pt-32 lg:pt-48 lg:pb-32 max-w-7xl mx-auto">
+      <section className="pt-24 pb-16 px-4 sm:px-6 sm:pt-32 lg:pt-48 lg:pb-32 max-w-7xl mx-auto relative">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <img src={bgHeroTop} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background" />
+        </div>
         <div className="flex flex-col lg:flex-row items-center gap-12">
           <div className="text-left max-w-2xl animate-in fade-in slide-in-from-bottom-8 duration-700">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
@@ -1068,7 +1081,11 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="how-it-works" className="py-24 px-4 md:px-6 max-w-7xl mx-auto">
+      <section id="how-it-works" className="py-24 px-4 md:px-6 max-w-7xl mx-auto relative">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <img src={bgHomepage2} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background" />
+        </div>
         <div className="text-center mb-12">
           <Badge variant="outline" className="mb-4 text-sm px-4 py-1">How It Works</Badge>
           <h2 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-4">
@@ -1212,7 +1229,11 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="features" className="py-24 px-6 bg-card/30 border-y border-border">
+      <section id="features" className="py-24 px-6 border-y border-border relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <img src={bgFeatures1} alt="" className="absolute inset-0 w-full h-full object-cover opacity-25" />
+          <div className="absolute inset-0 bg-background/70" />
+        </div>
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 text-sm px-4 py-1">Everything You Get</Badge>
@@ -1238,7 +1259,11 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="py-24 px-6 max-w-7xl mx-auto">
+      <section className="py-24 px-6 max-w-7xl mx-auto relative">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <img src={bgMain1} alt="" className="absolute inset-0 w-full h-full object-cover opacity-15" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/85 to-background" />
+        </div>
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-4 text-sm px-4 py-1">For Landlords</Badge>
           <h2 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-4">
@@ -1286,7 +1311,11 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="py-24 px-6 bg-card/30 border-y border-border">
+      <section className="py-24 px-6 border-y border-border relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <img src={bgDashboard1} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+          <div className="absolute inset-0 bg-background/75" />
+        </div>
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4 text-sm px-4 py-1">Testimonials</Badge>
@@ -1314,7 +1343,11 @@ export default function Landing() {
         </div>
       </section>
 
-      <section id="pricing" className="py-24 px-6 max-w-7xl mx-auto">
+      <section id="pricing" className="py-24 px-6 max-w-7xl mx-auto relative">
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <img src={bgFeatures2} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background" />
+        </div>
         <div className="text-center mb-16">
           <Badge variant="outline" className="mb-4 text-sm px-4 py-1">Pricing</Badge>
           <h2 className="text-4xl md:text-5xl font-display font-extrabold text-foreground mb-4">
@@ -1384,7 +1417,11 @@ export default function Landing() {
       </section>
 
       {/* FAQ */}
-      <section className="py-24 px-6 bg-card/30 border-y border-border">
+      <section className="py-24 px-6 border-y border-border relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <img src={bgFeatures3} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+          <div className="absolute inset-0 bg-background/75" />
+        </div>
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-4 text-sm px-4 py-1">FAQ</Badge>
@@ -1429,7 +1466,11 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="py-24 px-4 sm:px-6" id="about" data-testid="section-about">
+      <section className="py-24 px-4 sm:px-6 relative overflow-hidden" id="about" data-testid="section-about">
+        <div className="absolute inset-0 -z-10">
+          <img src={bgMain4} alt="" className="absolute inset-0 w-full h-full object-cover opacity-15" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background via-background/85 to-background" />
+        </div>
         <div className="max-w-3xl mx-auto">
           <div className="bg-card border border-border rounded-3xl p-8 md:p-12">
             <div className="flex flex-col sm:flex-row items-start gap-6">
@@ -1461,7 +1502,11 @@ export default function Landing() {
         </div>
       </section>
 
-      <section className="py-24 px-6">
+      <section className="py-24 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <img src={bgSaas} alt="" className="absolute inset-0 w-full h-full object-cover opacity-20" />
+          <div className="absolute inset-0 bg-background/60" />
+        </div>
         <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-primary/10 to-orange-500/5 rounded-3xl p-12 md:p-16 border border-primary/20">
           <h2 className="text-3xl md:text-5xl font-display font-extrabold text-foreground mb-4">
             Stop chasing vendors.<br className="hidden sm:block" /> Start managing maintenance.
