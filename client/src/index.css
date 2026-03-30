@@ -101,12 +101,18 @@
 @media print {
   body {
     background: white !important;
+    color: black !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+  .print-flyer,
   .print-flyer * {
+    color: inherit !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+  .print-flyer {
+    color: white !important;
   }
   .print\:hidden {
     display: none !important;
