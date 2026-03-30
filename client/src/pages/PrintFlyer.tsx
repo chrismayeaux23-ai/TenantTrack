@@ -33,7 +33,7 @@ export default function PrintFlyer() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background print-flyer">
       <div className="print:hidden sticky top-0 z-10 bg-card border-b border-border p-4 flex items-center justify-between max-w-4xl mx-auto">
         <Button variant="ghost" onClick={() => setLocation("/properties")} data-testid="button-back-properties">
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Properties
