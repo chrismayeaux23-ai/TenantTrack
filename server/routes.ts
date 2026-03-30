@@ -1748,17 +1748,17 @@ export async function registerRoutes(
         insuranceInfo: z.string().max(500).optional().default(""),
       });
 
-      const body = z.object({ vendors: z.array(z.any()).min(1).max(500) }).parse(req.body);
+      const body = z.object({ vendors: z.array(z.record(z.unknown())).min(1).max(500) }).parse(req.body);
       const results: { imported: number; failed: number; errors: string[] } = { imported: 0, failed: 0, errors: [] };
 
       const existingVendors = await storage.getVendorsByLandlord(userId);
-      const existingSet = new Set(existingVendors.map((v: any) => `${v.name.toLowerCase()}|${v.tradeCategory.toLowerCase()}`));
+      const existingSet = new Set(existingVendors.map((v) => `${v.name.toLowerCase()}|${v.tradeCategory.toLowerCase()}`));
       const batchSet = new Set<string>();
 
       for (let i = 0; i < body.vendors.length; i++) {
         try {
           const parsed = vendorSchema.parse(body.vendors[i]);
-          if (!TRADE_CATEGORIES.includes(parsed.tradeCategory as any)) {
+          if (!(TRADE_CATEGORIES as readonly string[]).includes(parsed.tradeCategory)) {
             results.failed++;
             results.errors.push(`Row ${i + 1}: Invalid trade category "${parsed.tradeCategory}"`);
             continue;

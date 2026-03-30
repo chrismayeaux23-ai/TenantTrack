@@ -459,7 +459,14 @@ const TEMPLATE_HEADERS = [
   "License Info", "Insurance Info",
 ];
 
-const HEADER_MAP: Record<string, keyof ParsedRow> = {
+type StringField = "name" | "companyName" | "tradeCategory" | "phone" | "email" | "city" | "serviceArea" | "notes" | "licenseInfo" | "insuranceInfo";
+type BoolField = "preferredVendor" | "emergencyAvailable";
+type MappableField = StringField | BoolField;
+
+const STRING_FIELDS: ReadonlySet<string> = new Set<string>(["name", "companyName", "tradeCategory", "phone", "email", "city", "serviceArea", "notes", "licenseInfo", "insuranceInfo"]);
+const BOOL_FIELDS: ReadonlySet<string> = new Set<string>(["preferredVendor", "emergencyAvailable"]);
+
+const HEADER_MAP: Record<string, MappableField> = {
   "name": "name",
   "contact name": "name",
   "company name": "companyName",
@@ -485,7 +492,7 @@ const HEADER_MAP: Record<string, keyof ParsedRow> = {
   "insurance": "insuranceInfo",
 };
 
-function parseBoolean(val: any): boolean {
+function parseBoolean(val: unknown): boolean {
   if (typeof val === "boolean") return val;
   const s = String(val).toLowerCase().trim();
   return s === "yes" || s === "true" || s === "1" || s === "y";
@@ -555,10 +562,10 @@ function VendorImportDialog({ open, onOpenChange, existingVendors }: {
 
           for (const [col, field] of Object.entries(colMap)) {
             const val = row[col];
-            if (field === "preferredVendor" || field === "emergencyAvailable") {
-              r[field] = parseBoolean(val);
-            } else if (field !== "status" && field !== "errors" && field !== "selected") {
-              (r as any)[field] = String(val || "").trim();
+            if (BOOL_FIELDS.has(field)) {
+              r[field as BoolField] = parseBoolean(val);
+            } else if (STRING_FIELDS.has(field)) {
+              r[field as StringField] = String(val || "").trim();
             }
           }
 
@@ -569,7 +576,7 @@ function VendorImportDialog({ open, onOpenChange, existingVendors }: {
           if (!r.tradeCategory) {
             r.status = "invalid";
             r.errors.push("Trade Category is required");
-          } else if (!TRADE_CATEGORIES.includes(r.tradeCategory as any)) {
+          } else if (!(TRADE_CATEGORIES as readonly string[]).includes(r.tradeCategory)) {
             const match = TRADE_CATEGORIES.find(t => t.toLowerCase() === r.tradeCategory.toLowerCase());
             if (match) {
               r.tradeCategory = match;
@@ -658,8 +665,9 @@ function VendorImportDialog({ open, onOpenChange, existingVendors }: {
       onOpenChange(false);
       setRows([]);
       setStep("upload");
-    } catch (err: any) {
-      toast({ title: "Import failed", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Import failed";
+      toast({ title: "Import failed", description: message, variant: "destructive" });
     } finally {
       setImporting(false);
     }
@@ -927,11 +935,11 @@ export default function Vendors() {
           <div className="flex items-center gap-2 shrink-0">
             {can("vendorImport") ? (
               <Button variant="outline" onClick={() => setShowImportModal(true)} className="gap-2" data-testid="button-import-vendors">
-                <Upload className="h-4 w-4" /> Import
+                <Upload className="h-4 w-4" /> Import Vendors
               </Button>
             ) : (
               <Button variant="outline" onClick={() => toast({ title: "Upgrade Required", description: "Vendor import is available on Growth and Pro plans." })} className="gap-2 opacity-70" data-testid="button-import-vendors-locked">
-                <Lock className="h-4 w-4" /> Import
+                <Lock className="h-4 w-4" /> Import Vendors
               </Button>
             )}
             <Button onClick={() => setShowAddModal(true)} className="gap-2" data-testid="button-add-vendor">
