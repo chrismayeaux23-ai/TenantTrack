@@ -44,24 +44,24 @@ export default function PrintFlyer() {
       </div>
 
       <div className="max-w-[8.5in] mx-auto p-6 print:p-0">
-        <div className="bg-white rounded-3xl print:rounded-none shadow-xl print:shadow-none border border-border print:border-0 overflow-hidden">
-          <div className="bg-gradient-to-br from-[hsl(217,89%,40%)] to-[hsl(222,47%,15%)] text-white p-8 sm:p-12 text-center">
+        <div className="rounded-3xl print:rounded-none shadow-xl print:shadow-none border border-border print:border-0 overflow-hidden bg-[hsl(224,50%,5%)]">
+          <div className="bg-gradient-to-br from-[hsl(224,50%,8%)] to-[hsl(224,50%,3%)] text-white p-8 sm:p-12 text-center border-b border-[hsl(18,100%,50%)]/30">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <img src={logoPng} alt="TenantTrack" className="h-14 w-14 rounded-xl" />
+              <img src={logoPng} alt="TenantTrack" className="h-16 w-16 rounded-xl" />
               <span className="text-3xl sm:text-4xl font-bold tracking-tight">TenantTrack</span>
             </div>
-            <div className="w-16 h-1 bg-white/40 rounded-full mx-auto mb-4"></div>
-            <p className="text-blue-100 text-lg">Fast. Easy. Maintenance Reporting.</p>
+            <div className="w-16 h-1 bg-[hsl(18,100%,50%)] rounded-full mx-auto mb-4"></div>
+            <p className="text-[hsl(18,100%,70%)] text-lg font-medium">Fast. Easy. Maintenance Reporting.</p>
           </div>
 
           <div className="p-8 sm:p-12">
             <div className="text-center mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Need Something Fixed?</h2>
-              <p className="text-gray-500 text-lg">Report maintenance issues in under 2 minutes.</p>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">Need Something Fixed?</h2>
+              <p className="text-[hsl(210,20%,65%)] text-lg">Report maintenance issues in under 2 minutes.</p>
             </div>
 
             <div className="flex flex-col items-center mb-10">
-              <div className="bg-white p-6 rounded-2xl shadow-lg border-2 border-blue-200 inline-block mb-4">
+              <div className="bg-white p-6 rounded-2xl shadow-lg shadow-[hsl(18,100%,50%)]/10 border-2 border-[hsl(18,100%,50%)]/40 inline-block mb-4">
                 <QRCodeSVG
                   value={reportUrl}
                   size={240}
@@ -69,39 +69,39 @@ export default function PrintFlyer() {
                   includeMargin={false}
                 />
               </div>
-              <p className="text-sm text-gray-400 font-mono break-all max-w-xs text-center">{reportUrl}</p>
+              <p className="text-sm text-[hsl(210,20%,50%)] font-mono break-all max-w-xs text-center">{reportUrl}</p>
             </div>
 
-            <div className="bg-blue-50 rounded-2xl p-6 sm:p-8 mb-8 border border-blue-200">
-              <h3 className="text-xl font-bold text-gray-900 mb-5 text-center">How It Works</h3>
+            <div className="bg-[hsl(224,44%,8%)] rounded-2xl p-6 sm:p-8 mb-8 border border-[hsl(18,100%,50%)]/20">
+              <h3 className="text-xl font-bold text-white mb-5 text-center">How It Works</h3>
               <div className="grid sm:grid-cols-3 gap-6 text-center">
                 <div>
-                  <div className="h-12 w-12 rounded-full bg-[hsl(217,89%,40%)] text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">1</div>
-                  <p className="font-semibold text-gray-800 mb-1">Scan the Code</p>
-                  <p className="text-sm text-gray-500">Open your phone camera and point it at the QR code above.</p>
+                  <div className="h-12 w-12 rounded-full bg-[hsl(18,100%,50%)] text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">1</div>
+                  <p className="font-semibold text-white mb-1">Scan the Code</p>
+                  <p className="text-sm text-[hsl(210,20%,60%)]">Open your phone camera and point it at the QR code above.</p>
                 </div>
                 <div>
-                  <div className="h-12 w-12 rounded-full bg-[hsl(217,89%,40%)] text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">2</div>
-                  <p className="font-semibold text-gray-800 mb-1">Describe the Issue</p>
-                  <p className="text-sm text-gray-500">Fill out the form with details and take a photo if you can.</p>
+                  <div className="h-12 w-12 rounded-full bg-[hsl(18,100%,50%)] text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">2</div>
+                  <p className="font-semibold text-white mb-1">Describe the Issue</p>
+                  <p className="text-sm text-[hsl(210,20%,60%)]">Fill out the form with details and take a photo if you can.</p>
                 </div>
                 <div>
-                  <div className="h-12 w-12 rounded-full bg-[hsl(217,89%,40%)] text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">3</div>
-                  <p className="font-semibold text-gray-800 mb-1">We'll Handle It</p>
-                  <p className="text-sm text-gray-500">Your landlord gets notified instantly and will follow up.</p>
+                  <div className="h-12 w-12 rounded-full bg-[hsl(18,100%,50%)] text-white flex items-center justify-center text-xl font-bold mx-auto mb-3">3</div>
+                  <p className="font-semibold text-white mb-1">We'll Handle It</p>
+                  <p className="text-sm text-[hsl(210,20%,60%)]">Your landlord gets notified instantly and will follow up.</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-2xl p-6 text-center border border-gray-100">
-              <p className="text-sm text-gray-500 mb-1">This flyer is for tenants of</p>
-              <p className="text-xl font-bold text-gray-900">{property.name}</p>
-              <p className="text-sm text-gray-500">{property.address}</p>
+            <div className="bg-[hsl(224,44%,8%)] rounded-2xl p-6 text-center border border-[hsl(224,24%,15%)]">
+              <p className="text-sm text-[hsl(210,20%,55%)] mb-1">This flyer is for tenants of</p>
+              <p className="text-xl font-bold text-white">{property.name}</p>
+              <p className="text-sm text-[hsl(210,20%,55%)]">{property.address}</p>
             </div>
 
             <div className="mt-8 text-center">
-              <p className="text-xs text-gray-400">No app download required. Works on any smartphone browser.</p>
-              <p className="text-xs text-gray-400 mt-1">Powered by TenantTrack</p>
+              <p className="text-xs text-[hsl(210,20%,45%)]">No app download required. Works on any smartphone browser.</p>
+              <p className="text-xs text-[hsl(18,100%,50%)] mt-1 font-medium">Powered by TenantTrack</p>
             </div>
           </div>
         </div>
