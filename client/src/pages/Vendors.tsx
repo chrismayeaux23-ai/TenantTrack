@@ -645,7 +645,7 @@ function VendorImportDialog({ open, onOpenChange, existingVendors }: {
     });
   }
 
-  async function fileToBase64(file: File): Promise<string> {
+  async function fileToBase64(file: File | Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = () => {
@@ -658,15 +658,50 @@ function VendorImportDialog({ open, onOpenChange, existingVendors }: {
     });
   }
 
+  async function downscaleImage(
+    file: File,
+    maxEdge = 2000,
+    quality = 0.85,
+  ): Promise<{ base64: string; mimeType: string }> {
+    const dataUrl: string = await new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result as string);
+      r.onerror = () => reject(new Error("Failed to read file"));
+      r.readAsDataURL(file);
+    });
+    const img: HTMLImageElement = await new Promise((resolve, reject) => {
+      const i = new Image();
+      i.onload = () => resolve(i);
+      i.onerror = () => reject(new Error("Failed to decode image"));
+      i.src = dataUrl;
+    });
+    const longEdge = Math.max(img.width, img.height);
+    const scale = longEdge > maxEdge ? maxEdge / longEdge : 1;
+    const w = Math.round(img.width * scale);
+    const h = Math.round(img.height * scale);
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return { base64: await fileToBase64(file), mimeType: file.type || "image/jpeg" };
+    }
+    ctx.drawImage(img, 0, 0, w, h);
+    const blob: Blob | null = await new Promise(resolve =>
+      canvas.toBlob(b => resolve(b), "image/jpeg", quality),
+    );
+    if (!blob) {
+      return { base64: await fileToBase64(file), mimeType: file.type || "image/jpeg" };
+    }
+    return { base64: await fileToBase64(blob), mimeType: "image/jpeg" };
+  }
+
   async function extractPhotos() {
     if (photos.length === 0) return;
     setExtracting(true);
     try {
       const images = await Promise.all(
-        photos.map(async p => ({
-          base64: await fileToBase64(p.file),
-          mimeType: p.file.type || "image/jpeg",
-        }))
+        photos.map(p => downscaleImage(p.file)),
       );
 
       const res = await fetch("/api/vendors/import-photos", {
