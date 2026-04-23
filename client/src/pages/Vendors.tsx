@@ -349,6 +349,11 @@ function VendorCard({
             {vendor.preferredVendor && !isArchived && (
               <Badge className="bg-yellow-500/10 text-yellow-400 border-yellow-500/20 text-[10px] px-1.5">⭐ Preferred</Badge>
             )}
+            {vendor.source === "phonebook_photo" && (
+              <Badge variant="outline" className="text-[10px] text-muted-foreground gap-0.5" data-testid={`badge-source-photo-${vendor.id}`}>
+                <Camera className="h-2.5 w-2.5" /> Imported from photo
+              </Badge>
+            )}
             {isArchived && <Badge variant="outline" className="text-[10px] text-muted-foreground">Archived</Badge>}
           </div>
           {vendor.companyName && <p className="text-xs text-muted-foreground truncate">{vendor.companyName}</p>}
