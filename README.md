@@ -107,6 +107,31 @@ Automated transactional email via Resend for:
 
 ---
 
+## Screenshots
+
+### Dispatch Board
+![Dispatch Board](screenshots/dispatch-board.png)
+
+### Landing Page
+![Landing Page](screenshots/landing-page.png)
+
+### Problem We Solve
+![Problem We Solve](screenshots/problem-we-solve.png)
+
+### Auto Dispatch
+![Auto Dispatch](screenshots/request-auto-dispatched.png)
+
+### Vendor Analytics
+![Vendor Analytics](screenshots/vendor-analytics.png)
+
+### Vendor Dispatch Details
+![Dispatch Details](screenshots/vendor-dispatch-detail.png)
+
+### Vendor Job Proposal
+![Vendor Job Proposal](screenshots/vendor-job-proposal.png)
+
+---
+
 ## Tech stack
 
 | Layer | Technology |
